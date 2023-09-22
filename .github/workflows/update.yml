@@ -27,6 +27,8 @@ jobs:
 
       - name: Download GitHub GraphQL Schema
         run: bun run download
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Types
         run: bun run codegen
