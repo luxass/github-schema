@@ -50,4 +50,3 @@ jobs:
           base: main
           assignees: luxass
           token: ${{ secrets.ROBOBUB_TOKEN }}
-
