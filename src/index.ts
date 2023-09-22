@@ -5,3 +5,5 @@ export {
   graphql,
   gql,
 };
+
+export type * from "../github-schema";

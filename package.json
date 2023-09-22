@@ -25,13 +25,15 @@
       "require": "./dist/index.cjs"
     },
     "./github-schema.graphql": "./github-schema.graphql",
-    "./github-schema.d.ts": "./github-schema.d.ts",
+    "./github-schema": "./github-schema.d.ts",
+    "./schema": "./github-schema.d.ts",
     "./package.json": "./package.json"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "types": "github-schema.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
+    "dist",
     "github-schema.graphql",
     "github-schema.d.ts"
   ],
@@ -39,7 +41,10 @@
     "build": "unbuild",
     "download": "bun run scripts/download.ts",
     "codegen": "graphql-codegen",
-    "prepublishOnly": "bun run download && bun run codegen"
+    "prepublishOnly": "bun run download && bun run codegen && bun run build",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "graphql": "^16.8.1",
