@@ -16,6 +16,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ROBOBUB_TOKEN }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
@@ -28,7 +30,7 @@ jobs:
       - name: Download GitHub GraphQL Schema
         run: bun run download
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ROBOBUB_TOKEN }}
 
       - name: Generate Types
         run: bun run codegen
@@ -47,3 +49,5 @@ jobs:
           author: robobub <bot@luxass.dev>
           base: main
           assignees: luxass
+          token: ${{ secrets.ROBOBUB_TOKEN }}
+
