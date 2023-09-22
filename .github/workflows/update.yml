@@ -1,0 +1,41 @@
+name: Update GitHub GraphQL Schema
+
+on:
+  workflow_dispatch: 
+    inputs:
+      dry-run:
+        description: Run the workflow without creating a pull request
+        required: false
+        default: "false"
+  schedule:
+    - cron: "0 0 * * *"
+
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        if: github.event.inputs.dry-run == 'false'
+        with:
+          commit-message: "chore: updated github graphql schema"
+          title: "chore: updated github graphql schema"
+          body: |
+            This is an automated PR to update the GitHub GraphQL Schema.
+
+            If you have any questions or suggestions, please open an issue or PR.
+          branch: "update-github-graphql-schema"
+          author: robobub <bot@luxass.dev>
+          path: github-schema.graphql
