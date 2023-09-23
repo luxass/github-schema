@@ -2,9 +2,6 @@
 
 > GitHub's GraphQL Schema
 
-<br/>
-<br/>
-
 ## 📦 Installation
 
 ```sh
