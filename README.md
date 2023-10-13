@@ -40,4 +40,4 @@ const REPOSITORY_QUERY = gql`
 schema: node_modules/github-schema/schema.graphql
 ```
 
-Published under [MIT License](./LICENCE).
+Published under [MIT License](./LICENSE).
