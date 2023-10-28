@@ -4,8 +4,13 @@ const config = {
   schema: "./github-schema.graphql",
   overwrite: true,
   generates: {
-    "github-schema.d.ts": {
+    "./src/github-schema.ts": {
       plugins: [
+        {
+          add: {
+            content: "/* eslint-disable eslint-comments/no-unlimited-disable */\n/* eslint-disable */",
+          },
+        },
         "typescript",
       ],
       config: {
