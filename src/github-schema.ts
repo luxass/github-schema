@@ -3656,6 +3656,8 @@ export type CreateLinkedBranchPayload = {
   __typename?: 'CreateLinkedBranchPayload';
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The issue that was linked to. */
+  issue?: Maybe<Issue>;
   /** The new branch issue reference. */
   linkedBranch?: Maybe<LinkedBranch>;
 };
@@ -5064,6 +5066,8 @@ export type DeploymentProtectionRule = {
   __typename?: 'DeploymentProtectionRule';
   /** Identifies the primary key from the database. */
   databaseId?: Maybe<Scalars['Int']['output']>;
+  /** Whether deployments to this environment can be approved by the user who created the deployment. */
+  preventSelfReview?: Maybe<Scalars['Boolean']['output']>;
   /** The teams or users that can review the deployment */
   reviewers: DeploymentReviewerConnection;
   /** The timeout in minutes for this protection rule. */
@@ -15051,6 +15055,8 @@ export type PermissionSource = {
   organization: Organization;
   /** The level of access this source has granted to the user. */
   permission: DefaultRepositoryPermissionField;
+  /** The name of the role this source has granted to the user. */
+  roleName?: Maybe<Scalars['String']['output']>;
   /** The source of this permission. */
   source: PermissionGranter;
 };
@@ -21631,7 +21637,9 @@ export type RepositoryLockReason =
   /** The repository is locked due to a rename. */
   | 'RENAME'
   /** The repository is locked due to a trade controls related reason. */
-  | 'TRADE_RESTRICTION';
+  | 'TRADE_RESTRICTION'
+  /** The repository is locked due to an ownership transfer. */
+  | 'TRANSFERRING_OWNERSHIP';
 
 /** A GitHub Enterprise Importer (GEI) repository migration. */
 export type RepositoryMigration = Migration & Node & {
@@ -21895,6 +21903,8 @@ export type RepositoryRuleInput = {
 
 /** The rule types supported in rulesets */
 export type RepositoryRuleType =
+  /** Authorization */
+  | 'AUTHORIZATION'
   /** Branch name pattern */
   | 'BRANCH_NAME_PATTERN'
   /** Committer email pattern */
@@ -21907,30 +21917,57 @@ export type RepositoryRuleType =
   | 'CREATION'
   /** Only allow users with bypass permissions to delete matching refs. */
   | 'DELETION'
-  /** Prevent users with push access from force pushing to branches. */
+  /** File path pattern */
+  | 'FILE_PATH_PATTERN'
+  /** Branch is read-only. Users cannot push to the branch. */
+  | 'LOCK_BRANCH'
+  /** Max ref updates */
+  | 'MAX_REF_UPDATES'
+  /** Merges must be performed via a merge queue. */
+  | 'MERGE_QUEUE'
+  /** Merge queue locked ref */
+  | 'MERGE_QUEUE_LOCKED_REF'
+  /** Prevent users with push access from force pushing to refs. */
   | 'NON_FAST_FORWARD'
   /** Require all commits be made to a non-target branch and submitted via a pull request before they can be merged. */
   | 'PULL_REQUEST'
-  /**
-   * Choose which environments must be successfully deployed to before branches can
-   * be merged into a branch that matches this rule.
-   */
+  /** Choose which environments must be successfully deployed to before refs can be merged into a branch that matches this rule. */
   | 'REQUIRED_DEPLOYMENTS'
-  /** Prevent merge commits from being pushed to matching branches. */
+  /** Prevent merge commits from being pushed to matching refs. */
   | 'REQUIRED_LINEAR_HISTORY'
-  /** Commits pushed to matching branches must have verified signatures. */
+  /**
+   * When enabled, all conversations on code must be resolved before a pull request
+   * can be merged into a branch that matches this rule.
+   */
+  | 'REQUIRED_REVIEW_THREAD_RESOLUTION'
+  /** Commits pushed to matching refs must have verified signatures. */
   | 'REQUIRED_SIGNATURES'
   /**
    * Choose which status checks must pass before branches can be merged into a
    * branch that matches this rule. When enabled, commits must first be pushed to
-   * another branch, then merged or pushed directly to a branch that matches this
-   * rule after status checks have passed.
+   * another branch, then merged or pushed directly to a ref that matches this rule
+   * after status checks have passed.
    */
   | 'REQUIRED_STATUS_CHECKS'
+  /**
+   * Require all commits be made to a non-target branch and submitted via a pull
+   * request and required workflow checks to pass before they can be merged.
+   */
+  | 'REQUIRED_WORKFLOW_STATUS_CHECKS'
+  /** Commits pushed to matching refs must have verified signatures. */
+  | 'RULESET_REQUIRED_SIGNATURES'
+  /** Secret scanning */
+  | 'SECRET_SCANNING'
+  /** Tag */
+  | 'TAG'
   /** Tag name pattern */
   | 'TAG_NAME_PATTERN'
   /** Only allow users with bypass permission to update matching refs. */
-  | 'UPDATE';
+  | 'UPDATE'
+  /** Require all changes made to a targeted branch to pass the specified workflows before they can be merged. */
+  | 'WORKFLOWS'
+  /** Workflow files cannot be modified. */
+  | 'WORKFLOW_UPDATES';
 
 /** A repository ruleset. */
 export type RepositoryRuleset = Node & {
@@ -22361,20 +22398,14 @@ export type RequirableByPullRequestIsRequiredArgs = {
   pullRequestNumber?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/**
- * Choose which environments must be successfully deployed to before branches can
- * be merged into a branch that matches this rule.
- */
+/** Choose which environments must be successfully deployed to before refs can be merged into a branch that matches this rule. */
 export type RequiredDeploymentsParameters = {
   __typename?: 'RequiredDeploymentsParameters';
   /** The environments that must be successfully deployed to before branches can be merged. */
   requiredDeploymentEnvironments: Array<Scalars['String']['output']>;
 };
 
-/**
- * Choose which environments must be successfully deployed to before branches can
- * be merged into a branch that matches this rule.
- */
+/** Choose which environments must be successfully deployed to before refs can be merged into a branch that matches this rule. */
 export type RequiredDeploymentsParametersInput = {
   /** The environments that must be successfully deployed to before branches can be merged. */
   requiredDeploymentEnvironments: Array<Scalars['String']['input']>;
@@ -22404,7 +22435,7 @@ export type RequiredStatusCheckInput = {
 /**
  * Choose which status checks must pass before branches can be merged into a branch
  * that matches this rule. When enabled, commits must first be pushed to another
- * branch, then merged or pushed directly to a branch that matches this rule after
+ * branch, then merged or pushed directly to a ref that matches this rule after
  * status checks have passed.
  */
 export type RequiredStatusChecksParameters = {
@@ -22422,7 +22453,7 @@ export type RequiredStatusChecksParameters = {
 /**
  * Choose which status checks must pass before branches can be merged into a branch
  * that matches this rule. When enabled, commits must first be pushed to another
- * branch, then merged or pushed directly to a branch that matches this rule after
+ * branch, then merged or pushed directly to a ref that matches this rule after
  * status checks have passed.
  */
 export type RequiredStatusChecksParametersInput = {
@@ -22745,7 +22776,7 @@ export type RuleEnforcement =
   | 'EVALUATE';
 
 /** Types which can be parameters for `RepositoryRule` objects. */
-export type RuleParameters = BranchNamePatternParameters | CommitAuthorEmailPatternParameters | CommitMessagePatternParameters | CommitterEmailPatternParameters | PullRequestParameters | RequiredDeploymentsParameters | RequiredStatusChecksParameters | TagNamePatternParameters | UpdateParameters;
+export type RuleParameters = BranchNamePatternParameters | CommitAuthorEmailPatternParameters | CommitMessagePatternParameters | CommitterEmailPatternParameters | PullRequestParameters | RequiredDeploymentsParameters | RequiredStatusChecksParameters | TagNamePatternParameters | UpdateParameters | WorkflowsParameters;
 
 /** Specifies the parameters for a `RepositoryRule` object. Only one of the fields should be specified. */
 export type RuleParametersInput = {
@@ -22767,6 +22798,8 @@ export type RuleParametersInput = {
   tagNamePattern?: InputMaybe<TagNamePatternParametersInput>;
   /** Parameters used for the `update` rule type */
   update?: InputMaybe<UpdateParametersInput>;
+  /** Parameters used for the `workflows` rule type */
+  workflows?: InputMaybe<WorkflowsParametersInput>;
 };
 
 /** Types which can have `RepositoryRule` objects. */
@@ -23330,6 +23363,8 @@ export type SocialAccountProvider =
   | 'LINKEDIN'
   /** Open-source federated microblogging service. */
   | 'MASTODON'
+  /** JavaScript package registry. */
+  | 'NPM'
   /** Social news aggregation and discussion website. */
   | 'REDDIT'
   /** Live-streaming service. */
@@ -24083,7 +24118,7 @@ export type SponsorsCountryOrRegionCode =
   | 'TN'
   /** Tonga */
   | 'TO'
-  /** Turkey */
+  /** Türkiye */
   | 'TR'
   /** Trinidad and Tobago */
   | 'TT'
@@ -27216,6 +27251,8 @@ export type UpdateEnvironmentInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The node ID of the environment. */
   environmentId: Scalars['ID']['input'];
+  /** Whether deployments to this environment can be approved by the user who created the deployment. */
+  preventSelfReview?: InputMaybe<Scalars['Boolean']['input']>;
   /** The ids of users or teams that can approve deployments to this environment */
   reviewers?: InputMaybe<Array<Scalars['ID']['input']>>;
   /** The wait timer in minutes. */
@@ -28921,6 +28958,31 @@ export type WorkflowRunsArgs = {
   orderBy?: InputMaybe<WorkflowRunOrder>;
 };
 
+/** A workflow that must run for this rule to pass */
+export type WorkflowFileReference = {
+  __typename?: 'WorkflowFileReference';
+  /** The path to the workflow file */
+  path: Scalars['String']['output'];
+  /** The ref (branch or tag) of the workflow file to use */
+  ref?: Maybe<Scalars['String']['output']>;
+  /** The ID of the repository where the workflow is defined */
+  repositoryId: Scalars['Int']['output'];
+  /** The commit SHA of the workflow file to use */
+  sha?: Maybe<Scalars['String']['output']>;
+};
+
+/** A workflow that must run for this rule to pass */
+export type WorkflowFileReferenceInput = {
+  /** The path to the workflow file */
+  path: Scalars['String']['input'];
+  /** The ref (branch or tag) of the workflow file to use */
+  ref?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the repository where the workflow is defined */
+  repositoryId: Scalars['Int']['input'];
+  /** The commit SHA of the workflow file to use */
+  sha?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** A workflow run. */
 export type WorkflowRun = Node & UniformResourceLocatable & {
   __typename?: 'WorkflowRun';
@@ -29038,3 +29100,16 @@ export type WorkflowState =
   | 'DISABLED_INACTIVITY'
   /** The workflow was disabled manually. */
   | 'DISABLED_MANUALLY';
+
+/** Require all changes made to a targeted branch to pass the specified workflows before they can be merged. */
+export type WorkflowsParameters = {
+  __typename?: 'WorkflowsParameters';
+  /** Workflows that must pass for this rule to pass. */
+  workflows: Array<WorkflowFileReference>;
+};
+
+/** Require all changes made to a targeted branch to pass the specified workflows before they can be merged. */
+export type WorkflowsParametersInput = {
+  /** Workflows that must pass for this rule to pass. */
+  workflows: Array<WorkflowFileReferenceInput>;
+};
