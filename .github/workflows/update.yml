@@ -44,7 +44,7 @@ jobs:
           body: |
             This is an automated PR to update the GitHub GraphQL Schema.
 
-            If you have any questions or suggestions, please open an issue or PR.
+            If you have any questions or suggestions, please open an issue.
           branch: update-github-graphql-schema
           author: robobub <bot@luxass.dev>
           base: main
