@@ -21371,7 +21371,10 @@ export type RepositoryConnection = {
   pageInfo: PageInfo;
   /** Identifies the total count of items in the connection. */
   totalCount: Scalars['Int']['output'];
-  /** The total size in kilobytes of all repositories in the connection. */
+  /**
+   * The total size in kilobytes of all repositories in the connection. Value will
+   * never be larger than max 32-bit signed integer.
+   */
   totalDiskUsage: Scalars['Int']['output'];
 };
 
@@ -21917,8 +21920,6 @@ export type RepositoryRuleType =
   | 'CREATION'
   /** Only allow users with bypass permissions to delete matching refs. */
   | 'DELETION'
-  /** File path pattern */
-  | 'FILE_PATH_PATTERN'
   /** Branch is read-only. Users cannot push to the branch. */
   | 'LOCK_BRANCH'
   /** Max ref updates */
