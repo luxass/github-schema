@@ -42,8 +42,8 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         if: ${{ github.event.inputs.dry-run != 'true' }}
         with:
-          commit-message: "chore: updated github graphql schema"
-          title: "chore: updated github graphql schema"
+          commit-message: "feat: updated github graphql schema"
+          title: "feat: updated github graphql schema"
           body: |
             This is an automated PR to update the GitHub GraphQL Schema.
 
@@ -52,4 +52,5 @@ jobs:
           author: robobub <bot@luxass.dev>
           base: main
           assignees: luxass
+          reviewers: luxass
           token: ${{ secrets.ROBOBUB_TOKEN }}
