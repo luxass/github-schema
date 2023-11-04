@@ -76,7 +76,6 @@
     "codegen": "graphql-codegen",
     "prepublishOnly": "bun run download && bun run codegen && bun run build",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
