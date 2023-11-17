@@ -52,6 +52,4 @@ jobs:
             If you have any questions or suggestions, please open an issue.
           branch: update-github-graphql-schema
           base: main
-          author: robobub <bot@luxass.dev>
-          committer: robobub <bot@luxass.dev>
           assignees: luxass
