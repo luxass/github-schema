@@ -31,14 +31,14 @@ jobs:
         with:
           bun-version: latest
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: bun install
 
-      - name: 🛠 Build project
+      - name: Build
         run: bun run build
 
-      - name: 🔠 Lint project
+      - name: Lint
         run: bun run lint
 
-      - name: ✅ TypeCheck project
+      - name: TypeCheck
         run: bun run typecheck
