@@ -17,10 +17,12 @@ jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    if: github.repository_owner == 'luxass'
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.ROBOBUB_TOKEN }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
@@ -49,8 +51,5 @@ jobs:
 
             If you have any questions or suggestions, please open an issue.
           branch: update-github-graphql-schema
-          author: robobub <bot@luxass.dev>
           base: main
           assignees: luxass
-          reviewers: luxass
-          token: ${{ secrets.ROBOBUB_TOKEN }}
