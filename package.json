@@ -2,7 +2,7 @@
   "name": "github-schema",
   "type": "module",
   "version": "1.1.4",
-  "packageManager": "bun@1.0.8",
+  "packageManager": "bun@1.0.13",
   "description": "GitHub's GraphQL schema",
   "author": {
     "name": "Lucas Nørgård",
@@ -67,14 +67,14 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "github-schema.graphql",
-    "github-schema.d.ts"
+    "github-schema.d.ts",
+    "github-schema.graphql"
   ],
   "scripts": {
     "build": "tsup",
-    "download": "bun run scripts/download.ts",
-    "codegen": "graphql-codegen",
-    "prepublishOnly": "bun run download && bun run codegen && bun run build",
+    "schema:download": "bun run scripts/download.ts",
+    "schema:codegen": "graphql-codegen",
+    "prepublishOnly": "bun run schema:download && bun run schema:codegen && bun run build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
@@ -86,10 +86,9 @@
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
-    "@luxass/eslint-config": "^3.3.2",
-    "bun-types": "^1.0.8",
+    "@luxass/eslint-config": "^4.0.0-beta.4",
+    "bun-types": "^1.0.13",
     "eslint": "^8.53.0",
-    "eslint-plugin-import": "npm:eslint-plugin-i@2.29.0",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2"
   }

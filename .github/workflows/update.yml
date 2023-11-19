@@ -33,12 +33,12 @@ jobs:
         run: bun install
 
       - name: Download GitHub GraphQL Schema
-        run: bun run download
+        run: bun run schema:download
         env:
-          GITHUB_TOKEN: ${{ secrets.ROBOBUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Types
-        run: bun run codegen
+        run: bun run schema:codegen
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
