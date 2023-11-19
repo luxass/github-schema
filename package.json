@@ -18,6 +18,12 @@
   "bugs": {
     "url": "https://github.com/luxass/github-schema/issues"
   },
+  "keywords": [
+    "github graphql",
+    "github",
+    "graphql",
+    "github schema"
+  ],
   "exports": {
     ".": {
       "import": {
