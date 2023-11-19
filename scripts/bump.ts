@@ -39,7 +39,8 @@ async function run() {
 
   pkgJSON.version = newVersion;
 
-  await Bun.write("package.json", JSON.stringify(pkgJSON, null, 2));
+  await Bun.write("package.json", `${JSON.stringify(pkgJSON, null, 2)}\n`);
+  console.log(newVersion);
 }
 
 run().catch((err) => {

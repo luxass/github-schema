@@ -40,6 +40,14 @@ jobs:
       - name: Generate Types
         run: bun run schema:codegen
 
+      - name: Update Package Version
+        id: bump
+        run: |
+          new-version=$(bun run --silent pkg:bump)
+          echo "new-version=$new-version" >> $GITHUB_STATE
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         if: ${{ github.event.inputs.dry-run != 'true' }}
@@ -48,6 +56,8 @@ jobs:
           title: "feat: updated github graphql schema"
           body: |
             This is an automated PR to update the GitHub GraphQL Schema.
+
+            The new version is ${{ steps.bump.outputs.new-version }}.
 
             If you have any questions or suggestions, please open an issue.
           branch: update-github-graphql-schema
