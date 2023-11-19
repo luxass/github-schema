@@ -10,6 +10,7 @@ async function run() {
   const gitStatusProcess = Bun.spawn(["git", "status", "--porcelain"]);
 
   const gitStatusOutput = await new Response(gitStatusProcess.stdout).text();
+  console.log(gitStatusOutput);
 
   if (gitStatusOutput.trim() !== "") {
     console.log("git status is not clean");
