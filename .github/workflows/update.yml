@@ -40,7 +40,20 @@ jobs:
       - name: Generate Types
         run: bun run schema:codegen
 
+      - name: Check for changes
+        id: schema-changed
+        run: |
+          changes=$(git status --porcelain)
+          if [ -n "$changes" ]; then
+            echo "There was changes."
+            echo "SCHEMA_CHANGES=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes, skipping."
+            echo "SCHEMA_CHANGES=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Update Package Version
+        if: ${{ steps.schema-changed.outputs.SCHEMA_CHANGES == 'true' }}
         id: bump
         run: |
           NEW_VERSION=$(bun run --silent pkg:bump)
