@@ -96,7 +96,7 @@
     "typescript": "^5.2.2"
   },
   "simple-git-hooks": {
-    "pre-commit": "npx lint-staged"
+    "pre-commit": "bunx lint-staged"
   },
   "lint-staged": {
     "package.json": "eslint --fix"
