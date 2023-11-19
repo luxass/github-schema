@@ -7,6 +7,15 @@ async function run() {
     process.exit(1);
   }
 
+  const gitStatusProcess = Bun.spawn(["git", "status", "--porcelain"]);
+
+  const gitStatusOutput = await new Response(gitStatusProcess.stdout).text();
+
+  if (gitStatusOutput.trim() !== "") {
+    console.log("git status is not clean");
+    return;
+  }
+
   const pkgJSONFile = Bun.file("package.json");
 
   const pkgJSON: unknown = await pkgJSONFile.json();
