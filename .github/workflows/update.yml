@@ -43,8 +43,8 @@ jobs:
       - name: Update Package Version
         id: bump
         run: |
-          new-version=$(bun run --silent pkg:bump)
-          echo "new-version=$new-version" >> $GITHUB_STATE
+          NEW_VERSION=$(bun run --silent pkg:bump)
+          echo "new-version=$NEW_VERSION" >> $GITHUB_STATE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
