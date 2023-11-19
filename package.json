@@ -80,7 +80,6 @@
     "build": "tsup",
     "schema:download": "bun run scripts/download.ts",
     "schema:codegen": "graphql-codegen",
-    "pkg:bump": "bun run --silent scripts/bump.ts",
     "prepublishOnly": "bun run schema:download && bun run schema:codegen && bun run build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
