@@ -1,6 +1,6 @@
 # github-schema
 
-> GitHub's GraphQL Schema
+GitHub's GraphQL Schema
 
 ## 📦 Installation
 
