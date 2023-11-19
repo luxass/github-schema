@@ -89,8 +89,8 @@
     "@graphql-codegen/typescript": "^4.0.1",
     "@luxass/eslint-config": "^4.0.0-beta.4",
     "bun-types": "^1.0.13",
-    "eslint": "^8.53.0",
-    "tsup": "^7.2.0",
+    "eslint": "^8.54.0",
+    "tsup": "^8.0.0",
     "typescript": "^5.2.2"
   }
 }

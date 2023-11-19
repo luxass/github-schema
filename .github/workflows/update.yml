@@ -49,7 +49,7 @@ jobs:
           body: |
             I found some new changes in GitHub's GraphQL Schema.
 
-            I don't know what they changed, but I'm sure it's important. 
+            I don't know what they changed, but I'm sure it's important.
             If you want you can go take a look yourself.
 
             I will be waiting for your approval 👋.
