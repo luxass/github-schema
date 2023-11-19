@@ -40,27 +40,6 @@ jobs:
       - name: Generate Types
         run: bun run schema:codegen
 
-      - name: Check for changes
-        id: schema-changed
-        run: |
-          changes=$(git status --porcelain)
-          if [ -n "$changes" ]; then
-            echo "There was changes."
-            echo "SCHEMA_CHANGES=true" >> $GITHUB_OUTPUT
-          else
-            echo "No changes, skipping."
-            echo "SCHEMA_CHANGES=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Update Package Version
-        if: ${{ steps.schema-changed.outputs.SCHEMA_CHANGES == 'true' }}
-        id: bump
-        run: |
-          NEW_VERSION=$(bun run --silent pkg:bump)
-          echo "NEXT_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         if: ${{ github.event.inputs.dry-run != 'true' }}
@@ -68,11 +47,14 @@ jobs:
           commit-message: "feat: updated github graphql schema"
           title: "feat: updated github graphql schema"
           body: |
-            This is an automated PR to update the GitHub GraphQL Schema.
+            I found some new changes in GitHub's GraphQL Schema.
 
-            The new version is ${{ steps.bump.outputs.NEXT_VERSION }}.
+            I don't know what they changed, but I'm sure it's important. 
+            If you want you can go take a look yourself.
 
-            If you have any questions or suggestions, please open an issue.
+            I will be waiting for your approval 👋.
+
+            > This is an automated PR to update the GitHub GraphQL Schema.
           branch: update-github-graphql-schema
           base: main
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
