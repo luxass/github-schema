@@ -30,6 +30,8 @@ jobs:
 
       - name: Build
         run: bun run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM
         run: npm publish --access public --no-git-checks
