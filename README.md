@@ -1,4 +1,7 @@
-# github-schema
+# 📋 github-schema
+
+[![npm version][npm-version-src]][npm-version-href]
+[![npm downloads][npm-downloads-src]][npm-downloads-href]
 
 GitHub's GraphQL Schema
 
@@ -57,3 +60,10 @@ schema: node_modules/github-schema/schema.graphql
 ## 📄 License
 
 Published under [MIT License](./LICENSE).
+
+<!-- Badges -->
+
+[npm-version-src]: https://img.shields.io/npm/v/github-schema?style=flat&colorA=18181B&colorB=4169E1
+[npm-version-href]: https://npmjs.com/package/github-schema
+[npm-downloads-src]: https://img.shields.io/npm/dm/github-schema?style=flat&colorA=18181B&colorB=4169E1
+[npm-downloads-href]: https://npmjs.com/package/github-schema
