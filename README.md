@@ -48,7 +48,7 @@ import { gqlTyped } from "github-schema";
 
 ## Editor Autocompletion
 
-> [!NOTE]
+> [!TIP]
 > You will need to have [GraphQL LSP](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql) installed, and have a `.graphqlrc.yaml` file in your project root.  
 > If you also want nice colors, i would recommend [GraphQL Syntax Highlighting](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql-syntax) installed.
 
