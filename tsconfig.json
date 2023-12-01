@@ -16,5 +16,10 @@
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "www"
+  ]
 }
