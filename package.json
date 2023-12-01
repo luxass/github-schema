@@ -79,9 +79,12 @@
     "github-schema.d.ts",
     "github-schema.graphql"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "tsup",
-    "schema:download": "pnpx tsx ./scripts/download.ts",
+    "schema:download": "pnpx tsx --env-file=.env ./scripts/download.ts",
     "schema:codegen": "graphql-codegen",
     "prepublishOnly": "pnpm run schema:download && pnpm run schema:codegen && pnpm run build",
     "lint": "eslint .",
@@ -96,6 +99,7 @@
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
     "@luxass/eslint-config": "^4.0.0-beta.13",
+    "@types/node": "^18.19.0",
     "eslint": "^8.54.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.2"
