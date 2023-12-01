@@ -2,4 +2,4 @@ import {
   luxass,
 } from "@luxass/eslint-config";
 
-export default luxass();
+export default await luxass();

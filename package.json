@@ -1,14 +1,14 @@
 {
   "name": "github-schema",
-  "type": "module",
   "version": "1.2.5",
-  "packageManager": "bun@1.0.14",
   "description": "GitHub's GraphQL schema",
+  "type": "module",
   "author": {
     "name": "Lucas Nørgård",
     "email": "lucasnrgaard@gmail.com",
     "url": "https://luxass.dev"
   },
+  "packageManager": "pnpm@8.10.1",
   "license": "MIT",
   "homepage": "https://github.com/luxass/github-schema",
   "repository": {
@@ -23,6 +23,9 @@
     "github",
     "graphql",
     "github schema"
+  ],
+  "workspaces": [
+    "www"
   ],
   "exports": {
     ".": {
@@ -76,11 +79,14 @@
     "github-schema.d.ts",
     "github-schema.graphql"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "tsup",
-    "schema:download": "bun run scripts/download.ts",
+    "schema:download": "pnpx tsx --env-file=.env ./scripts/download.ts",
     "schema:codegen": "graphql-codegen",
-    "prepublishOnly": "bun run schema:download && bun run schema:codegen && bun run build",
+    "prepublishOnly": "pnpm run schema:download && pnpm run schema:codegen && pnpm run build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
@@ -92,8 +98,8 @@
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
-    "@luxass/eslint-config": "^4.0.0-beta.12",
-    "bun-types": "^1.0.14",
+    "@luxass/eslint-config": "^4.0.0-beta.13",
+    "@types/node": "^18.19.0",
     "eslint": "^8.54.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.2"

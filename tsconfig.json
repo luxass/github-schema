@@ -8,9 +8,6 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
-    "types": [
-      "bun-types"
-    ],
     "allowJs": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
@@ -19,5 +16,10 @@
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "www"
+  ]
 }
