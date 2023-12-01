@@ -1,7 +1,0 @@
-{
-  "git": {
-    "deploymentEnabled": {
-      "update-github-graphql-schema": false
-    }
-  }
-}

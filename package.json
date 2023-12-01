@@ -24,9 +24,6 @@
     "graphql",
     "github schema"
   ],
-  "workspaces": [
-    "www"
-  ],
   "exports": {
     ".": {
       "import": {
