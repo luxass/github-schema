@@ -1,3 +1,4 @@
+// @ts-check
 import {
   luxass,
 } from "@luxass/eslint-config";
