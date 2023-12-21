@@ -5,4 +5,7 @@ import {
 
 export default luxass({
   formatters: true,
+  ignores: [
+    "github-schema.graphql",
+  ],
 });
