@@ -14841,8 +14841,13 @@ export type OrganizationInvitation = Node & {
   invitationType: OrganizationInvitationType;
   /** The user who was invited to the organization. */
   invitee?: Maybe<User>;
-  /** The user who created the invitation. */
+  /**
+   * The user who created the invitation.
+   * @deprecated `inviter` will be removed. `inviter` will be replaced by `inviterActor`. Removal on 2024-07-01 UTC.
+   */
   inviter: User;
+  /** The user who created the invitation. */
+  inviterActor?: Maybe<User>;
   /** The organization the invite is for */
   organization: Organization;
   /** The user's pending role in the organization (e.g. member, owner). */
