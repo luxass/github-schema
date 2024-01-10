@@ -14525,6 +14525,7 @@ export type OrganizationRepositoriesArgs = {
   orderBy?: InputMaybe<RepositoryOrder>;
   ownerAffiliations?: InputMaybe<Array<InputMaybe<RepositoryAffiliation>>>;
   privacy?: InputMaybe<RepositoryPrivacy>;
+  visibility?: InputMaybe<RepositoryVisibility>;
 };
 
 
@@ -21379,6 +21380,7 @@ export type RepositoryForksArgs = {
   orderBy?: InputMaybe<RepositoryOrder>;
   ownerAffiliations?: InputMaybe<Array<InputMaybe<RepositoryAffiliation>>>;
   privacy?: InputMaybe<RepositoryPrivacy>;
+  visibility?: InputMaybe<RepositoryVisibility>;
 };
 
 
@@ -22206,6 +22208,7 @@ export type RepositoryOwnerRepositoriesArgs = {
   orderBy?: InputMaybe<RepositoryOrder>;
   ownerAffiliations?: InputMaybe<Array<InputMaybe<RepositoryAffiliation>>>;
   privacy?: InputMaybe<RepositoryPrivacy>;
+  visibility?: InputMaybe<RepositoryVisibility>;
 };
 
 
@@ -26615,6 +26618,7 @@ export type TopicRepositoriesArgs = {
   ownerAffiliations?: InputMaybe<Array<InputMaybe<RepositoryAffiliation>>>;
   privacy?: InputMaybe<RepositoryPrivacy>;
   sponsorableOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  visibility?: InputMaybe<RepositoryVisibility>;
 };
 
 
@@ -29029,6 +29033,7 @@ export type UserRepositoriesArgs = {
   orderBy?: InputMaybe<RepositoryOrder>;
   ownerAffiliations?: InputMaybe<Array<InputMaybe<RepositoryAffiliation>>>;
   privacy?: InputMaybe<RepositoryPrivacy>;
+  visibility?: InputMaybe<RepositoryVisibility>;
 };
 
 
@@ -29222,6 +29227,7 @@ export type UserWatchingArgs = {
   orderBy?: InputMaybe<RepositoryOrder>;
   ownerAffiliations?: InputMaybe<Array<InputMaybe<RepositoryAffiliation>>>;
   privacy?: InputMaybe<RepositoryPrivacy>;
+  visibility?: InputMaybe<RepositoryVisibility>;
 };
 
 /** The possible durations that a user can be blocked for. */
