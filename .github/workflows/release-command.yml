@@ -14,6 +14,9 @@ jobs:
     if: ${{ github.event.sender.login == 'luxass' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.github.payload.pull_request.head.ref }}
+
       - name: Print args
         run: |
           echo "args: ${{ toJson(github.event.client_payload.slash_command.args) }}"
