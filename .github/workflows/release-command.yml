@@ -40,15 +40,17 @@ jobs:
               -H "X-GitHub-Api-Version: 2022-11-28" \
               /repos/${{ github.repository }}/issues/${{ github.event.client_payload.github.payload.issue.number }}/comments \
               -f body=$'Hi, @luxass.\nYou can\'t release this pull request, because you haven\'t approved it yet.\nplease approve it and try again.'
-            echo "missing review"
-            exit 1
+
+            echo "reviewed=false" >> $GITHUB_OUTPUT
+          else
+            echo "reviewed=true" >> $GITHUB_OUTPUT
           fi
 
-          echo "reviews=true" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: get the release version
+        if: steps.reviews.outputs.reviewed == 'true'
         id: vars
         run: |
           version=${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
@@ -67,27 +69,21 @@ jobs:
           PACKAGE_INFO=$(npm show "github-schema" versions --json)
 
           if echo "$PACKAGE_INFO" | grep -q "$PACKAGE_VERSION"; then
-              gh api \
-                -X POST \
-                -H "Accept: application/vnd.github+json" \
-                -H "X-GitHub-Api-Version: 2022-11-28" \
-                /repos/${{ github.repository }}/issues/${{ github.event.client_payload.github.payload.issue.number }}/comments \
-                -f body=$'Hi, @luxass.\nThe version you tried to release, already exists on npm.\nplease choose a different version.'
-            echo "version already exists"
-            exit 1
+            BODY=$'Hi, @luxass.\n\nThe version you tried to release, already exists on npm. Please choose a different version and try again.'
+            echo "already_exists=true" >> $GITHUB_OUTPUT
+          else
+            BODY=$'Hi, @luxass.\n\nI'm going to try and create a release for version ${{ steps.vars.outputs.version }}.'
+            echo "already_exists=false" >> $GITHUB_OUTPUT
           fi
+
+          gh api \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ github.repository }}/issues/${{ github.event.client_payload.github.payload.issue.number }}/comments \
+            -f body="$BODY"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: create comment
-        uses: peter-evans/create-or-update-comment@v3
-        if: steps.npm.outputs.already_exists != 'true'
-        with:
-          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
-          body: |
-            Hello @${{ github.event.client_payload.github.actor }}!
-
-            I'm going to create a release for version ${{ steps.vars.outputs.version }}.
 
       # - name: merge pr
       #   if: steps.npm.outputs.already_exists != 'true'
