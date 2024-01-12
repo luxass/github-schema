@@ -1,0 +1,23 @@
+name: Slash Command Dispatch
+
+on:
+  pull_request_comment:
+    types: [created]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Slash Commands
+        uses: peter-evans/slash-command-dispatch@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          commands: |
+            release
+          permission: none
+          issue-type: pull_request
+
+
+
