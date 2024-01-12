@@ -1,7 +1,7 @@
 name: Slash Command Dispatch
 
 on:
-  issue_comment: 
+  issue_comment:
     types: [created]
 
 jobs:
@@ -17,7 +17,6 @@ jobs:
           commands: |
             release
           permission: none
-          issue-type: pull_request
 
 
 
