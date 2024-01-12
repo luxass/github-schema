@@ -1,4 +1,5 @@
-name: Hello World Command
+name: Release Command
+
 on:
   repository_dispatch:
     types: [release-command]
@@ -10,6 +11,30 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - name: Get the release version
+        id: vars
+        run: |
+          version=${{ github.event.client_payload.slash_command.args.named.version }}
+          # if version is missing just error
+          if [[ -z "$version" ]]; then
+            echo "missing a version"
+            exit 1
+          fi
+
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Check if the version already exists on NPM
+        id: npm
+        run: |
+          PACKAGE_VERSION=${{ steps.vars.outputs.version }}
+
+          PACKAGE_INFO=$(npm show "github-schema" versions --json)
+
+          if echo "$PACKAGE_INFO" | grep -q "$PACKAGE_VERSION"; then
+            echo "version already exists"
+            exit 1
+          fi
+
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v3
         with:
@@ -18,10 +43,6 @@ jobs:
             hooray
 
 
-      - name: Create URL to the run output
-        id: vars
-        run: echo "run-url=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> $GITHUB_OUTPUT
-
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v3
         with:
@@ -29,6 +50,4 @@ jobs:
           body: |
             Hello @${{ github.event.client_payload.github.actor }}!
 
-            [Click here to see the command run output][1]
-
-            [1]: ${{ steps.vars.outputs.run-url }}
+            I'm going to create a release for version ${{ steps.vars.outputs.version }}.

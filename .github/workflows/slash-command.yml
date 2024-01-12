@@ -16,7 +16,10 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           commands: |
             release
-          permission: none
+          static-args: |
+            version
+          issue-type: pull-request
+          permission: admin
 
 
 
