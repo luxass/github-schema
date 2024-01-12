@@ -1,0 +1,53 @@
+name: Release Command
+
+on:
+  repository_dispatch:
+    types: [release-command]
+
+jobs:
+  make-release:
+    permissions:
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the release version
+        id: vars
+        run: |
+          version=${{ github.event.client_payload.slash_command.args.named.version }}
+          # if version is missing just error
+          if [[ -z "$version" ]]; then
+            echo "missing a version"
+            exit 1
+          fi
+
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Check if the version already exists on NPM
+        id: npm
+        run: |
+          PACKAGE_VERSION=${{ steps.vars.outputs.version }}
+
+          PACKAGE_INFO=$(npm show "github-schema" versions --json)
+
+          if echo "$PACKAGE_INFO" | grep -q "$PACKAGE_VERSION"; then
+            echo "version already exists"
+            exit 1
+          fi
+
+      - name: Add reaction
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          reactions: |
+            hooray
+
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+          body: |
+            Hello @${{ github.event.client_payload.github.actor }}!
+
+            I'm going to create a release for version ${{ steps.vars.outputs.version }}.
