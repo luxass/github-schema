@@ -39,9 +39,6 @@ jobs:
             echo "already_exists=true" >> $GITHUB_OUTPUT
           fi
 
-          VERSIONS_LIST=$(echo "$PACKAGE_INFO" | jq -r '.[] | "* " + .')
-          echo "versions=$VERSIONS_LIST" >> $GITHUB_OUTPUT
-
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v3
         if: steps.npm.outputs.already_exists == 'true'
@@ -51,9 +48,6 @@ jobs:
             Hello @${{ github.event.client_payload.github.actor }}!
 
             The version ${{ steps.vars.outputs.version }} already exists on NPM. Please choose a different version.
-
-            The available versions are:
-            ${{ steps.npm.outputs.versions }}
 
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v3
