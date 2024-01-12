@@ -9,7 +9,9 @@ jobs:
     permissions:
       issues: write
       pull-requests: write
+      contents: write
     runs-on: ubuntu-latest
+    if: github.event.sender == 'luxass'
     steps:
       - uses: actions/checkout@v4
 
