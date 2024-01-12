@@ -77,7 +77,8 @@ jobs:
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          npx bumpp ${{ steps.vars.outputs.version }} --no-tag --yes
+          npm version ${{ steps.vars.outputs.version }} --no-git-tag-version
+          git commit -am "chore: release v${{ steps.vars.outputs.version }}"
 
       - name: Merge Pull Request & Create Tag
         run: |
