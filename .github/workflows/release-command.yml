@@ -39,7 +39,7 @@ jobs:
             echo "already_exists=true" >> $GITHUB_OUTPUT
           fi
 
-          VERSIONS_LIST=$(echo "$PACKAGE_INFO" | jq -r '.[] | "* " + .')
+          VERSIONS_LIST=$(echo "$PACKAGE_INFO" | jq -r '.[] | "* " + .' | tr '\n' '\\n')
           echo "versions=$VERSIONS_LIST" >> $GITHUB_ENV
 
       - name: Create comment
@@ -53,7 +53,7 @@ jobs:
             The version ${{ steps.vars.outputs.version }} already exists on NPM. Please choose a different version.
 
             The available versions are:
-              ${{ env.VERSIONS }}
+            ${{ env.VERSIONS }}
 
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v3
