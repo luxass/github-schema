@@ -33,6 +33,8 @@ jobs:
               --jq 'if any(.[]; .state == "APPROVED" and .user.login == "luxass"
             ) then true else false end')
 
+          echo "reviews=$REVIEWS"
+
           if [[ $REVIEWS != "true" ]]; then
             gh api \
               -X POST \
@@ -62,6 +64,7 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: check if the version already exists on NPM
+        if: steps.reviews.outputs.reviewed == 'true'
         id: npm
         run: |
           PACKAGE_VERSION=${{ steps.vars.outputs.version }}
