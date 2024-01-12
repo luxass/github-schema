@@ -11,15 +11,16 @@ jobs:
       pull-requests: write
       contents: write
     runs-on: ubuntu-latest
-    if: github.event.sender == 'luxass'
+    if: ${{ github.event.sender.login == 'luxass' }}
     steps:
       - uses: actions/checkout@v4
-
       - name: Print args
         run: |
           echo "args: ${{ toJson(github.event.client_payload.slash_command.args) }}"
           echo "named: ${{ toJson(github.event.client_payload.slash_command.args.named) }}"
           echo "unnamed: ${{ toJson(github.event.client_payload.slash_command.args.unnamed) }}"
+
+          echo "sender: ${{ github.event.sender.login }}"
 
       - name: Get the release version
         id: vars
