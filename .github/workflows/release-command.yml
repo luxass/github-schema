@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Print args
+      - name: print args
         run: |
           echo "args: ${{ toJson(github.event.client_payload.slash_command.args) }}"
           echo "named: ${{ toJson(github.event.client_payload.slash_command.args.named) }}"
@@ -23,7 +23,30 @@ jobs:
 
           echo "sender: ${{ github.event.sender.login }}"
 
-      - name: Get the release version
+      - name: ensure the reviews are met
+        id: reviews
+        run: |
+          REVIEWS=$(gh api \
+              -H "Accept: application/vnd.github.full+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              /repos/${{ github.repository }}/pulls/${{ github.event.client_payload.github.payload.issue.number }}/reviews \
+              --jq 'if any(.[]; .state == "APPROVED" and .user.login == "luxass"
+            ) then true else false end')
+
+          if [[ $REVIEWS != "true" ]]; then
+            gh api \
+              -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              /repos/${{ github.repository }}/issues/${{ github.event.client_payload.github.payload.issue.number }}/comments \
+              -f body=$'Hi, @luxass.\nYou can\'t release this pull request, because you haven\'t approved it yet.\nplease approve it and try again.'
+            echo "missing review"
+            exit 1
+          fi
+
+          echo "reviews=true" >> $GITHUB_OUTPUT
+
+      - name: get the release version
         id: vars
         run: |
           version=${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
@@ -34,7 +57,7 @@ jobs:
 
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Check if the version already exists on NPM
+      - name: check if the version already exists on NPM
         id: npm
         run: |
           PACKAGE_VERSION=${{ steps.vars.outputs.version }}
@@ -42,28 +65,17 @@ jobs:
           PACKAGE_INFO=$(npm show "github-schema" versions --json)
 
           if echo "$PACKAGE_INFO" | grep -q "$PACKAGE_VERSION"; then
-            echo "already_exists=true" >> $GITHUB_OUTPUT
+              gh api \
+                -X POST \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                /repos/${{ github.repository }}/issues/${{ github.event.client_payload.github.payload.issue.number }}/comments \
+                -f body=$'Hi, @luxass.\nThe version you tried to release, already exists on npm.\nplease choose a different version.'
+            echo "version already exists"
+            exit 1
           fi
 
-      - name: create comment if version already exists
-        uses: peter-evans/create-or-update-comment@v3
-        if: steps.npm.outputs.already_exists == 'true'
-        with:
-          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
-          body: |
-            Hello @${{ github.event.client_payload.github.actor }}!
-
-            The version ${{ steps.vars.outputs.version }} already exists on NPM. Please choose a different version.
-
-      # - name: Add reaction
-      #   uses: peter-evans/create-or-update-comment@v3
-      #   if: steps.npm.outputs.already_exists != 'true'
-      #   with:
-      #     comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
-      #     reactions: |
-      #       hooray
-
-      - name: create comment if version does not exist
+      - name: create comment
         uses: peter-evans/create-or-update-comment@v3
         if: steps.npm.outputs.already_exists != 'true'
         with:
@@ -73,34 +85,34 @@ jobs:
 
             I'm going to create a release for version ${{ steps.vars.outputs.version }}.
 
-      - name: merge pr
-        if: steps.npm.outputs.already_exists != 'true'
-        id: merge
-        run: |
-          PR_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
-          VERSION=${{ steps.vars.outputs.version }}
+      # - name: merge pr
+      #   if: steps.npm.outputs.already_exists != 'true'
+      #   id: merge
+      #   run: |
+      #     PR_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
+      #     VERSION=${{ steps.vars.outputs.version }}
 
-          echo "PR_NUMBER=$PR_NUMBER"
-          echo "VERSION=$VERSION"
+      #     echo "PR_NUMBER=$PR_NUMBER"
+      #     echo "VERSION=$VERSION"
 
-          OUTPUT=$(gh api \
-            --method PUT \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/${{ github.repository }}/pulls/${{ github.event.client_payload.github.payload.issue.number }}/merge \
-            -f commit_title="feat: updated github graphql schema" \
-            -f merge_method=squash)
+      #     OUTPUT=$(gh api \
+      #       --method PUT \
+      #       -H "Accept: application/vnd.github+json" \
+      #       -H "X-GitHub-Api-Version: 2022-11-28" \
+      #       /repos/${{ github.repository }}/pulls/${{ github.event.client_payload.github.payload.issue.number }}/merge \
+      #       -f commit_title="feat: updated github graphql schema" \
+      #       -f merge_method=squash)
 
-          MERGED=$(echo "$OUTPUT" | jq -r '.merged')
+      #     MERGED=$(echo "$OUTPUT" | jq -r '.merged')
 
-          echo "merged=$MERGED" >> $GITHUB_OUTPUT
+      #     echo "merged=$MERGED" >> $GITHUB_OUTPUT
 
-      - name: bump version
-        if: steps.npm.outputs.already_exists != 'true' && steps.merge.outputs.merged == 'true'
-        run: |
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          npx bumpp --yes ${{ steps.vars.outputs.version }}
+      # - name: bump version
+      #   if: steps.npm.outputs.already_exists != 'true' && steps.merge.outputs.merged == 'true'
+      #   run: |
+      #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      #     git config --global user.name "github-actions[bot]"
+      #     npx bumpp --yes ${{ steps.vars.outputs.version }}
 
 
 
