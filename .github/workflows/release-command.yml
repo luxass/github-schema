@@ -53,7 +53,7 @@ jobs:
             The version ${{ steps.vars.outputs.version }} already exists on NPM. Please choose a different version.
 
             The available versions are:
-            ${{ env.VERSIONS }}
+            ${{ env.versions }}
 
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v3
