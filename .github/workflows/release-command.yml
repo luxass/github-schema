@@ -36,12 +36,28 @@ jobs:
           PACKAGE_INFO=$(npm show "github-schema" versions --json)
 
           if echo "$PACKAGE_INFO" | grep -q "$PACKAGE_VERSION"; then
-            echo "version already exists"
-            exit 1
+            echo "already_exists=true" >> $GITHUB_OUTPUT
           fi
+
+          VERSIONS_LIST=$(echo "$PACKAGE_INFO" | jq -r '.[] | "* " + .')
+          echo "versions=$VERSIONS_LIST" >> $GITHUB_ENV
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v3
+        if: steps.npm.outputs.already_exists == 'true'
+        with:
+          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+          body: |
+            Hello @${{ github.event.client_payload.github.actor }}!
+
+            The version ${{ steps.vars.outputs.version }} already exists on NPM. Please choose a different version.
+
+            The available versions are:
+              ${{ env.VERSIONS }}
 
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v3
+        if: steps.npm.outputs.already_exists != 'true'
         with:
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reactions: |
@@ -49,6 +65,7 @@ jobs:
 
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v3
+        if: steps.npm.outputs.already_exists != 'true'
         with:
           issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
           body: |
