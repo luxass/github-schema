@@ -88,31 +88,33 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: merge pr
-      #   if: steps.npm.outputs.already_exists != 'true'
-      #   id: merge
-      #   run: |
-      #     PR_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
-      #     VERSION=${{ steps.vars.outputs.version }}
+      - name: merge pr
+        if: steps.reviews.outputs.reviewed == 'true' && steps.npm.outputs.already_exists != 'true'
+        id: merge
+        run: |
+          PR_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
+          VERSION=${{ steps.vars.outputs.version }}
 
-      #     echo "PR_NUMBER=$PR_NUMBER"
-      #     echo "VERSION=$VERSION"
+          echo "PR_NUMBER=$PR_NUMBER"
+          echo "VERSION=$VERSION"
 
-      #     OUTPUT=$(gh api \
-      #       --method PUT \
-      #       -H "Accept: application/vnd.github+json" \
-      #       -H "X-GitHub-Api-Version: 2022-11-28" \
-      #       /repos/${{ github.repository }}/pulls/${{ github.event.client_payload.github.payload.issue.number }}/merge \
-      #       -f commit_title="feat: updated github graphql schema" \
-      #       -f merge_method=squash)
+          OUTPUT=$(gh api \
+            --method PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ github.repository }}/pulls/${{ github.event.client_payload.github.payload.issue.number }}/merge \
+            -f commit_title="feat: updated github graphql schema" \
+            -f merge_method=squash)
 
-      #     MERGED=$(echo "$OUTPUT" | jq -r '.merged')
+          MERGED=$(echo "$OUTPUT" | jq -r '.merged')
 
-      #     echo "merged=$MERGED" >> $GITHUB_OUTPUT
+          echo "merged=$MERGED" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: bump version
-      #   if: steps.npm.outputs.already_exists != 'true' && steps.merge.outputs.merged == 'true'
-      #   run: |
-      #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      #     git config --global user.name "github-actions[bot]"
-      #     npx bumpp --yes ${{ steps.vars.outputs.version }}
+      - name: bump version
+        if: steps.npm.outputs.already_exists != 'true' && steps.merge.outputs.merged == 'true'
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          npx bumpp --yes ${{ steps.vars.outputs.version }}
