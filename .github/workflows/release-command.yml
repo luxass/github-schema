@@ -5,6 +5,9 @@ on:
 
 jobs:
   make-release:
+    permissions:
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Add reaction
