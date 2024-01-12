@@ -66,3 +66,19 @@ jobs:
             Hello @${{ github.event.client_payload.github.actor }}!
 
             I'm going to create a release for version ${{ steps.vars.outputs.version }}.
+
+      - name: bump version and commit
+        if: steps.npm.outputs.already_exists != 'true'
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          npm version ${{ steps.vars.outputs.version }} --no-git-tag-version
+          git commit -am "chore: release  v${{ steps.vars.outputs.version }}"
+
+      - name: Merge Pull Request & Create Tag
+        run: |
+          PR_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
+          VERSION=${{ steps.vars.outputs.version }}
+
+          echo "PR_NUMBER=$PR_NUMBER"
+          echo "VERSION=$VERSION"
