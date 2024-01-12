@@ -50,7 +50,6 @@ jobs:
           reactions: |
             hooray
 
-
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v3
         with:
