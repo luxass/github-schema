@@ -75,7 +75,7 @@ jobs:
             BODY=$'Hi, @luxass.\n\nThe version you tried to release, already exists on npm. Please choose a different version and try again.'
             echo "already_exists=true" >> $GITHUB_OUTPUT
           else
-            BODY=$'Hi, @luxass.\n\nI'm going to try and create a release for version ${{ steps.vars.outputs.version }}.'
+            BODY=$'Hi, @luxass.\n\nI\'m going to try and create a release for version ${{ steps.vars.outputs.version }}.'
             echo "already_exists=false" >> $GITHUB_OUTPUT
           fi
 
