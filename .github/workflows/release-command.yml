@@ -13,9 +13,9 @@ jobs:
     steps:
       - name: Print args
         run: |
-          echo "args: ${{ github.event.client_payload.slash_command.args }}"
-          echo "named: ${{ github.event.client_payload.slash_command.args.named }}"
-          echo "unnamed: ${{ github.event.client_payload.slash_command.args.unnamed }}"
+          echo "args: ${{ toJson(github.event.client_payload.slash_command.args) }}"
+          echo "named: ${{ toJson(github.event.client_payload.slash_command.args.named) }}"
+          echo "unnamed: ${{ toJson(github.event.client_payload.slash_command.args.unnamed) }}"
 
       - name: Get the release version
         id: vars
