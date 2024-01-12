@@ -11,14 +11,22 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - name: Print args
+        run: |
+          echo "args: ${{ github.event.client_payload.slash_command.args }}"
+          echo "named: ${{ github.event.client_payload.slash_command.args.named }}"
+          echo "unnamed: ${{ github.event.client_payload.slash_command.args.unnamed }}"
+
       - name: Get the release version
         id: vars
         run: |
           version=${{ github.event.client_payload.slash_command.args.named.version }}
-          # if version is missing just error
           if [[ -z "$version" ]]; then
-            echo "missing a version"
-            exit 1
+            version=${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
+            if [[ -z "$version" ]]; then
+              echo "missing a version"
+              exit 1
+            fi
           fi
 
           echo "version=$version" >> $GITHUB_OUTPUT
