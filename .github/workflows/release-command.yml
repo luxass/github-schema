@@ -20,13 +20,10 @@ jobs:
       - name: Get the release version
         id: vars
         run: |
-          version=${{ github.event.client_payload.slash_command.args.named.version }}
+          version=${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
           if [[ -z "$version" ]]; then
-            version=${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
-            if [[ -z "$version" ]]; then
-              echo "missing a version"
-              exit 1
-            fi
+            echo "missing a version"
+            exit 1
           fi
 
           echo "version=$version" >> $GITHUB_OUTPUT
