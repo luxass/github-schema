@@ -121,4 +121,3 @@ jobs:
           npx bumpp --yes ${{ steps.vars.outputs.version }} --no-tag
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
