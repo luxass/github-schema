@@ -20,6 +20,3 @@ jobs:
             version
           issue-type: pull-request
           permission: admin
-
-
-
