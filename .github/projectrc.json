@@ -1,7 +1,6 @@
 {
   "$schema": "https://projectrc.luxass.dev/schema",
-  "extras": {
-    "npm": true
-  },
-  "readme": true
+  "npm": true,
+  "readme": true,
+  "version": true
 }
