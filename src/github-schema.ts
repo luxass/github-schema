@@ -14194,6 +14194,11 @@ export type Organization = Actor & AnnouncementBanner & MemberStatusable & Node 
    * either curated or that have been selected automatically based on popularity.
    */
   itemShowcase: ProfileItemShowcase;
+  /**
+   * Calculate how much each sponsor has ever paid total to this maintainer via
+   * GitHub Sponsors. Does not include sponsorships paid via Patreon.
+   */
+  lifetimeReceivedSponsorshipValues: SponsorAndLifetimeValueConnection;
   /** The organization's public profile location. */
   location?: Maybe<Scalars['String']['output']>;
   /** The organization's login name. */
@@ -14393,6 +14398,16 @@ export type OrganizationIpAllowListEntriesArgs = {
 /** An account on GitHub, with one or more owners, that has repositories, members and teams. */
 export type OrganizationIsSponsoredByArgs = {
   accountLogin: Scalars['String']['input'];
+};
+
+
+/** An account on GitHub, with one or more owners, that has repositories, members and teams. */
+export type OrganizationLifetimeReceivedSponsorshipValuesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<SponsorAndLifetimeValueOrder>;
 };
 
 
@@ -23806,6 +23821,61 @@ export type SocialAccountProvider =
 /** Entities that can sponsor others via GitHub Sponsors */
 export type Sponsor = Organization | User;
 
+/**
+ * A GitHub account and the total amount in USD they've paid for sponsorships to a
+ * particular maintainer. Does not include payments made via Patreon.
+ */
+export type SponsorAndLifetimeValue = {
+  __typename?: 'SponsorAndLifetimeValue';
+  /** The amount in cents. */
+  amountInCents: Scalars['Int']['output'];
+  /** The amount in USD, formatted as a string. */
+  formattedAmount: Scalars['String']['output'];
+  /** The sponsor's GitHub account. */
+  sponsor: Organization | User;
+  /** The maintainer's GitHub account. */
+  sponsorable: Organization | User;
+};
+
+/** The connection type for SponsorAndLifetimeValue. */
+export type SponsorAndLifetimeValueConnection = {
+  __typename?: 'SponsorAndLifetimeValueConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<Maybe<SponsorAndLifetimeValueEdge>>>;
+  /** A list of nodes. */
+  nodes?: Maybe<Array<Maybe<SponsorAndLifetimeValue>>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** An edge in a connection. */
+export type SponsorAndLifetimeValueEdge = {
+  __typename?: 'SponsorAndLifetimeValueEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node?: Maybe<SponsorAndLifetimeValue>;
+};
+
+/** Ordering options for connections to get sponsor entities and associated USD amounts for GitHub Sponsors. */
+export type SponsorAndLifetimeValueOrder = {
+  /** The ordering direction. */
+  direction: OrderDirection;
+  /** The field to order results by. */
+  field: SponsorAndLifetimeValueOrderField;
+};
+
+/** Properties by which sponsor and lifetime value connections can be ordered. */
+export type SponsorAndLifetimeValueOrderField =
+  /** Order results by how much money the sponsor has paid in total. */
+  | 'LIFETIME_VALUE'
+  /** Order results by the sponsor's login (username). */
+  | 'SPONSOR_LOGIN'
+  /** Order results by the sponsor's relevance to the viewer. */
+  | 'SPONSOR_RELEVANCE';
+
 /** The connection type for Sponsor. */
 export type SponsorConnection = {
   __typename?: 'SponsorConnection';
@@ -23853,6 +23923,11 @@ export type Sponsorable = {
   isSponsoredBy: Scalars['Boolean']['output'];
   /** True if the viewer is sponsored by this user/organization. */
   isSponsoringViewer: Scalars['Boolean']['output'];
+  /**
+   * Calculate how much each sponsor has ever paid total to this maintainer via
+   * GitHub Sponsors. Does not include sponsorships paid via Patreon.
+   */
+  lifetimeReceivedSponsorshipValues: SponsorAndLifetimeValueConnection;
   /** The estimated monthly GitHub Sponsors income for this user/organization in cents (USD). */
   monthlyEstimatedSponsorsIncomeInCents: Scalars['Int']['output'];
   /** List of users and organizations this entity is sponsoring. */
@@ -23889,6 +23964,16 @@ export type Sponsorable = {
 /** Entities that can sponsor or be sponsored through GitHub Sponsors. */
 export type SponsorableIsSponsoredByArgs = {
   accountLogin: Scalars['String']['input'];
+};
+
+
+/** Entities that can sponsor or be sponsored through GitHub Sponsors. */
+export type SponsorableLifetimeReceivedSponsorshipValuesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<SponsorAndLifetimeValueOrder>;
 };
 
 
@@ -28649,6 +28734,11 @@ export type User = Actor & Node & PackageOwner & ProfileOwner & ProjectOwner & P
    * either curated or that have been selected automatically based on popularity.
    */
   itemShowcase: ProfileItemShowcase;
+  /**
+   * Calculate how much each sponsor has ever paid total to this maintainer via
+   * GitHub Sponsors. Does not include sponsorships paid via Patreon.
+   */
+  lifetimeReceivedSponsorshipValues: SponsorAndLifetimeValueConnection;
   /** A user-curated list of repositories */
   lists: UserListConnection;
   /** The user's public profile location. */
@@ -28888,6 +28978,16 @@ export type UserIssuesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<IssueOrder>;
   states?: InputMaybe<Array<IssueState>>;
+};
+
+
+/** A user is an individual's account on GitHub that owns repositories and can make new content. */
+export type UserLifetimeReceivedSponsorshipValuesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<SponsorAndLifetimeValueOrder>;
 };
 
 
