@@ -33973,6 +33973,36 @@ enum ProjectV2WorkflowsOrderField {
 }
 
 """
+A property that must match
+"""
+type PropertyTargetDefinition {
+  """
+  The name of the property
+  """
+  name: String!
+
+  """
+  The values to match for
+  """
+  propertyValues: [String!]!
+}
+
+"""
+A property that must match
+"""
+input PropertyTargetDefinitionInput {
+  """
+  The name of the property
+  """
+  name: String!
+
+  """
+  The values to match for
+  """
+  propertyValues: [String!]!
+}
+
+"""
 A user's public key.
 """
 type PublicKey implements Node {
@@ -34395,6 +34425,11 @@ type PullRequest implements Assignable & Closable & Comment & Labelable & Lockab
   isDraft: Boolean!
 
   """
+  Indicates whether the pull request is in a merge queue
+  """
+  isInMergeQueue: Boolean!
+
+  """
   Is this pull request read by the viewer
   """
   isReadByViewer: Boolean
@@ -34503,6 +34538,11 @@ type PullRequest implements Assignable & Closable & Comment & Labelable & Lockab
   The commit that was created when this pull request was merged.
   """
   mergeCommit: Commit
+
+  """
+  The merge queue for the pull request's base branch
+  """
+  mergeQueue: MergeQueue
 
   """
   The merge queue entry of the pull request in the base branch's merge queue
@@ -44765,6 +44805,36 @@ enum RepositoryPrivacy {
 }
 
 """
+Parameters to be used for the repository_property condition
+"""
+type RepositoryPropertyConditionTarget {
+  """
+  Array of repository properties that must not match.
+  """
+  exclude: [PropertyTargetDefinition!]!
+
+  """
+  Array of repository properties that must match
+  """
+  include: [PropertyTargetDefinition!]!
+}
+
+"""
+Parameters to be used for the repository_property condition
+"""
+input RepositoryPropertyConditionTargetInput {
+  """
+  Array of repository properties that must not match.
+  """
+  exclude: [PropertyTargetDefinitionInput!]!
+
+  """
+  Array of repository properties that must match
+  """
+  include: [PropertyTargetDefinitionInput!]!
+}
+
+"""
 A repository rule.
 """
 type RepositoryRule implements Node {
@@ -44807,6 +44877,11 @@ type RepositoryRuleConditions {
   Configuration for the repository_name condition
   """
   repositoryName: RepositoryNameConditionTarget
+
+  """
+  Configuration for the repository_property condition
+  """
+  repositoryProperty: RepositoryPropertyConditionTarget
 }
 
 """
@@ -44827,6 +44902,11 @@ input RepositoryRuleConditionsInput {
   Configuration for the repository_name condition
   """
   repositoryName: RepositoryNameConditionTargetInput
+
+  """
+  Configuration for the repository_property condition
+  """
+  repositoryProperty: RepositoryPropertyConditionTargetInput
 }
 
 """
