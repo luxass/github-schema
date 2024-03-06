@@ -9571,7 +9571,7 @@ export type LinkedBranch = Node & {
   ref?: Maybe<Ref>;
 };
 
-/** The connection type for LinkedBranch. */
+/** A list of branches linked to an issue. */
 export type LinkedBranchConnection = {
   __typename?: 'LinkedBranchConnection';
   /** A list of edges. */
@@ -9679,7 +9679,7 @@ export type MannequinAvatarUrlArgs = {
   size?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** The connection type for Mannequin. */
+/** A list of mannequins. */
 export type MannequinConnection = {
   __typename?: 'MannequinConnection';
   /** A list of edges. */
@@ -14951,7 +14951,7 @@ export type OrganizationInvitationType =
   /** The invitation was to an existing user. */
   | 'USER';
 
-/** The connection type for User. */
+/** A list of users who belong to the organization. */
 export type OrganizationMemberConnection = {
   __typename?: 'OrganizationMemberConnection';
   /** A list of edges. */
@@ -16493,6 +16493,8 @@ export type ProjectV2Item = Node & {
   fieldValueByName?: Maybe<ProjectV2ItemFieldValue>;
   /** The field values that are set on the item. */
   fieldValues: ProjectV2ItemFieldValueConnection;
+  /** Identifies the primary key from the database as a BigInt. */
+  fullDatabaseId?: Maybe<Scalars['BigInt']['output']>;
   /** The Node ID of the ProjectV2Item object */
   id: Scalars['ID']['output'];
   /** Whether the item is archived. */
@@ -22162,7 +22164,7 @@ export type RepositoryMigration = Migration & Node & {
   warningsCount: Scalars['Int']['output'];
 };
 
-/** The connection type for RepositoryMigration. */
+/** A list of migrations. */
 export type RepositoryMigrationConnection = {
   __typename?: 'RepositoryMigrationConnection';
   /** A list of edges. */
@@ -22483,8 +22485,6 @@ export type RepositoryRuleType =
    * request and required workflow checks to pass before they can be merged.
    */
   | 'REQUIRED_WORKFLOW_STATUS_CHECKS'
-  /** Commits pushed to matching refs must have verified signatures. */
-  | 'RULESET_REQUIRED_SIGNATURES'
   /** Secret scanning */
   | 'SECRET_SCANNING'
   /** Tag */
@@ -23970,7 +23970,7 @@ export type SponsorAndLifetimeValueOrderField =
   /** Order results by the sponsor's relevance to the viewer. */
   | 'SPONSOR_RELEVANCE';
 
-/** The connection type for Sponsor. */
+/** A list of users and organizations sponsoring someone via GitHub Sponsors. */
 export type SponsorConnection = {
   __typename?: 'SponsorConnection';
   /** A list of edges. */
@@ -25084,7 +25084,7 @@ export type Sponsorship = Node & {
   tierSelectedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
-/** The connection type for Sponsorship. */
+/** A list of sponsorships either from the subject or received by the subject. */
 export type SponsorshipConnection = {
   __typename?: 'SponsorshipConnection';
   /** A list of edges. */
@@ -29457,7 +29457,7 @@ export type UserBlockedEvent = Node & {
   subject?: Maybe<User>;
 };
 
-/** The connection type for User. */
+/** A list of users. */
 export type UserConnection = {
   __typename?: 'UserConnection';
   /** A list of edges. */
