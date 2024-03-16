@@ -8,7 +8,7 @@
     "email": "lucasnrgaard@gmail.com",
     "url": "https://luxass.dev"
   },
-  "packageManager": "pnpm@8.14.1",
+  "packageManager": "pnpm@8.15.4",
   "license": "MIT",
   "homepage": "https://github.com/luxass/github-schema",
   "repository": {
@@ -92,14 +92,14 @@
     "graphql-tag": "^2.12.6"
   },
   "devDependencies": {
-    "@graphql-codegen/add": "^5.0.0",
-    "@graphql-codegen/cli": "^5.0.0",
-    "@graphql-codegen/typescript": "^4.0.1",
-    "@luxass/eslint-config": "^4.2.1",
+    "@graphql-codegen/add": "^5.0.2",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.6",
+    "@luxass/eslint-config": "^4.2.10",
     "@types/node": "^18.19.0",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-format": "^0.1.0",
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.3"
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.2"
   }
 }
