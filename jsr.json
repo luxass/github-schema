@@ -11,7 +11,11 @@
     "tsup.config.ts",
     "eslint.config.js",
     "pnpm-lock.yaml",
-    "codegen.ts"
+    "codegen.ts",
+    ".env.example",
+    ".nvmrc",
+    ".github",
+    "scripts"
   ],
   "include": [
     "github-schema.graphql"
