@@ -14,8 +14,8 @@
     "codegen.ts",
     ".env.example",
     ".nvmrc",
-    ".github",
-    "scripts"
+    ".github/**",
+    "scripts/**"
   ],
   "include": [
     "github-schema.graphql"
