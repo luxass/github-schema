@@ -1,0 +1,19 @@
+{
+  "name": "@luxass/github-schema",
+  "version": "1.7.5",
+  "exports": {
+    ".": "./src/index.ts",
+    "./raw": "./src/raw.ts",
+    "./github-schema": "./src/github-schema.ts",
+    "./schema": "./src/github-schema.ts"
+  },
+  "exclude": [
+    "tsup.config.ts",
+    "eslint.config.js",
+    "pnpm-lock.yaml",
+    "codegen.ts"
+  ],
+  "include": [
+    "github-schema.graphql"
+  ]
+}
