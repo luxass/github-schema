@@ -23,8 +23,8 @@ devDependencies:
     specifier: ^4.0.6
     version: 4.0.6(graphql@16.8.1)
   '@luxass/eslint-config':
-    specifier: ^4.3.2
-    version: 4.3.2(@vue/compiler-sfc@3.4.21)(eslint-plugin-format@0.1.0)(eslint@9.0.0)(typescript@5.4.4)
+    specifier: ^4.3.3
+    version: 4.3.4(@vue/compiler-sfc@3.4.21)(eslint-plugin-format@0.1.0)(eslint@9.0.0)(typescript@5.4.4)
   '@types/node':
     specifier: ^18.19.0
     version: 18.19.30
@@ -1634,8 +1634,8 @@ packages:
     resolution: {integrity: sha512-gbkePEBupNydxCelHCESvFSFM8XPh1Zs/OAVRW/rKpEqPAl5PbOM90Si8mv9bvnR53uPD2s/FiRxdvSejpRJew==}
     dev: true
 
-  /@luxass/eslint-config@4.3.2(@vue/compiler-sfc@3.4.21)(eslint-plugin-format@0.1.0)(eslint@9.0.0)(typescript@5.4.4):
-    resolution: {integrity: sha512-waEyUvTCLqmRwBZGTpwknKCmd2WtF8LDRTRtvMT1zTPmxvvG4EYj9vAgyWfTI/eNfQykwaCgBvhN3xSnZrAVgg==}
+  /@luxass/eslint-config@4.3.4(@vue/compiler-sfc@3.4.21)(eslint-plugin-format@0.1.0)(eslint@9.0.0)(typescript@5.4.4):
+    resolution: {integrity: sha512-xXdtSmlqUOwFN2oXlYS8vwix980e2y4FcqRjJiASdeQ9tJ0mCnlxl7ocbJmUGbfRxR4HbRXJt5yOaI6zEba+Iw==}
     engines: {node: '>=20'}
     peerDependencies:
       '@next/eslint-plugin-next': '>=14.0.0'
