@@ -1,17 +1,17 @@
-import type { CodegenConfig } from '@graphql-codegen/cli'
+import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config = {
-  schema: './github-schema.graphql',
+  schema: "./github-schema.graphql",
   overwrite: true,
   generates: {
-    './src/github-schema.ts': {
+    "./src/github-schema.ts": {
       plugins: [
         {
           add: {
-            content: '/* eslint-disable eslint-comments/no-unlimited-disable */\n/* eslint-disable */',
+            content: "/* eslint-disable eslint-comments/no-unlimited-disable */\n/* eslint-disable */",
           },
         },
-        'typescript',
+        "typescript",
       ],
       config: {
         enumsAsTypes: true,
@@ -19,6 +19,6 @@ const config = {
       },
     },
   },
-} satisfies CodegenConfig
+} satisfies CodegenConfig;
 
-export default config
+export default config;

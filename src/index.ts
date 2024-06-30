@@ -1,11 +1,11 @@
-import gqlTyped from 'graphql-tag'
+import gqlTyped from "graphql-tag";
 import {
   gql,
-} from './raw'
+} from "./raw";
 
 export {
   gqlTyped,
   gql,
-}
+};
 
-export type * from './github-schema'
+export type * from "./github-schema";

@@ -14,7 +14,7 @@ npm install github-schema
 ## 📚 Usage
 
 ```ts
-import { gql, gqlTyped } from 'github-schema'
+import { gql, gqlTyped } from "github-schema";
 
 // we are also exporting a ton of types from the graphql schema.
 
@@ -36,14 +36,14 @@ const REPOSITORY_QUERY = gql`
       }
     }
   }
-`
+`;
 ```
 
 > [!NOTE]
 > If you want to use `gql` with return type of `DocumentNode` you can do something like this:
 
 ```ts
-import { gqlTyped } from 'github-schema'
+import { gqlTyped } from "github-schema";
 ```
 
 ## Editor Autocompletion
