@@ -19,13 +19,13 @@ jobs:
       pull-requests: write
     if: github.repository_owner == 'luxass'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.1.7
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.0.2
         with:
           # we need node 20 to run, so we can use the --env-file flag
           node-version-file: .nvmrc
@@ -45,7 +45,7 @@ jobs:
         run: pnpm run lint --fix
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v6.1.0
         if: ${{ github.event.inputs.dry-run != 'true' }}
         with:
           commit-message: "feat: updated github graphql schema"
