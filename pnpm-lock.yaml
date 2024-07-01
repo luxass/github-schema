@@ -25,8 +25,8 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8(graphql@16.9.0)
       '@luxass/eslint-config':
-        specifier: ^4.7.0
-        version: 4.7.0(@vue/compiler-sfc@3.4.31)(eslint-plugin-format@0.1.2(eslint@9.6.0))(eslint@9.6.0)(typescript@5.5.2)
+        specifier: ^4.8.0
+        version: 4.8.0(@vue/compiler-sfc@3.4.31)(eslint-plugin-format@0.1.2(eslint@9.6.0))(eslint@9.6.0)(typescript@5.5.2)
       '@types/node':
         specifier: ^20.14.9
         version: 20.14.9
@@ -787,9 +787,9 @@ packages:
   '@kamilkisiela/fast-url-parser@1.1.4':
     resolution: {integrity: sha512-gbkePEBupNydxCelHCESvFSFM8XPh1Zs/OAVRW/rKpEqPAl5PbOM90Si8mv9bvnR53uPD2s/FiRxdvSejpRJew==}
 
-  '@luxass/eslint-config@4.7.0':
-    resolution: {integrity: sha512-imamrQ1HIzuAcio/R+Wtxt1sPR5PENfu7vLTS9nKW27pAYGFdGnkIPcktuuu9VT3SNxM457WbVAkh1zDxTIQaQ==}
-    engines: {node: '>=20'}
+  '@luxass/eslint-config@4.8.0':
+    resolution: {integrity: sha512-+n7WYCsuDhHF/ExA+TKOUjttBs4zaLfeR7hBrKvniwo9vC7w5jtvcST1k+Y7yKnjWTmO+Y37gpumREEfuQkAeg==}
+    engines: {node: '>=18'}
     peerDependencies:
       '@eslint-react/eslint-plugin': ^1.5.8
       '@unocss/eslint-plugin': '>=0.50.0'
@@ -1572,8 +1572,8 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-plugin-unicorn@53.0.0:
-    resolution: {integrity: sha512-kuTcNo9IwwUCfyHGwQFOK/HjJAYzbODHN3wP0PgqbW+jbXqpNWxNVpVhj2tO9SixBwuAdmal8rVcWKBxwFnGuw==}
+  eslint-plugin-unicorn@54.0.0:
+    resolution: {integrity: sha512-XxYLRiYtAWiAjPv6z4JREby1TAE2byBC7wlh0V4vWDCpccOSU1KovWV//jqPXF6bq3WKxqX9rdjoRQ1EhdmNdQ==}
     engines: {node: '>=18.18'}
     peerDependencies:
       eslint: '>=8.56.0'
@@ -2787,10 +2787,6 @@ packages:
 
   toml-eslint-parser@0.10.0:
     resolution: {integrity: sha512-khrZo4buq4qVmsGzS5yQjKe/WsFvV8fGfOjDQN0q4iy9FjRfPWRgTFrU8u1R2iu/SfWLhY9WnCi4Jhdrcbtg+g==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-
-  toml-eslint-parser@0.9.3:
-    resolution: {integrity: sha512-moYoCvkNUAPCxSW9jmHmRElhm4tVJpHL8ItC/+uYD0EpPSFXbck7yREz9tNdJVTSpHVod8+HoipcpbQ0oE6gsw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
   tr46@0.0.3:
@@ -4039,7 +4035,7 @@ snapshots:
 
   '@kamilkisiela/fast-url-parser@1.1.4': {}
 
-  '@luxass/eslint-config@4.7.0(@vue/compiler-sfc@3.4.31)(eslint-plugin-format@0.1.2(eslint@9.6.0))(eslint@9.6.0)(typescript@5.5.2)':
+  '@luxass/eslint-config@4.8.0(@vue/compiler-sfc@3.4.31)(eslint-plugin-format@0.1.2(eslint@9.6.0))(eslint@9.6.0)(typescript@5.5.2)':
     dependencies:
       '@antfu/install-pkg': 0.3.3
       '@clack/prompts': 0.7.0
@@ -4059,7 +4055,7 @@ snapshots:
       eslint-plugin-n: 17.9.0(eslint@9.6.0)
       eslint-plugin-regexp: 2.6.0(eslint@9.6.0)
       eslint-plugin-toml: 0.11.1(eslint@9.6.0)
-      eslint-plugin-unicorn: 53.0.0(eslint@9.6.0)
+      eslint-plugin-unicorn: 54.0.0(eslint@9.6.0)
       eslint-plugin-unused-imports: 4.0.0(@typescript-eslint/eslint-plugin@7.14.1(@typescript-eslint/parser@7.14.1(eslint@9.6.0)(typescript@5.5.2))(eslint@9.6.0)(typescript@5.5.2))(eslint@9.6.0)
       eslint-plugin-vitest: 0.5.4(@typescript-eslint/eslint-plugin@7.14.1(@typescript-eslint/parser@7.14.1(eslint@9.6.0)(typescript@5.5.2))(eslint@9.6.0)(typescript@5.5.2))(eslint@9.6.0)(typescript@5.5.2)
       eslint-plugin-vue: 9.26.0(eslint@9.6.0)
@@ -4069,7 +4065,7 @@ snapshots:
       jsonc-eslint-parser: 2.4.0
       local-pkg: 0.5.0
       parse-gitignore: 2.0.0
-      toml-eslint-parser: 0.9.3
+      toml-eslint-parser: 0.10.0
       vue-eslint-parser: 9.4.3(eslint@9.6.0)
       yaml-eslint-parser: 1.2.3
     optionalDependencies:
@@ -4953,7 +4949,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-unicorn@53.0.0(eslint@9.6.0):
+  eslint-plugin-unicorn@54.0.0(eslint@9.6.0):
     dependencies:
       '@babel/helper-validator-identifier': 7.24.7
       '@eslint-community/eslint-utils': 4.4.0(eslint@9.6.0)
@@ -6213,10 +6209,6 @@ snapshots:
       is-number: 7.0.0
 
   toml-eslint-parser@0.10.0:
-    dependencies:
-      eslint-visitor-keys: 3.4.3
-
-  toml-eslint-parser@0.9.3:
     dependencies:
       eslint-visitor-keys: 3.4.3
 
