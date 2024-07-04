@@ -34,7 +34,9 @@ jobs:
         run: pnpm install
 
       - name: Download GitHub GraphQL Schema
-        run: pnpm run schema:download
+        run: |
+          echo "" > .env
+          pnpm run schema:download
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
