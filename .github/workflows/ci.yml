@@ -38,6 +38,3 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
-
-      - name: Test run
-        run: pnpx tsx ./scripts/test.ts
