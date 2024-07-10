@@ -11,6 +11,7 @@ version = true
 
 [npm]
 enabled = true
+downloads = true
 
 [readme]
 enabled = true
