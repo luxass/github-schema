@@ -25,7 +25,7 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8(graphql@16.9.0)
       '@luxass/eslint-config':
-        specifier: ^4.8.0
+        specifier: ^4.8.1
         version: 4.8.3(@vue/compiler-sfc@3.4.31)(eslint-plugin-format@0.1.2(eslint@9.6.0))(eslint@9.6.0)(typescript@5.5.2)
       '@types/node':
         specifier: ^20.14.10
