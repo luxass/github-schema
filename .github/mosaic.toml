@@ -2,7 +2,7 @@
 # should be showcases on my website.
 
 # read more here: https://mosaic.luxass.dev
-# schema can be found here: https://mosaic.luxass.dev/json-schema
+# schema can be found here: https://mosaic.luxass.dev/json-schema.json
 
 [project]
 name = "github-schema"
