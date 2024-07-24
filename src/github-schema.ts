@@ -6018,6 +6018,8 @@ export type Discussion = Closable & Comment & Deletable & Labelable & Lockable &
   viewerCanClose: Scalars['Boolean']['output'];
   /** Check if the current viewer can delete this object. */
   viewerCanDelete: Scalars['Boolean']['output'];
+  /** Indicates if the viewer can edit labels for this object. */
+  viewerCanLabel: Scalars['Boolean']['output'];
   /** Can user react to this subject */
   viewerCanReact: Scalars['Boolean']['output'];
   /** Indicates if the object can be reopened by the viewer. */
@@ -9277,6 +9279,8 @@ export type Issue = Assignable & Closable & Comment & Deletable & Labelable & Lo
   viewerCanClose: Scalars['Boolean']['output'];
   /** Check if the current viewer can delete this object. */
   viewerCanDelete: Scalars['Boolean']['output'];
+  /** Indicates if the viewer can edit labels for this object. */
+  viewerCanLabel: Scalars['Boolean']['output'];
   /** Can user react to this subject */
   viewerCanReact: Scalars['Boolean']['output'];
   /** Indicates if the object can be reopened by the viewer. */
@@ -9987,6 +9991,8 @@ export type LabelOrderField =
 export type Labelable = {
   /** A list of labels associated with the object. */
   labels?: Maybe<LabelConnection>;
+  /** Indicates if the viewer can edit labels for this object. */
+  viewerCanLabel: Scalars['Boolean']['output'];
 };
 
 
@@ -11021,12 +11027,96 @@ export type MergeQueueEntryState =
   /** The entry is currently unmergeable. */
   | 'UNMERGEABLE';
 
+/**
+ * When set to ALLGREEN, the merge commit created by merge queue for each PR in the
+ * group must pass all required checks to merge. When set to HEADGREEN, only the
+ * commit at the head of the merge group, i.e. the commit containing changes from
+ * all of the PRs in the group, must pass its required checks to merge.
+ */
+export type MergeQueueGroupingStrategy =
+  /** The merge commit created by merge queue for each PR in the group must pass all required checks to merge */
+  | 'ALLGREEN'
+  /** Only the commit at the head of the merge group must pass its required checks to merge. */
+  | 'HEADGREEN';
+
+/** Method to use when merging changes from queued pull requests. */
+export type MergeQueueMergeMethod =
+  /** Merge commit */
+  | 'MERGE'
+  /** Rebase and merge */
+  | 'REBASE'
+  /** Squash and merge */
+  | 'SQUASH';
+
 /** The possible merging strategies for a merge queue. */
 export type MergeQueueMergingStrategy =
   /** Entries only allowed to merge if they are passing. */
   | 'ALLGREEN'
   /** Failing Entires are allowed to merge if they are with a passing entry. */
   | 'HEADGREEN';
+
+/** Merges must be performed via a merge queue. */
+export type MergeQueueParameters = {
+  __typename?: 'MergeQueueParameters';
+  /**
+   * Maximum time for a required status check to report a conclusion. After this
+   * much time has elapsed, checks that have not reported a conclusion will be
+   * assumed to have failed
+   */
+  checkResponseTimeoutMinutes: Scalars['Int']['output'];
+  /**
+   * When set to ALLGREEN, the merge commit created by merge queue for each PR in
+   * the group must pass all required checks to merge. When set to HEADGREEN, only
+   * the commit at the head of the merge group, i.e. the commit containing changes
+   * from all of the PRs in the group, must pass its required checks to merge.
+   */
+  groupingStrategy: MergeQueueGroupingStrategy;
+  /** Limit the number of queued pull requests requesting checks and workflow runs at the same time. */
+  maxEntriesToBuild: Scalars['Int']['output'];
+  /** The maximum number of PRs that will be merged together in a group. */
+  maxEntriesToMerge: Scalars['Int']['output'];
+  /** Method to use when merging changes from queued pull requests. */
+  mergeMethod: MergeQueueMergeMethod;
+  /** The minimum number of PRs that will be merged together in a group. */
+  minEntriesToMerge: Scalars['Int']['output'];
+  /**
+   * The time merge queue should wait after the first PR is added to the queue for
+   * the minimum group size to be met. After this time has elapsed, the minimum
+   * group size will be ignored and a smaller group will be merged.
+   */
+  minEntriesToMergeWaitMinutes: Scalars['Int']['output'];
+};
+
+/** Merges must be performed via a merge queue. */
+export type MergeQueueParametersInput = {
+  /**
+   * Maximum time for a required status check to report a conclusion. After this
+   * much time has elapsed, checks that have not reported a conclusion will be
+   * assumed to have failed
+   */
+  checkResponseTimeoutMinutes: Scalars['Int']['input'];
+  /**
+   * When set to ALLGREEN, the merge commit created by merge queue for each PR in
+   * the group must pass all required checks to merge. When set to HEADGREEN, only
+   * the commit at the head of the merge group, i.e. the commit containing changes
+   * from all of the PRs in the group, must pass its required checks to merge.
+   */
+  groupingStrategy: MergeQueueGroupingStrategy;
+  /** Limit the number of queued pull requests requesting checks and workflow runs at the same time. */
+  maxEntriesToBuild: Scalars['Int']['input'];
+  /** The maximum number of PRs that will be merged together in a group. */
+  maxEntriesToMerge: Scalars['Int']['input'];
+  /** Method to use when merging changes from queued pull requests. */
+  mergeMethod: MergeQueueMergeMethod;
+  /** The minimum number of PRs that will be merged together in a group. */
+  minEntriesToMerge: Scalars['Int']['input'];
+  /**
+   * The time merge queue should wait after the first PR is added to the queue for
+   * the minimum group size to be met. After this time has elapsed, the minimum
+   * group size will be ignored and a smaller group will be merged.
+   */
+  minEntriesToMergeWaitMinutes: Scalars['Int']['input'];
+};
 
 /** Detailed status information about a pull request merge. */
 export type MergeStateStatus =
@@ -18656,6 +18746,8 @@ export type PullRequest = Assignable & Closable & Comment & Labelable & Lockable
   viewerCanEditFiles: Scalars['Boolean']['output'];
   /** Whether or not the viewer can enable auto-merge */
   viewerCanEnableAutoMerge: Scalars['Boolean']['output'];
+  /** Indicates if the viewer can edit labels for this object. */
+  viewerCanLabel: Scalars['Boolean']['output'];
   /** Indicates whether the viewer can bypass branch protections and merge the pull request immediately */
   viewerCanMergeAsAdmin: Scalars['Boolean']['output'];
   /** Can user react to this subject */
@@ -23595,25 +23687,25 @@ export type RepositoryRuleType =
   | 'DELETION'
   /**
    * Prevent commits that include files with specified file extensions from being
-   * pushed to the commit graph. NOTE: Thie rule is in beta and subject to change
+   * pushed to the commit graph. NOTE: This rule is in beta and subject to change
    */
   | 'FILE_EXTENSION_RESTRICTION'
   /**
    * Prevent commits that include changes in specified file paths from being pushed
-   * to the commit graph. NOTE: Thie rule is in beta and subject to change
+   * to the commit graph. NOTE: This rule is in beta and subject to change
    */
   | 'FILE_PATH_RESTRICTION'
   /** Branch is read-only. Users cannot push to the branch. */
   | 'LOCK_BRANCH'
   /**
    * Prevent commits that include file paths that exceed a specified character
-   * limit from being pushed to the commit graph. NOTE: Thie rule is in beta and
+   * limit from being pushed to the commit graph. NOTE: This rule is in beta and
    * subject to change
    */
   | 'MAX_FILE_PATH_LENGTH'
   /**
    * Prevent commits that exceed a specified file size limit from being pushed to
-   * the commit. NOTE: Thie rule is in beta and subject to change
+   * the commit. NOTE: This rule is in beta and subject to change
    */
   | 'MAX_FILE_SIZE'
   /** Max ref updates */
@@ -24481,7 +24573,7 @@ export type RuleEnforcement =
   | 'EVALUATE';
 
 /** Types which can be parameters for `RepositoryRule` objects. */
-export type RuleParameters = BranchNamePatternParameters | CodeScanningParameters | CommitAuthorEmailPatternParameters | CommitMessagePatternParameters | CommitterEmailPatternParameters | FileExtensionRestrictionParameters | FilePathRestrictionParameters | MaxFilePathLengthParameters | MaxFileSizeParameters | PullRequestParameters | RequiredDeploymentsParameters | RequiredStatusChecksParameters | TagNamePatternParameters | UpdateParameters | WorkflowsParameters;
+export type RuleParameters = BranchNamePatternParameters | CodeScanningParameters | CommitAuthorEmailPatternParameters | CommitMessagePatternParameters | CommitterEmailPatternParameters | FileExtensionRestrictionParameters | FilePathRestrictionParameters | MaxFilePathLengthParameters | MaxFileSizeParameters | MergeQueueParameters | PullRequestParameters | RequiredDeploymentsParameters | RequiredStatusChecksParameters | TagNamePatternParameters | UpdateParameters | WorkflowsParameters;
 
 /** Specifies the parameters for a `RepositoryRule` object. Only one of the fields should be specified. */
 export type RuleParametersInput = {
@@ -24503,6 +24595,8 @@ export type RuleParametersInput = {
   maxFilePathLength?: InputMaybe<MaxFilePathLengthParametersInput>;
   /** Parameters used for the `max_file_size` rule type */
   maxFileSize?: InputMaybe<MaxFileSizeParametersInput>;
+  /** Parameters used for the `merge_queue` rule type */
+  mergeQueue?: InputMaybe<MergeQueueParametersInput>;
   /** Parameters used for the `pull_request` rule type */
   pullRequest?: InputMaybe<PullRequestParametersInput>;
   /** Parameters used for the `required_deployments` rule type */
