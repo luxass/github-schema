@@ -24234,6 +24234,8 @@ export type RequiredStatusCheckInput = {
  */
 export type RequiredStatusChecksParameters = {
   __typename?: 'RequiredStatusChecksParameters';
+  /** Allow repositories and branches to be created if a check would otherwise prohibit it. */
+  doNotEnforceOnCreate: Scalars['Boolean']['output'];
   /** Status checks that are required. */
   requiredStatusChecks: Array<StatusCheckConfiguration>;
   /**
@@ -24249,6 +24251,8 @@ export type RequiredStatusChecksParameters = {
  * commits must first be pushed to another ref where the checks pass.
  */
 export type RequiredStatusChecksParametersInput = {
+  /** Allow repositories and branches to be created if a check would otherwise prohibit it. */
+  doNotEnforceOnCreate?: InputMaybe<Scalars['Boolean']['input']>;
   /** Status checks that are required. */
   requiredStatusChecks: Array<StatusCheckConfigurationInput>;
   /**
@@ -31367,12 +31371,16 @@ export type WorkflowState =
 /** Require all changes made to a targeted branch to pass the specified workflows before they can be merged. */
 export type WorkflowsParameters = {
   __typename?: 'WorkflowsParameters';
+  /** Allow repositories and branches to be created if a check would otherwise prohibit it. */
+  doNotEnforceOnCreate: Scalars['Boolean']['output'];
   /** Workflows that must pass for this rule to pass. */
   workflows: Array<WorkflowFileReference>;
 };
 
 /** Require all changes made to a targeted branch to pass the specified workflows before they can be merged. */
 export type WorkflowsParametersInput = {
+  /** Allow repositories and branches to be created if a check would otherwise prohibit it. */
+  doNotEnforceOnCreate?: InputMaybe<Scalars['Boolean']['input']>;
   /** Workflows that must pass for this rule to pass. */
   workflows: Array<WorkflowFileReferenceInput>;
 };
