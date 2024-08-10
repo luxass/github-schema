@@ -8493,6 +8493,8 @@ export type FundingPlatform =
   | 'PATREON'
   /** Polar funding platform. */
   | 'POLAR'
+  /** thanks.dev funding platform. */
+  | 'THANKS_DEV'
   /** Tidelift funding platform. */
   | 'TIDELIFT';
 
