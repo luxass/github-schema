@@ -1,6 +1,6 @@
 {
   "name": "github-schema",
-  "version": "1.10.4",
+  "version": "1.10.5",
   "description": "GitHub's GraphQL schema",
   "type": "module",
   "author": {
