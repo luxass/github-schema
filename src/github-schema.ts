@@ -713,6 +713,8 @@ export type AnnouncementBanner = {
 /** A GitHub App. */
 export type App = Node & {
   __typename?: 'App';
+  /** The client ID of the app. */
+  clientId?: Maybe<Scalars['String']['output']>;
   /** Identifies the date and time when the object was created. */
   createdAt: Scalars['DateTime']['output'];
   /** Identifies the primary key from the database. */
@@ -8353,39 +8355,27 @@ export type FileDeletion = {
   path: Scalars['String']['input'];
 };
 
-/**
- * Prevent commits that include files with specified file extensions from being
- * pushed to the commit graph. NOTE: This rule is in beta and subject to change
- */
+/** Prevent commits that include files with specified file extensions from being pushed to the commit graph. */
 export type FileExtensionRestrictionParameters = {
   __typename?: 'FileExtensionRestrictionParameters';
   /** The file extensions that are restricted from being pushed to the commit graph. */
   restrictedFileExtensions: Array<Scalars['String']['output']>;
 };
 
-/**
- * Prevent commits that include files with specified file extensions from being
- * pushed to the commit graph. NOTE: This rule is in beta and subject to change
- */
+/** Prevent commits that include files with specified file extensions from being pushed to the commit graph. */
 export type FileExtensionRestrictionParametersInput = {
   /** The file extensions that are restricted from being pushed to the commit graph. */
   restrictedFileExtensions: Array<Scalars['String']['input']>;
 };
 
-/**
- * Prevent commits that include changes in specified file paths from being pushed
- * to the commit graph. NOTE: This rule is in beta and subject to change
- */
+/** Prevent commits that include changes in specified file paths from being pushed to the commit graph. */
 export type FilePathRestrictionParameters = {
   __typename?: 'FilePathRestrictionParameters';
   /** The file paths that are restricted from being pushed to the commit graph. */
   restrictedFilePaths: Array<Scalars['String']['output']>;
 };
 
-/**
- * Prevent commits that include changes in specified file paths from being pushed
- * to the commit graph. NOTE: This rule is in beta and subject to change
- */
+/** Prevent commits that include changes in specified file paths from being pushed to the commit graph. */
 export type FilePathRestrictionParametersInput = {
   /** The file paths that are restricted from being pushed to the commit graph. */
   restrictedFilePaths: Array<Scalars['String']['input']>;
@@ -10624,39 +10614,27 @@ export type MarketplaceListingEdge = {
   node?: Maybe<MarketplaceListing>;
 };
 
-/**
- * Prevent commits that include file paths that exceed a specified character limit
- * from being pushed to the commit graph. NOTE: This rule is in beta and subject to change
- */
+/** Prevent commits that include file paths that exceed a specified character limit from being pushed to the commit graph. */
 export type MaxFilePathLengthParameters = {
   __typename?: 'MaxFilePathLengthParameters';
   /** The maximum amount of characters allowed in file paths */
   maxFilePathLength: Scalars['Int']['output'];
 };
 
-/**
- * Prevent commits that include file paths that exceed a specified character limit
- * from being pushed to the commit graph. NOTE: This rule is in beta and subject to change
- */
+/** Prevent commits that include file paths that exceed a specified character limit from being pushed to the commit graph. */
 export type MaxFilePathLengthParametersInput = {
   /** The maximum amount of characters allowed in file paths */
   maxFilePathLength: Scalars['Int']['input'];
 };
 
-/**
- * Prevent commits that exceed a specified file size limit from being pushed to the
- * commit. NOTE: This rule is in beta and subject to change
- */
+/** Prevent commits that exceed a specified file size limit from being pushed to the commit. */
 export type MaxFileSizeParameters = {
   __typename?: 'MaxFileSizeParameters';
   /** The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS). */
   maxFileSize: Scalars['Int']['output'];
 };
 
-/**
- * Prevent commits that exceed a specified file size limit from being pushed to the
- * commit. NOTE: This rule is in beta and subject to change
- */
+/** Prevent commits that exceed a specified file size limit from being pushed to the commit. */
 export type MaxFileSizeParametersInput = {
   /** The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS). */
   maxFileSize: Scalars['Int']['input'];
@@ -23687,28 +23665,15 @@ export type RepositoryRuleType =
   | 'CREATION'
   /** Only allow users with bypass permissions to delete matching refs. */
   | 'DELETION'
-  /**
-   * Prevent commits that include files with specified file extensions from being
-   * pushed to the commit graph. NOTE: This rule is in beta and subject to change
-   */
+  /** Prevent commits that include files with specified file extensions from being pushed to the commit graph. */
   | 'FILE_EXTENSION_RESTRICTION'
-  /**
-   * Prevent commits that include changes in specified file paths from being pushed
-   * to the commit graph. NOTE: This rule is in beta and subject to change
-   */
+  /** Prevent commits that include changes in specified file paths from being pushed to the commit graph. */
   | 'FILE_PATH_RESTRICTION'
   /** Branch is read-only. Users cannot push to the branch. */
   | 'LOCK_BRANCH'
-  /**
-   * Prevent commits that include file paths that exceed a specified character
-   * limit from being pushed to the commit graph. NOTE: This rule is in beta and
-   * subject to change
-   */
+  /** Prevent commits that include file paths that exceed a specified character limit from being pushed to the commit graph. */
   | 'MAX_FILE_PATH_LENGTH'
-  /**
-   * Prevent commits that exceed a specified file size limit from being pushed to
-   * the commit. NOTE: This rule is in beta and subject to change
-   */
+  /** Prevent commits that exceed a specified file size limit from being pushed to the commit. */
   | 'MAX_FILE_SIZE'
   /** Max ref updates */
   | 'MAX_REF_UPDATES'
@@ -23890,7 +23855,7 @@ export type RepositoryRulesetEdge = {
   node?: Maybe<RepositoryRuleset>;
 };
 
-/** The targets supported for rulesets. NOTE: The push target is in beta and subject to change. */
+/** The targets supported for rulesets. */
 export type RepositoryRulesetTarget =
   /** Branch */
   | 'BRANCH'
@@ -24773,7 +24738,10 @@ export type SecurityAdvisory = Node & {
   __typename?: 'SecurityAdvisory';
   /** The classification of the advisory */
   classification: SecurityAdvisoryClassification;
-  /** The CVSS associated with this advisory */
+  /**
+   * The CVSS associated with this advisory
+   * @deprecated `cvss` will be removed. New `cvss_severities` field will now contain both `cvss_v3` and `cvss_v4` properties. Removal on 2025-10-01 UTC.
+   */
   cvss: Cvss;
   /** CWEs associated with this Advisory */
   cwes: CweConnection;
@@ -24922,6 +24890,10 @@ export type SecurityAdvisoryOrder = {
 
 /** Properties by which security advisory connections can be ordered. */
 export type SecurityAdvisoryOrderField =
+  /** Order advisories by EPSS percentage */
+  | 'EPSS_PERCENTAGE'
+  /** Order advisories by EPSS percentile */
+  | 'EPSS_PERCENTILE'
   /** Order advisories by publication time */
   | 'PUBLISHED_AT'
   /** Order advisories by update time */
