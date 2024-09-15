@@ -1,7 +1,7 @@
-import process from "node:process";
 import {
   writeFile,
 } from "node:fs/promises";
+import process from "node:process";
 
 async function run() {
   if (!process.env.GITHUB_TOKEN) {

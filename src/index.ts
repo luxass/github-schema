@@ -4,8 +4,8 @@ import {
 } from "./raw";
 
 export {
-  gqlTyped,
   gql,
+  gqlTyped,
 };
 
 export type * from "./github-schema";

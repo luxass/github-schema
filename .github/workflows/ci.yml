@@ -1,7 +1,6 @@
 name: CI
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -19,22 +18,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.7
 
-      - name: Setup pnpm
+      - name: setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Setup node
+      - name: setup node
         uses: actions/setup-node@v4.0.3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
+      - name: install dependencies
         run: pnpm install
 
-      - name: Build
+      - name: build
         run: pnpm build
 
-      - name: Lint
+      - name: lint
         run: pnpm lint
 
-      - name: Typecheck
+      - name: typecheck
         run: pnpm typecheck
