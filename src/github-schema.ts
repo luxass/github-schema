@@ -11926,7 +11926,7 @@ export type Mutation = {
   updateEnterpriseRepositoryProjectsSetting?: Maybe<UpdateEnterpriseRepositoryProjectsSettingPayload>;
   /** Sets whether team discussions are enabled for an enterprise. */
   updateEnterpriseTeamDiscussionsSetting?: Maybe<UpdateEnterpriseTeamDiscussionsSettingPayload>;
-  /** Sets the two-factor authentication methods that users of an enterprise may NOT use. */
+  /** Sets the two-factor authentication methods that users of an enterprise may not use. */
   updateEnterpriseTwoFactorAuthenticationDisallowedMethodsSetting?: Maybe<UpdateEnterpriseTwoFactorAuthenticationDisallowedMethodsSettingPayload>;
   /** Sets whether two factor authentication is required for all users in an enterprise. */
   updateEnterpriseTwoFactorAuthenticationRequiredSetting?: Maybe<UpdateEnterpriseTwoFactorAuthenticationRequiredSettingPayload>;
@@ -15561,6 +15561,7 @@ export type OrganizationRulesetsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   includeParents?: InputMaybe<Scalars['Boolean']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  targets?: InputMaybe<Array<RepositoryRulesetTarget>>;
 };
 
 
@@ -22957,6 +22958,7 @@ export type RepositoryRulesetsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   includeParents?: InputMaybe<Scalars['Boolean']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  targets?: InputMaybe<Array<RepositoryRulesetTarget>>;
 };
 
 
