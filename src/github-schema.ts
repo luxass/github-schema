@@ -699,7 +699,7 @@ export type AddedToProjectEvent = Node & {
 };
 
 /** Represents an announcement banner. */
-export type AnnouncementBanner = {
+export type AnnouncementBannerI = {
   /** The text of the announcement */
   announcement?: Maybe<Scalars['String']['output']>;
   /** The date the announcement was created */
@@ -6607,7 +6607,7 @@ export type EnqueuePullRequestPayload = {
 };
 
 /** An account to manage multiple organizations with consolidated policy and billing. */
-export type Enterprise = AnnouncementBanner & Node & {
+export type Enterprise = AnnouncementBannerI & Node & {
   __typename?: 'Enterprise';
   /** The text of the announcement */
   announcement?: Maybe<Scalars['String']['output']>;
@@ -8851,6 +8851,8 @@ export type GitSignature = {
    * GitHub, otherwise represents reason why signature is considered invalid.
    */
   state: GitSignatureState;
+  /** The date the signature was verified, if valid */
+  verifiedAt?: Maybe<Scalars['DateTime']['output']>;
   /** True if the signature was made with GitHub's signing key. */
   wasSignedByGitHub: Scalars['Boolean']['output'];
 };
@@ -8912,6 +8914,8 @@ export type GpgSignature = GitSignature & {
    * GitHub, otherwise represents reason why signature is considered invalid.
    */
   state: GitSignatureState;
+  /** The date the signature was verified, if valid */
+  verifiedAt?: Maybe<Scalars['DateTime']['output']>;
   /** True if the signature was made with GitHub's signing key. */
   wasSignedByGitHub: Scalars['Boolean']['output'];
 };
@@ -15116,7 +15120,7 @@ export type OrgUpdateMemberRepositoryInvitationPermissionAuditEntry = AuditEntry
 };
 
 /** An account on GitHub, with one or more owners, that has repositories, members and teams. */
-export type Organization = Actor & AnnouncementBanner & MemberStatusable & Node & PackageOwner & ProfileOwner & ProjectOwner & ProjectV2Owner & ProjectV2Recent & RepositoryDiscussionAuthor & RepositoryDiscussionCommentAuthor & RepositoryOwner & Sponsorable & UniformResourceLocatable & {
+export type Organization = Actor & AnnouncementBannerI & MemberStatusable & Node & PackageOwner & ProfileOwner & ProjectOwner & ProjectV2Owner & ProjectV2Recent & RepositoryDiscussionAuthor & RepositoryDiscussionCommentAuthor & RepositoryOwner & Sponsorable & UniformResourceLocatable & {
   __typename?: 'Organization';
   /** The text of the announcement */
   announcement?: Maybe<Scalars['String']['output']>;
@@ -25178,6 +25182,8 @@ export type SmimeSignature = GitSignature & {
    * GitHub, otherwise represents reason why signature is considered invalid.
    */
   state: GitSignatureState;
+  /** The date the signature was verified, if valid */
+  verifiedAt?: Maybe<Scalars['DateTime']['output']>;
   /** True if the signature was made with GitHub's signing key. */
   wasSignedByGitHub: Scalars['Boolean']['output'];
 };
@@ -26565,6 +26571,8 @@ export type SshSignature = GitSignature & {
    * GitHub, otherwise represents reason why signature is considered invalid.
    */
   state: GitSignatureState;
+  /** The date the signature was verified, if valid */
+  verifiedAt?: Maybe<Scalars['DateTime']['output']>;
   /** True if the signature was made with GitHub's signing key. */
   wasSignedByGitHub: Scalars['Boolean']['output'];
 };
@@ -28417,6 +28425,8 @@ export type UnknownSignature = GitSignature & {
    * GitHub, otherwise represents reason why signature is considered invalid.
    */
   state: GitSignatureState;
+  /** The date the signature was verified, if valid */
+  verifiedAt?: Maybe<Scalars['DateTime']['output']>;
   /** True if the signature was made with GitHub's signing key. */
   wasSignedByGitHub: Scalars['Boolean']['output'];
 };
