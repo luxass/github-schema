@@ -96,7 +96,7 @@
     "@graphql-codegen/cli": "^5.0.3",
     "@graphql-codegen/typescript": "^4.1.2",
     "@luxass/eslint-config": "^4.14.0",
-    "@types/node": "^20.14.10",
+    "@types/node": "^22.0.0",
     "eslint": "^9.15.0",
     "eslint-plugin-format": "^0.1.2",
     "tsup": "^8.3.5",
