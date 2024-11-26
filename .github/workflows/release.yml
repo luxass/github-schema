@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v4.1.0
         with:
           registry-url: "https://registry.npmjs.org"
-          node-version-file: .nvmrc
+          node-version: 22
 
       - run: pnpx changelogithub
         env:

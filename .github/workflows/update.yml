@@ -27,8 +27,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4.1.0
         with:
-          # we need node 20 to run, so we can use the --env-file flag
-          node-version-file: .nvmrc
+          node-version: 22
 
       - name: Install dependencies
         run: pnpm install
