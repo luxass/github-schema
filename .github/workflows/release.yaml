@@ -16,23 +16,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: setup pnpm
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
 
-      - name: Setup node
+      - name: setup node
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           registry-url: "https://registry.npmjs.org"
-          node-version: 22
+          node-version: lts/*
 
       - run: pnpx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
+      - name: install dependencies
         run: pnpm install
 
-      - name: Publish to NPM
+      - name: publish to npm
         run: |
           echo "" > .env
           npm publish --access public --no-git-checks
@@ -42,8 +42,8 @@ jobs:
           # so prepublishOnly can run.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to JSR
+      - name: publish to jsr
         run: npx jsr publish --allow-dirty
 
-      - name: Print Dirty Files
+      - name: print dirty files
         run: git status --porcelain
