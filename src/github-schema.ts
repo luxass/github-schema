@@ -21562,7 +21562,7 @@ export type RepoAccessAuditEntry = AuditEntry & Node & OrganizationAuditEntryDat
 
 /** The privacy of a repository */
 export type RepoAccessAuditEntryVisibility =
-  /** The repository is visible only to users in the same business. */
+  /** The repository is visible only to users in the same enterprise. */
   | 'INTERNAL'
   /** The repository is visible only to those with explicit access. */
   | 'PRIVATE'
@@ -21622,7 +21622,7 @@ export type RepoAddMemberAuditEntry = AuditEntry & Node & OrganizationAuditEntry
 
 /** The privacy of a repository */
 export type RepoAddMemberAuditEntryVisibility =
-  /** The repository is visible only to users in the same business. */
+  /** The repository is visible only to users in the same enterprise. */
   | 'INTERNAL'
   /** The repository is visible only to those with explicit access. */
   | 'PRIVATE'
@@ -21735,7 +21735,7 @@ export type RepoArchivedAuditEntry = AuditEntry & Node & OrganizationAuditEntryD
 
 /** The privacy of a repository */
 export type RepoArchivedAuditEntryVisibility =
-  /** The repository is visible only to users in the same business. */
+  /** The repository is visible only to users in the same enterprise. */
   | 'INTERNAL'
   /** The repository is visible only to those with explicit access. */
   | 'PRIVATE'
@@ -22351,7 +22351,7 @@ export type RepoCreateAuditEntry = AuditEntry & Node & OrganizationAuditEntryDat
 
 /** The privacy of a repository */
 export type RepoCreateAuditEntryVisibility =
-  /** The repository is visible only to users in the same business. */
+  /** The repository is visible only to users in the same enterprise. */
   | 'INTERNAL'
   /** The repository is visible only to those with explicit access. */
   | 'PRIVATE'
@@ -22411,7 +22411,7 @@ export type RepoDestroyAuditEntry = AuditEntry & Node & OrganizationAuditEntryDa
 
 /** The privacy of a repository */
 export type RepoDestroyAuditEntryVisibility =
-  /** The repository is visible only to users in the same business. */
+  /** The repository is visible only to users in the same enterprise. */
   | 'INTERNAL'
   /** The repository is visible only to those with explicit access. */
   | 'PRIVATE'
@@ -22471,7 +22471,7 @@ export type RepoRemoveMemberAuditEntry = AuditEntry & Node & OrganizationAuditEn
 
 /** The privacy of a repository */
 export type RepoRemoveMemberAuditEntryVisibility =
-  /** The repository is visible only to users in the same business. */
+  /** The repository is visible only to users in the same enterprise. */
   | 'INTERNAL'
   /** The repository is visible only to those with explicit access. */
   | 'PRIVATE'
@@ -24226,7 +24226,7 @@ export type RepositoryTopicEdge = {
 
 /** The repository's visibility level. */
 export type RepositoryVisibility =
-  /** The repository is visible only to users in the same business. */
+  /** The repository is visible only to users in the same enterprise. */
   | 'INTERNAL'
   /** The repository is visible only to those with explicit access. */
   | 'PRIVATE'
