@@ -39766,12 +39766,12 @@ type Query implements Node {
     enterpriseSlug: String!
 
     """
-    The role for the business member invitation.
+    The role for the enterprise member invitation.
     """
     role: EnterpriseAdministratorRole!
 
     """
-    The login of the user invited to join the business.
+    The login of the user invited to join the enterprise.
     """
     userLogin: String!
   ): EnterpriseAdministratorInvitation
@@ -39796,7 +39796,7 @@ type Query implements Node {
     enterpriseSlug: String!
 
     """
-    The login of the user invited to join the business.
+    The login of the user invited to join the enterprise.
     """
     userLogin: String!
   ): EnterpriseMemberInvitation
@@ -42438,7 +42438,7 @@ The privacy of a repository
 """
 enum RepoAccessAuditEntryVisibility {
   """
-  The repository is visible only to users in the same business.
+  The repository is visible only to users in the same enterprise.
   """
   INTERNAL
 
@@ -42578,7 +42578,7 @@ The privacy of a repository
 """
 enum RepoAddMemberAuditEntryVisibility {
   """
-  The repository is visible only to users in the same business.
+  The repository is visible only to users in the same enterprise.
   """
   INTERNAL
 
@@ -42843,7 +42843,7 @@ The privacy of a repository
 """
 enum RepoArchivedAuditEntryVisibility {
   """
-  The repository is visible only to users in the same business.
+  The repository is visible only to users in the same enterprise.
   """
   INTERNAL
 
@@ -44288,7 +44288,7 @@ The privacy of a repository
 """
 enum RepoCreateAuditEntryVisibility {
   """
-  The repository is visible only to users in the same business.
+  The repository is visible only to users in the same enterprise.
   """
   INTERNAL
 
@@ -44428,7 +44428,7 @@ The privacy of a repository
 """
 enum RepoDestroyAuditEntryVisibility {
   """
-  The repository is visible only to users in the same business.
+  The repository is visible only to users in the same enterprise.
   """
   INTERNAL
 
@@ -44568,7 +44568,7 @@ The privacy of a repository
 """
 enum RepoRemoveMemberAuditEntryVisibility {
   """
-  The repository is visible only to users in the same business.
+  The repository is visible only to users in the same enterprise.
   """
   INTERNAL
 
@@ -48400,7 +48400,7 @@ The repository's visibility level.
 """
 enum RepositoryVisibility {
   """
-  The repository is visible only to users in the same business.
+  The repository is visible only to users in the same enterprise.
   """
   INTERNAL
 
