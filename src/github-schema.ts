@@ -1871,7 +1871,7 @@ export type CheckRunStepsArgs = {
 export type CheckRunAction = {
   /** A short explanation of what this action would do. */
   description: Scalars['String']['input'];
-  /** A reference for the action on the integrator's system. */
+  /** A reference for the action on the integrator's system.  */
   identifier: Scalars['String']['input'];
   /** The text to be displayed on a button in the web UI. */
   label: Scalars['String']['input'];
@@ -6762,6 +6762,8 @@ export type Enterprise = AnnouncementBannerI & Node & {
   slug: Scalars['String']['output'];
   /** The HTTP URL for this enterprise. */
   url: Scalars['URI']['output'];
+  /** A list of repositories that belong to users. Only available for enterprises with Enterprise Managed Users. */
+  userNamespaceRepositories: UserNamespaceRepositoryConnection;
   /** Is the current viewer an admin of this enterprise? */
   viewerIsAdmin: Scalars['Boolean']['output'];
   /** The URL of the enterprise website. */
@@ -6815,6 +6817,17 @@ export type EnterpriseRulesetsArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** An account to manage multiple organizations with consolidated policy and billing. */
+export type EnterpriseUserNamespaceRepositoriesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RepositoryOrder>;
+  query?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The connection type for User. */
@@ -10176,7 +10189,7 @@ export type LabelOrder = {
 export type LabelOrderField =
   /** Order labels by creation time */
   | 'CREATED_AT'
-  /** Order labels by name */
+  /** Order labels by name  */
   | 'NAME';
 
 /** An object that can have labels assigned to it. */
