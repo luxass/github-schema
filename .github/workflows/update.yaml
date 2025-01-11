@@ -80,14 +80,13 @@ jobs:
 
             ### Changes
             <details>
-            <summary>Schema Changes</summary>
-            <br/>
-            ```diff
+            <summary>Schema Changes</summary><br/>
 
+            ```diff
             ${{ steps.generate-diff.outputs.DIFF }}
             ```
-            <br/>
-            </details>
+
+            <br/></details>
 
             I will be waiting for your approval 👋.
 
