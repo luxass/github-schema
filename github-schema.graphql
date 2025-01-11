@@ -3483,7 +3483,7 @@ input CheckRunAction {
   description: String!
 
   """
-  A reference for the action on the integrator's system. 
+  A reference for the action on the integrator's system.
   """
   identifier: String!
 
@@ -13123,41 +13123,6 @@ type Enterprise implements AnnouncementBannerI & Node {
   url: URI!
 
   """
-  A list of repositories that belong to users. Only available for enterprises with Enterprise Managed Users.
-  """
-  userNamespaceRepositories(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-
-    """
-    Ordering options for repositories returned from the connection.
-    """
-    orderBy: RepositoryOrder = {field: NAME, direction: ASC}
-
-    """
-    The search string to look for.
-    """
-    query: String
-  ): UserNamespaceRepositoryConnection!
-
-  """
   Is the current viewer an admin of this enterprise?
   """
   viewerIsAdmin: Boolean!
@@ -20103,7 +20068,7 @@ enum LabelOrderField {
   CREATED_AT
 
   """
-  Order labels by name 
+  Order labels by name
   """
   NAME
 }
