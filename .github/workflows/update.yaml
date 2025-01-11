@@ -48,6 +48,20 @@ jobs:
       - name: lint with fix
         run: pnpm run lint --fix
 
+      - name: generate diff
+        id: generate-diff
+        run: |
+          git diff github-schema.graphql > github-schema.diff
+
+          # if the diff is empty
+          if [ ! -s github-schema.diff ]; then
+            echo "No changes found in the GitHub GraphQL Schema."
+            exit 0
+          fi
+
+          echo "Changes found in the GitHub GraphQL Schema:"
+          echo "DIFF=$(cat github-schema.diff)" >> "$GITHUB_OUTPUT"
+
       - name: create pull request
         uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
         if: ${{ github.event.inputs.dry-run != 'true' }}
@@ -59,6 +73,16 @@ jobs:
 
             I don't know what they changed, but I'm sure it's important.
             If you want you can go take a look yourself.
+
+            ### Changes
+            <details>
+            <summary>Schema Changes</summary>
+            <br/>
+            ```diff
+            ${{ steps.generate-diff.outputs.DIFF }}
+            ```
+            <br/>
+            </details>
 
             I will be waiting for your approval 👋.
 
