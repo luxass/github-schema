@@ -6762,6 +6762,8 @@ export type Enterprise = AnnouncementBannerI & Node & {
   slug: Scalars['String']['output'];
   /** The HTTP URL for this enterprise. */
   url: Scalars['URI']['output'];
+  /** A list of repositories that belong to users. Only available for enterprises with Enterprise Managed Users. */
+  userNamespaceRepositories: UserNamespaceRepositoryConnection;
   /** Is the current viewer an admin of this enterprise? */
   viewerIsAdmin: Scalars['Boolean']['output'];
   /** The URL of the enterprise website. */
@@ -6815,6 +6817,17 @@ export type EnterpriseRulesetsArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** An account to manage multiple organizations with consolidated policy and billing. */
+export type EnterpriseUserNamespaceRepositoriesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RepositoryOrder>;
+  query?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The connection type for User. */
@@ -31473,6 +31486,28 @@ export type UserNamespaceRepository = Node & {
   owner: Organization | User;
   /** The repository owned by an enterprise managed user. */
   repository?: Maybe<Repository>;
+};
+
+/** A list of repositories owned by users in an enterprise with Enterprise Managed Users. */
+export type UserNamespaceRepositoryConnection = {
+  __typename?: 'UserNamespaceRepositoryConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<Maybe<UserNamespaceRepositoryEdge>>>;
+  /** A list of nodes. */
+  nodes?: Maybe<Array<Maybe<UserNamespaceRepository>>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** An edge in a connection. */
+export type UserNamespaceRepositoryEdge = {
+  __typename?: 'UserNamespaceRepositoryEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node?: Maybe<UserNamespaceRepository>;
 };
 
 /** The user's description of what they're currently doing. */
