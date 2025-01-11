@@ -83,6 +83,7 @@ jobs:
             <summary>Schema Changes</summary>
             <br/>
             ```diff
+
             ${{ steps.generate-diff.outputs.DIFF }}
             ```
             <br/>
