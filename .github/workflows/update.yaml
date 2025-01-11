@@ -93,6 +93,7 @@ jobs:
 
             This is an automated PR to update the GitHub GraphQL Schema.
           branch: update-github-graphql-schema
+          add-paths: github-schema.graphql,src/github-schema.ts
           base: main
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
