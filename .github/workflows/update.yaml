@@ -60,7 +60,11 @@ jobs:
           fi
 
           echo "Changes found in the GitHub GraphQL Schema:"
-          echo "DIFF=$(cat github-schema.diff)" >> "$GITHUB_OUTPUT"
+          {
+            echo 'DIFF<<EOF'
+            cat github-schema.diff
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
 
       - name: create pull request
         uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
