@@ -17957,12 +17957,16 @@ export type ProjectV2FieldType =
   | 'MILESTONE'
   /** Number */
   | 'NUMBER'
+  /** Parent issue */
+  | 'PARENT_ISSUE'
   /** Repository */
   | 'REPOSITORY'
   /** Reviewers */
   | 'REVIEWERS'
   /** Single Select */
   | 'SINGLE_SELECT'
+  /** Sub-issues progress */
+  | 'SUB_ISSUES_PROGRESS'
   /** Text */
   | 'TEXT'
   /** Title */
