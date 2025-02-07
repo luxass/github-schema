@@ -13336,6 +13336,11 @@ enum EnterpriseAdministratorRole {
   Represents an owner of the enterprise account.
   """
   OWNER
+
+  """
+  Unaffiliated member of the enterprise account without an admin role.
+  """
+  UNAFFILIATED
 }
 
 """
@@ -21344,7 +21349,7 @@ input MaxFilePathLengthParametersInput {
 }
 
 """
-Prevent commits that exceed a specified file size limit from being pushed to the commit.
+Prevent commits that exceed a specified file size limit from being pushed to the commit graph.
 """
 type MaxFileSizeParameters {
   """
@@ -21354,7 +21359,7 @@ type MaxFileSizeParameters {
 }
 
 """
-Prevent commits that exceed a specified file size limit from being pushed to the commit.
+Prevent commits that exceed a specified file size limit from being pushed to the commit graph.
 """
 input MaxFileSizeParametersInput {
   """
@@ -47995,7 +48000,7 @@ enum RepositoryRuleType {
   MAX_FILE_PATH_LENGTH
 
   """
-  Prevent commits that exceed a specified file size limit from being pushed to the commit.
+  Prevent commits that exceed a specified file size limit from being pushed to the commit graph.
   """
   MAX_FILE_SIZE
 

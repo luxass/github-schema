@@ -6927,7 +6927,9 @@ export type EnterpriseAdministratorRole =
   /** Represents a billing manager of the enterprise account. */
   | 'BILLING_MANAGER'
   /** Represents an owner of the enterprise account. */
-  | 'OWNER';
+  | 'OWNER'
+  /** Unaffiliated member of the enterprise account without an admin role. */
+  | 'UNAFFILIATED';
 
 /** The possible values for the enterprise allow private repository forking policy value. */
 export type EnterpriseAllowPrivateRepositoryForkingPolicyValue =
@@ -10835,14 +10837,14 @@ export type MaxFilePathLengthParametersInput = {
   maxFilePathLength: Scalars['Int']['input'];
 };
 
-/** Prevent commits that exceed a specified file size limit from being pushed to the commit. */
+/** Prevent commits that exceed a specified file size limit from being pushed to the commit graph. */
 export type MaxFileSizeParameters = {
   __typename?: 'MaxFileSizeParameters';
   /** The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS). */
   maxFileSize: Scalars['Int']['output'];
 };
 
-/** Prevent commits that exceed a specified file size limit from being pushed to the commit. */
+/** Prevent commits that exceed a specified file size limit from being pushed to the commit graph. */
 export type MaxFileSizeParametersInput = {
   /** The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS). */
   maxFileSize: Scalars['Int']['input'];
@@ -24254,7 +24256,7 @@ export type RepositoryRuleType =
   | 'LOCK_BRANCH'
   /** Prevent commits that include file paths that exceed a specified character limit from being pushed to the commit graph. */
   | 'MAX_FILE_PATH_LENGTH'
-  /** Prevent commits that exceed a specified file size limit from being pushed to the commit. */
+  /** Prevent commits that exceed a specified file size limit from being pushed to the commit graph. */
   | 'MAX_FILE_SIZE'
   /** Max ref updates */
   | 'MAX_REF_UPDATES'
