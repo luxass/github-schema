@@ -31756,8 +31756,6 @@ export type UserNamespaceRepository = Node & {
   nameWithOwner: Scalars['String']['output'];
   /** The user owner of the repository. */
   owner: Organization | User;
-  /** The repository owned by an enterprise managed user. */
-  repository?: Maybe<Repository>;
 };
 
 /** A list of repositories owned by users in an enterprise with Enterprise Managed Users. */
