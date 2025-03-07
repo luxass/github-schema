@@ -24660,6 +24660,8 @@ export type RepositoryVulnerabilityAlert = Node & RepositoryNode & {
   createdAt: Scalars['DateTime']['output'];
   /** The associated Dependabot update */
   dependabotUpdate?: Maybe<DependabotUpdate>;
+  /** The relationship of an alert's dependency. */
+  dependencyRelationship?: Maybe<RepositoryVulnerabilityAlertDependencyRelationship>;
   /** The scope of an alert's dependency */
   dependencyScope?: Maybe<RepositoryVulnerabilityAlertDependencyScope>;
   /** Comment explaining the reason the alert was dismissed */
@@ -24704,6 +24706,15 @@ export type RepositoryVulnerabilityAlertConnection = {
   /** Identifies the total count of items in the connection. */
   totalCount: Scalars['Int']['output'];
 };
+
+/** The possible relationships of an alert's dependency. */
+export type RepositoryVulnerabilityAlertDependencyRelationship =
+  /** A direct dependency of your project */
+  | 'DIRECT'
+  /** A transitive dependency of your project */
+  | 'TRANSITIVE'
+  /** The relationship is unknown */
+  | 'UNKNOWN';
 
 /** The possible scopes of an alert's dependency. */
 export type RepositoryVulnerabilityAlertDependencyScope =
@@ -25400,6 +25411,8 @@ export type SearchType =
   | 'DISCUSSION'
   /** Returns results matching issues in repositories. */
   | 'ISSUE'
+  /** Returns results matching issues in repositories. */
+  | 'ISSUE_ADVANCED'
   /** Returns results matching repositories. */
   | 'REPOSITORY'
   /** Returns results matching users and organizations on GitHub. */
