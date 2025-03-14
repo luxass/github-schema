@@ -48780,6 +48780,11 @@ type RepositoryVulnerabilityAlert implements Node & RepositoryNode {
   dependabotUpdate: DependabotUpdate
 
   """
+  The relationship of an alert's dependency.
+  """
+  dependencyRelationship: RepositoryVulnerabilityAlertDependencyRelationship
+
+  """
   The scope of an alert's dependency
   """
   dependencyScope: RepositoryVulnerabilityAlertDependencyScope
@@ -48878,6 +48883,26 @@ type RepositoryVulnerabilityAlertConnection {
   Identifies the total count of items in the connection.
   """
   totalCount: Int!
+}
+
+"""
+The possible relationships of an alert's dependency.
+"""
+enum RepositoryVulnerabilityAlertDependencyRelationship {
+  """
+  A direct dependency of your project
+  """
+  DIRECT
+
+  """
+  A transitive dependency of your project
+  """
+  TRANSITIVE
+
+  """
+  The relationship is unknown
+  """
+  UNKNOWN
 }
 
 """
@@ -50167,6 +50192,11 @@ enum SearchType {
   Returns results matching issues in repositories.
   """
   ISSUE
+
+  """
+  Returns results matching issues in repositories.
+  """
+  ISSUE_ADVANCED @deprecated(reason: "Search for issues and pull requests will be overridden by advanced search on September 4, 2025. You can read more about this change on https://github.blog/changelog/2025-03-06-github-issues-projects-api-support-for-issues-advanced-search-and-more/. Removal on 2025-09-04 UTC.")
 
   """
   Returns results matching repositories.
