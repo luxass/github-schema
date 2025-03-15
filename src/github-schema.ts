@@ -11451,6 +11451,8 @@ export type Milestone = Closable & Node & UniformResourceLocatable & {
   creator?: Maybe<Bot | EnterpriseUserAccount | Mannequin | Organization | User>;
   /** Identifies the description of the milestone. */
   description?: Maybe<Scalars['String']['output']>;
+  /** The HTML rendered description of the milestone using GitHub Flavored Markdown. */
+  descriptionHTML?: Maybe<Scalars['String']['output']>;
   /** Identifies the due date of the milestone. */
   dueOn?: Maybe<Scalars['DateTime']['output']>;
   /** The Node ID of the Milestone object */
