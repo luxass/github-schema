@@ -19993,6 +19993,11 @@ export type PullRequestParameters = {
    * `rebase`. At least one option must be enabled.
    */
   allowedMergeMethods?: Maybe<Array<PullRequestAllowedMergeMethods>>;
+  /**
+   * This field is in beta and subject to change. Automatically request review from
+   * Copilot for new pull requests, if the author has access to Copilot code review.
+   */
+  automaticCopilotCodeReviewEnabled: Scalars['Boolean']['output'];
   /** New, reviewable commits pushed will dismiss previous pull request review approvals. */
   dismissStaleReviewsOnPush: Scalars['Boolean']['output'];
   /** Require an approving review in pull requests that modify files that have a designated code owner. */
@@ -20012,6 +20017,11 @@ export type PullRequestParametersInput = {
    * `rebase`. At least one option must be enabled.
    */
   allowedMergeMethods?: InputMaybe<Array<PullRequestAllowedMergeMethods>>;
+  /**
+   * This argument is in beta and subject to change. Automatically request review
+   * from Copilot for new pull requests, if the author has access to Copilot code review.
+   */
+  automaticCopilotCodeReviewEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   /** New, reviewable commits pushed will dismiss previous pull request review approvals. */
   dismissStaleReviewsOnPush: Scalars['Boolean']['input'];
   /** Require an approving review in pull requests that modify files that have a designated code owner. */
