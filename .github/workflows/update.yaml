@@ -66,11 +66,22 @@ jobs:
             echo EOF
           } >> "$GITHUB_OUTPUT"
 
+      - name: check if diff is too long
+        id: diff-too-long
+        run: |
+          DIFF_LENGTH=$(wc -l < github-schema.diff)
+          if [ "$DIFF_LENGTH" -gt 100 ]; then
+            echo "The diff is too long. Please check the file manually."
+            echo "DIFF_TOO_LONG=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "DIFF_TOO_LONG=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: create pull request
         uses: peter-evans/create-pull-request@dd2324fc52d5d43c699a5636bcf19fceaa70c284 # v7.0.7
         if: ${{ github.event.inputs.dry-run != 'true' }}
         env:
-          DIFF: ${{ steps.generate-diff.outputs.DIFF }}
+          DIFF: ${{ steps.diff-too-long.outputs.DIFF_TOO_LONG == 'true' && 'diff is too long to render' || steps.generate-diff.outputs.DIFF }}
         with:
           commit-message: "feat: updated github graphql schema"
           title: "feat: updated github graphql schema"
