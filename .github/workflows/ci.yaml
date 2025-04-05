@@ -9,6 +9,8 @@ on:
       - opened
       - synchronize
 
+permissions: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
