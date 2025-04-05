@@ -69,6 +69,8 @@ jobs:
       - name: create pull request
         uses: peter-evans/create-pull-request@dd2324fc52d5d43c699a5636bcf19fceaa70c284 # v7.0.7
         if: ${{ github.event.inputs.dry-run != 'true' }}
+        env:
+          DIFF: ${{ steps.generate-diff.outputs.DIFF }}
         with:
           commit-message: "feat: updated github graphql schema"
           title: "feat: updated github graphql schema"
@@ -83,7 +85,7 @@ jobs:
             <summary>Schema Changes</summary><br/>
 
             ```diff
-            ${{ steps.generate-diff.outputs.DIFF }}
+            ${{ env.DIFF }}
             ```
 
             <br/></details>
