@@ -4039,14 +4039,6 @@ export type CreateIssueTypeInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   /** Whether or not the issue type is enabled on the org level */
   isEnabled: Scalars['Boolean']['input'];
-  /**
-   * Whether or not the issue type is restricted to issues in private repositories
-   *
-   * **Upcoming Change on 2025-04-01 UTC**
-   * **Description:** `isPrivate` will be removed.
-   * **Reason:** Private issue types are being deprecated and can no longer be created.
-   */
-  isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
   /** Name of the new issue type */
   name: Scalars['String']['input'];
   /** The ID for the organization on which the issue type is created */
@@ -33675,14 +33667,6 @@ export type UpdateIssueTypeInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   /** Whether or not the issue type is enabled for the organization */
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * Whether or not the issue type is restricted to issues in private repositories
-   *
-   * **Upcoming Change on 2025-04-01 UTC**
-   * **Description:** `isPrivate` will be removed.
-   * **Reason:** Private issue types are being deprecated and can no longer be created.
-   */
-  isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
   /** The ID of the issue type to update */
   issueTypeId: Scalars['ID']['input'];
   /** The name of the issue type */
