@@ -7725,15 +7725,6 @@ input CreateIssueTypeInput {
   isEnabled: Boolean!
 
   """
-  Whether or not the issue type is restricted to issues in private repositories
-
-  **Upcoming Change on 2025-04-01 UTC**
-  **Description:** `isPrivate` will be removed.
-  **Reason:** Private issue types are being deprecated and can no longer be created.
-  """
-  isPrivate: Boolean
-
-  """
   Name of the new issue type
   """
   name: String!
@@ -60437,15 +60428,6 @@ input UpdateIssueTypeInput {
   Whether or not the issue type is enabled for the organization
   """
   isEnabled: Boolean
-
-  """
-  Whether or not the issue type is restricted to issues in private repositories
-
-  **Upcoming Change on 2025-04-01 UTC**
-  **Description:** `isPrivate` will be removed.
-  **Reason:** Private issue types are being deprecated and can no longer be created.
-  """
-  isPrivate: Boolean
 
   """
   The ID of the issue type to update
