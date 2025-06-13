@@ -1334,9 +1334,6 @@ export type BotAvatarUrlArgs = {
   size?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** Used when either Bot or User are accepted. */
-export type BotOrUser = Bot | User;
-
 /** Types which can be actors for `BranchActorAllowance` objects. */
 export type BranchActorAllowanceActor = App | Team | User;
 
@@ -3337,7 +3334,10 @@ export type ContributionOrder = {
   direction: OrderDirection;
 };
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollection = {
   __typename?: 'ContributionsCollection';
   /** Commit contributions made by the user, grouped by repository. */
@@ -3465,13 +3465,19 @@ export type ContributionsCollection = {
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionCommitContributionsByRepositoryArgs = {
   maxRepositories?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionIssueContributionsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -3483,7 +3489,10 @@ export type ContributionsCollectionIssueContributionsArgs = {
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionIssueContributionsByRepositoryArgs = {
   excludeFirst?: InputMaybe<Scalars['Boolean']['input']>;
   excludePopular?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3491,7 +3500,10 @@ export type ContributionsCollectionIssueContributionsByRepositoryArgs = {
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionPullRequestContributionsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -3503,7 +3515,10 @@ export type ContributionsCollectionPullRequestContributionsArgs = {
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionPullRequestContributionsByRepositoryArgs = {
   excludeFirst?: InputMaybe<Scalars['Boolean']['input']>;
   excludePopular?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3511,7 +3526,10 @@ export type ContributionsCollectionPullRequestContributionsByRepositoryArgs = {
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionPullRequestReviewContributionsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -3521,13 +3539,19 @@ export type ContributionsCollectionPullRequestReviewContributionsArgs = {
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionPullRequestReviewContributionsByRepositoryArgs = {
   maxRepositories?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionRepositoryContributionsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -3538,35 +3562,50 @@ export type ContributionsCollectionRepositoryContributionsArgs = {
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionTotalIssueContributionsArgs = {
   excludeFirst?: InputMaybe<Scalars['Boolean']['input']>;
   excludePopular?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionTotalPullRequestContributionsArgs = {
   excludeFirst?: InputMaybe<Scalars['Boolean']['input']>;
   excludePopular?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionTotalRepositoriesWithContributedIssuesArgs = {
   excludeFirst?: InputMaybe<Scalars['Boolean']['input']>;
   excludePopular?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionTotalRepositoriesWithContributedPullRequestsArgs = {
   excludeFirst?: InputMaybe<Scalars['Boolean']['input']>;
   excludePopular?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
-/** A contributions collection aggregates contributions such as opened issues and commits created by a user. */
+/**
+ * A collection of contributions made by a user, including opened issues, commits, and pull requests.
+ * Contributions in private and internal repositories are only included with the optional read:user scope.
+ */
 export type ContributionsCollectionTotalRepositoryContributionsArgs = {
   excludeFirst?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -28203,6 +28242,8 @@ export type ReprioritizeSubIssuePayload = {
 
 /** Autogenerated input type of RequestReviews */
 export type RequestReviewsInput = {
+  /** The Node IDs of the bot to request. */
+  botIds?: InputMaybe<Array<Scalars['ID']['input']>>;
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The Node ID of the pull request to modify. */
