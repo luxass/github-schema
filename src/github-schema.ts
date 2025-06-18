@@ -2425,7 +2425,10 @@ export type ClosedEvent = Node & UniformResourceLocatable & {
   id: Scalars['ID']['output'];
   /** The HTTP path for this closed event. */
   resourcePath: Scalars['URI']['output'];
-  /** The reason the issue state was changed to closed. */
+  /**
+   * The reason the issue state was changed to closed.
+   * @deprecated The state reason for duplicate issue is now returned by default. Removal on 2025-10-01 UTC.
+   */
   stateReason?: Maybe<IssueStateReason>;
   /** The HTTP URL for this closed event. */
   url: Scalars['URI']['output'];
@@ -9615,7 +9618,10 @@ export type Issue = Assignable & Closable & Comment & Deletable & Labelable & Lo
   resourcePath: Scalars['URI']['output'];
   /** Identifies the state of the issue. */
   state: IssueState;
-  /** Identifies the reason for the issue state. */
+  /**
+   * Identifies the reason for the issue state.
+   * @deprecated The state reason for duplicate issue is now returned by default. Removal on 2025-10-01 UTC.
+   */
   stateReason?: Maybe<IssueStateReason>;
   /** A list of sub-issues associated with the Issue. */
   subIssues: IssueConnection;
@@ -10120,10 +10126,7 @@ export type IssueState =
 export type IssueStateReason =
   /** An issue that has been closed as completed */
   | 'COMPLETED'
-  /**
-   * An issue that has been closed as a duplicate. To retrieve this value, set
-   * `(enableDuplicate: true)` when querying the stateReason field.
-   */
+  /** An issue that has been closed as a duplicate. */
   | 'DUPLICATE'
   /** An issue that has been closed as not planned */
   | 'NOT_PLANNED'
