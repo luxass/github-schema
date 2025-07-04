@@ -1,4 +1,4 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsdown";
 
 export default defineConfig(
   {
@@ -7,11 +7,7 @@ export default defineConfig(
     clean: true,
     dts: true,
     treeshake: true,
-    bundle: true,
-    outExtension(ctx) {
-      return {
-        js: ctx.format === "cjs" ? ".cjs" : ".mjs",
-      };
-    },
+    exports: true,
+    publint: true,
   },
 );
