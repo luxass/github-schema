@@ -26,7 +26,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: taiki-e/install-action@d028bcc176afad59ee1e0b7dbba9789b8a1421f8 # v2.56.9
+      - uses: taiki-e/install-action@c07504cae06f832dc8de08911c9a9c5cddb0d2d3 # v2.56.13
         with:
           tool: zizmor
 
