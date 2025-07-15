@@ -36,6 +36,9 @@ jobs:
         run: pnpm run build
 
       - name: create tag and release
-        run: npx bumpp --commit --tag --push
+        run: |
+          CURRENT_VERSION=$(cat package.json | jq -r '.version')
+          PATCH_VERSION=$(echo $CURRENT_VERSION | awk -F. '{printf "%d.%d.%d", $1, $2, $3+1}')
+          npx bumpp $PATCH_VERSION --commit --tag --push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
