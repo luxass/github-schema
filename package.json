@@ -54,7 +54,6 @@
     "build": "tsdown",
     "schema:download": "pnpx tsx --env-file=.env ./scripts/download.ts",
     "schema:codegen": "graphql-codegen",
-    "prepublishOnly": "pnpm run schema:download && pnpm run schema:codegen && pnpm run build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
