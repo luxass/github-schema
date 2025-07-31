@@ -26,6 +26,9 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version: lts/*
 
+      - name: update npm (oidc)
+        run: npm install -g npm@latest
+
       - run: pnpx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -40,7 +43,6 @@ jobs:
         run: |
           npm publish --access public --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
 
       - name: publish to jsr
