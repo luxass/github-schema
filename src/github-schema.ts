@@ -10302,6 +10302,12 @@ export type IssueTimelineItemsItemType =
   | 'ASSIGNED_EVENT'
   /** Represents a 'blocked_by_added' event on a given issue. */
   | 'BLOCKED_BY_ADDED_EVENT'
+  /** Represents a 'blocked_by_removed' event on a given issue. */
+  | 'BLOCKED_BY_REMOVED_EVENT'
+  /** Represents a 'blocking_added' event on a given issue. */
+  | 'BLOCKING_ADDED_EVENT'
+  /** Represents a 'blocking_removed' event on a given issue. */
+  | 'BLOCKING_REMOVED_EVENT'
   /** Represents a 'closed' event on any `Closable`. */
   | 'CLOSED_EVENT'
   /** Represents a 'comment_deleted' event on a given issue or pull request. */
@@ -22757,6 +22763,12 @@ export type PullRequestTimelineItemsItemType =
   | 'BASE_REF_FORCE_PUSHED_EVENT'
   /** Represents a 'blocked_by_added' event on a given issue. */
   | 'BLOCKED_BY_ADDED_EVENT'
+  /** Represents a 'blocked_by_removed' event on a given issue. */
+  | 'BLOCKED_BY_REMOVED_EVENT'
+  /** Represents a 'blocking_added' event on a given issue. */
+  | 'BLOCKING_ADDED_EVENT'
+  /** Represents a 'blocking_removed' event on a given issue. */
+  | 'BLOCKING_REMOVED_EVENT'
   /** Represents a 'closed' event on any `Closable`. */
   | 'CLOSED_EVENT'
   /** Represents a 'comment_deleted' event on a given issue or pull request. */
