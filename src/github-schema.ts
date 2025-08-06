@@ -6954,6 +6954,8 @@ export type Enterprise = Node & {
   ruleset?: Maybe<RepositoryRuleset>;
   /** A list of rulesets for this enterprise. */
   rulesets?: Maybe<RepositoryRulesetConnection>;
+  /** The enterprise's security contact email address. */
+  securityContactEmail?: Maybe<Scalars['String']['output']>;
   /** The URL-friendly identifier for the enterprise. */
   slug: Scalars['String']['output'];
   /** Identifies the date and time when the object was last updated. */
@@ -33748,6 +33750,8 @@ export type UpdateEnterpriseProfileInput = {
   location?: InputMaybe<Scalars['String']['input']>;
   /** The name of the enterprise. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** The security contact email address of the enterprise. */
+  securityContactEmail?: InputMaybe<Scalars['String']['input']>;
   /** The URL of the enterprise's website. */
   websiteUrl?: InputMaybe<Scalars['String']['input']>;
 };
