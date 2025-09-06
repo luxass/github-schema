@@ -1,5 +1,5 @@
 /* eslint-disable node/prefer-global/process */
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const SYSTEM_PROMPT = `You are an expert at analyzing code changes and generating concise, descriptive pull request titles.
 
@@ -72,7 +72,12 @@ async function run() {
   }
 
   const title = data.choices[0].message.content.trim();
-  console.log(title);
+  // write to github_output
+  if (process.env.GITHUB_OUTPUT) {
+    console.log(`✅ Generated PR title: ${title}`);
+    writeFileSync(process.env.GITHUB_OUTPUT, `title=${title}\n`);
+  }
+
   return title;
 }
 

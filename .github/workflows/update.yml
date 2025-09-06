@@ -81,17 +81,7 @@ jobs:
       - name: generate pr metadata (ai)
         id: pr-metadata
         if: ${{ steps.generate-diff.outputs.DIFF != '' && github.event.inputs.dry-run != 'true' }}
-        run: |
-          # capture title
-          TITLE=$(node ./scripts/generate-pr-title.ts)
-
-          # if exit code of the script is 1, show the error
-          if [ $? -eq 1 ]; then
-            echo "Failed to generate AI title, will use fallback"
-            echo $TITLE
-          else
-            echo "title=$TITLE" >> "$GITHUB_OUTPUT"
-          fi
+        run: node ./scripts/generate-pr-title.ts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
