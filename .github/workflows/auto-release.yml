@@ -13,7 +13,9 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write
-    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'update-github-graphql-schema' && github.repository == 'luxass/github-schema'
+    if: |
+      github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'update-github-graphql-schema'
+      && github.repository == 'luxass/github-schema' && (github.event.pull_request.user.login == 'luxass' || github.event.pull_request.user.login == 'github-actions[bot]')
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
