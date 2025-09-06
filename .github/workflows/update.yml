@@ -78,17 +78,28 @@ jobs:
           fi
 
       - name: generate pr metadata (ai)
+        id: pr-metadata
+        continue-on-error: true
         if: ${{ steps.generate-diff.outputs.DIFF != '' && github.event.inputs.dry-run != 'true' }}
-        run: node ./scripts/generate-pr-title.ts
+        run: |
+          if TITLE=$(node ./scripts/generate-pr-title.ts 2>/dev/null); then
+            echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+            echo "Successfully generated AI title: $TITLE"
+          else
+            echo "Failed to generate AI title, will use fallback"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: create pull request
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         if: ${{ github.event.inputs.dry-run != 'true' }}
         env:
           DIFF: ${{ steps.diff-too-long.outputs.DIFF_TOO_LONG == 'true' && 'diff is too long to render' || steps.generate-diff.outputs.DIFF }}
+          TITLE: "${{ steps.pr-metadata.outputs.title || 'feat: updated github graphql schema' }}"
         with:
           commit-message: "feat: updated github graphql schema"
-          title: "feat: updated github graphql schema"
+          title: "${{ env.TITLE }}"
           body: |
             I found some new changes in GitHub's GraphQL Schema.
 

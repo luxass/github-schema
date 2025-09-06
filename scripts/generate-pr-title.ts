@@ -71,7 +71,9 @@ async function run() {
     throw new Error("No response received from GitHub Models API");
   }
 
-  return data.choices[0].message.content.trim();
+  const title = data.choices[0].message.content.trim();
+  console.log(title);
+  return title;
 }
 
 run().catch((err) => {
