@@ -30308,6 +30308,8 @@ export type SponsorsCountryOrRegionCode =
   | 'SV'
   /** Sint Maarten (Dutch part) */
   | 'SX'
+  /** Syria */
+  | 'SY'
   /** Swaziland */
   | 'SZ'
   /** Turks and Caicos Islands */
