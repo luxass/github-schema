@@ -1,6 +1,6 @@
 {
   "name": "@luxass/github-schema",
-  "version": "1.20.12",
+  "version": "1.20.13",
   "exports": {
     ".": "./src/index.ts",
     "./raw": "./src/raw.ts",
