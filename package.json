@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "graphql": "^16.11.0",
-    "graphql-tag": "^2.12.6"
+    "graphql-tag": "2.12.6"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^6.0.0",
