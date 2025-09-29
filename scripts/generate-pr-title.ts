@@ -50,7 +50,38 @@ async function run() {
           content: `Please analyze this git diff and generate an appropriate PR title:\n\n${diff}`,
         },
       ],
-      model: "openai/gpt-5",
+      model: "openai/gpt-4o",
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "pr-title",
+          strict: true,
+          schema: {
+            type: "object",
+            properties: {
+              type: {
+                type: "string",
+                enum: ["feat", "fix", "chore", "docs", "style", "refactor"],
+                description: "The type of change being made",
+              },
+              scope: {
+                type: "string",
+                description: "The scope of the change (e.g., component or section name)",
+              },
+              message: {
+                type: "string",
+                description: "A concise description of the change, under 72 characters",
+              },
+            },
+            additionalProperties: false,
+            required: [
+              "type",
+              "scope",
+              "message",
+            ],
+          },
+        },
+      },
     }),
   });
 
@@ -58,6 +89,10 @@ async function run() {
     const errorText = await response.text();
     throw new Error(`GitHub Models API request failed: ${response.status} ${response.statusText}\n${errorText}`);
   }
+
+  console.log("✅ Received response from GitHub Models API");
+  console.log("🤖 Parsing response...")
+  ;
 
   const data = await response.json() as {
     choices: {
@@ -67,15 +102,19 @@ async function run() {
     }[];
   };
 
+  console.log("data", data);
+
   if (!data.choices || data.choices.length === 0) {
     throw new Error("No response received from GitHub Models API");
   }
+
+  throw new Error("Temporarily disabled until we can fix the prompt");
 
   const title = data.choices[0].message.content.trim();
   // write to github_output
   if (process.env.GITHUB_OUTPUT) {
     console.log(`✅ Generated PR title: ${title}`);
-    writeFileSync(process.env.GITHUB_OUTPUT, `title=${title}\n`);
+    // writeFileSync(process.env.GITHUB_OUTPUT, `title=${title}\n`);
   }
 
   return title;
