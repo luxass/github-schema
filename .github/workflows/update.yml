@@ -32,6 +32,7 @@ jobs:
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: lts/*
+          cache: pnpm
 
       - name: install dependencies
         run: pnpm install
@@ -90,10 +91,10 @@ jobs:
         if: ${{ github.event.inputs.dry-run != 'true' }}
         env:
           DIFF: ${{ steps.diff-too-long.outputs.DIFF_TOO_LONG == 'true' && 'diff is too long to render' || steps.generate-diff.outputs.DIFF }}
-          TITLE: "${{ steps.pr-metadata.outputs.title || 'feat: updated github graphql schema' }}"
+          COMMIT_MESSAGE: "${{ steps.pr-metadata.outputs.title || 'feat: updated github graphql schema' }}"
         with:
-          commit-message: "feat: updated github graphql schema"
-          title: "${{ env.TITLE }}"
+          commit-message: ${{ env.COMMIT_MESSAGE }}
+          title: ${{ env.COMMIT_MESSAGE }}
           body: |
             I found some new changes in GitHub's GraphQL Schema.
 

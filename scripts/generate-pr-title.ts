@@ -1,25 +1,26 @@
 /* eslint-disable node/prefer-global/process */
 import { readFileSync, writeFileSync } from "node:fs";
 
-const SYSTEM_PROMPT = `You are an expert at analyzing code changes and generating concise, descriptive pull request titles.
+const SYSTEM_PROMPT = `You are an expert at analyzing code changes and generating structured data for pull request titles.
 
-Your task is to analyze the provided git diff and generate a clear, actionable PR title that describes what new feature, bug fix, or change has been implemented.
+Your task is to analyze the provided git diff and generate a JSON object with the following properties:
+- type: The conventional commit type (feat, fix, chore, docs, style, refactor)
+- scope: The scope of the change (e.g., component or section name). Use empty string if no specific scope.
+- message: A concise description of the change, under 72 characters total for the full title.
 
-Guidelines:
-- Use conventional commit format when appropriate (feat:, fix:, chore:, docs:, etc.)
+Guidelines for the message:
 - Be specific about what was added/changed/fixed
-- Keep titles under 72 characters
 - Focus on the user-facing impact or technical improvement
 - Use present tense, imperative mood
-- Don't include "PR" or "pull request" in the title
+- Keep the full formatted title (type(scope): message) under 72 characters
 
-Examples of good titles:
-- "feat: add user authentication with JWT tokens"
-- "fix: resolve memory leak in data processing pipeline"
-- "chore: update dependencies to latest versions"
-- "docs: add API documentation for webhook endpoints"
+Examples:
+- {"type": "feat", "scope": "auth", "message": "add user authentication with JWT tokens"}
+- {"type": "fix", "scope": "", "message": "resolve memory leak in data processing pipeline"}
+- {"type": "chore", "scope": "deps", "message": "update dependencies to latest versions"}
+- {"type": "docs", "scope": "api", "message": "add API documentation for webhook endpoints"}
 
-Analyze the diff and respond with ONLY the PR title, no additional text or explanation.
+Analyze the diff and respond with ONLY a valid JSON object matching this schema, no additional text or explanation.
 `;
 
 async function run() {
@@ -66,7 +67,7 @@ async function run() {
               },
               scope: {
                 type: "string",
-                description: "The scope of the change (e.g., component or section name)",
+                description: "The optional scope of the change (e.g., component or section name). Can be empty string.",
               },
               message: {
                 type: "string",
@@ -90,10 +91,6 @@ async function run() {
     throw new Error(`GitHub Models API request failed: ${response.status} ${response.statusText}\n${errorText}`);
   }
 
-  console.log("✅ Received response from GitHub Models API");
-  console.log("🤖 Parsing response...")
-  ;
-
   const data = await response.json() as {
     choices: {
       message: {
@@ -102,19 +99,23 @@ async function run() {
     }[];
   };
 
-  console.log("data", data);
-
   if (!data.choices || data.choices.length === 0) {
     throw new Error("No response received from GitHub Models API");
   }
 
-  throw new Error("Temporarily disabled until we can fix the prompt");
+  const content = data.choices[0].message.content.trim();
+  const parsed = JSON.parse(content) as {
+    type: string;
+    scope: string;
+    message: string;
+  };
 
-  const title = data.choices[0].message.content.trim();
+  const title = `${parsed.type}${parsed.scope ? `(${parsed.scope})` : ""}: ${parsed.message}`;
+
   // write to github_output
   if (process.env.GITHUB_OUTPUT) {
     console.log(`✅ Generated PR title: ${title}`);
-    // writeFileSync(process.env.GITHUB_OUTPUT, `title=${title}\n`);
+    writeFileSync(process.env.GITHUB_OUTPUT, `title=${title}\n`);
   }
 
   return title;
