@@ -13,7 +13,7 @@ Guidelines for the message:
 - Focus on the user-facing impact or technical improvement
 - Use present tense, imperative mood
 - Keep the full formatted title (type(scope): message) under 72 characters
-- Do not use `graphql` or `schema`, and something similar. The scope needs to be a component such as `User`, `Repository` (if applicable) 
+- Avoid generic scopes like 'graphql' or 'schema'; prefer specific component names such as 'User' or 'Repository' (if applicable)
 
 Examples:
 - {"type": "feat", "scope": "auth", "message": "add user authentication with JWT tokens"}
