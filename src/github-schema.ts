@@ -20222,6 +20222,7 @@ export type ProjectV2ItemsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<ProjectV2ItemOrder>;
+  query?: InputMaybe<Scalars['String']['input']>;
 };
 
 
