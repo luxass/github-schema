@@ -18699,6 +18699,40 @@ export type OrganizationOrderField =
   /** Order organizations by login */
   | 'LOGIN';
 
+/** Parameters to be used for the organization_property condition */
+export type OrganizationPropertyConditionTarget = {
+  __typename?: 'OrganizationPropertyConditionTarget';
+  /** Array of organization properties that must not match. */
+  exclude: Array<OrganizationPropertyTargetDefinition>;
+  /** Array of organization properties that must match */
+  include: Array<OrganizationPropertyTargetDefinition>;
+};
+
+/** Parameters to be used for the organization_property condition */
+export type OrganizationPropertyConditionTargetInput = {
+  /** Array of organization properties that must not match. */
+  exclude: Array<OrganizationPropertyTargetDefinitionInput>;
+  /** Array of organization properties that must match */
+  include: Array<OrganizationPropertyTargetDefinitionInput>;
+};
+
+/** A property that must match */
+export type OrganizationPropertyTargetDefinition = {
+  __typename?: 'OrganizationPropertyTargetDefinition';
+  /** The name of the property */
+  name: Scalars['String']['output'];
+  /** The values to match for */
+  propertyValues: Array<Scalars['String']['output']>;
+};
+
+/** A property that must match */
+export type OrganizationPropertyTargetDefinitionInput = {
+  /** The name of the property */
+  name: Scalars['String']['input'];
+  /** The values to match for */
+  propertyValues: Array<Scalars['String']['input']>;
+};
+
 /** An organization teams hovercard context */
 export type OrganizationTeamsHovercardContext = HovercardContext & {
   __typename?: 'OrganizationTeamsHovercardContext';
@@ -27884,6 +27918,8 @@ export type RepositoryRule = Node & {
 /** Set of conditions that determine if a ruleset will evaluate */
 export type RepositoryRuleConditions = {
   __typename?: 'RepositoryRuleConditions';
+  /** Configuration for the organization_property condition */
+  organizationProperty?: Maybe<OrganizationPropertyConditionTarget>;
   /** Configuration for the ref_name condition */
   refName?: Maybe<RefNameConditionTarget>;
   /** Configuration for the repository_id condition */
@@ -27896,6 +27932,8 @@ export type RepositoryRuleConditions = {
 
 /** Specifies the conditions required for a ruleset to evaluate */
 export type RepositoryRuleConditionsInput = {
+  /** Configuration for the organization_property condition */
+  organizationProperty?: InputMaybe<OrganizationPropertyConditionTargetInput>;
   /** Configuration for the ref_name condition */
   refName?: InputMaybe<RefNameConditionTargetInput>;
   /** Configuration for the repository_id condition */
@@ -28496,6 +28534,8 @@ export type RepositoryVulnerabilityAlertConnection = {
 export type RepositoryVulnerabilityAlertDependencyRelationship =
   /** A direct dependency of your project */
   | 'DIRECT'
+  /** The relationship could not be determined */
+  | 'INCONCLUSIVE'
   /** A transitive dependency of your project */
   | 'TRANSITIVE'
   /** The relationship is unknown */
@@ -34463,14 +34503,18 @@ export type UpdateProjectV2FieldInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The ID of the field to update. */
   fieldId: Scalars['ID']['input'];
-  /** Configuration for an iteration field. */
+  /**
+   * Configuration for a field of type ITERATION. Empty input is ignored, provided
+   * values overwrite the existing configuration, and existing configuration should
+   * be fetched for partial updates.
+   */
   iterationConfiguration?: InputMaybe<ProjectV2IterationFieldConfigurationInput>;
   /** The name to update. */
   name?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Options for a field of type SINGLE_SELECT. If empty, no changes will be made
-   * to the options. If values are present, they will overwrite the existing
-   * options for the field.
+   * Options for a field of type SINGLE_SELECT. Empty input is ignored, provided
+   * values overwrite existing options, and existing options should be fetched for
+   * partial updates.
    */
   singleSelectOptions?: InputMaybe<Array<ProjectV2SingleSelectFieldOptionInput>>;
 };
