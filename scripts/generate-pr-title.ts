@@ -16,10 +16,10 @@ Guidelines for the message:
 
 IMPORTANT Guidelines for scope:
 - NEVER use generic terms like 'schema', 'graphql', 'api', or 'types'
-- Look for specific entity or component names in the diff (e.g., 'User', 'Repository', 'Issue')
+- Look for specific entity or component names in the diff (e.g., 'user', 'repository', 'issue')
 - If changes span multiple specific components, use empty string for scope
 - Prefer empty string over vague or project-level scopes
-- Examples of good scopes: 'User', 'Repository', 'Workflow', 'Organization'
+- Examples of good scopes: 'user', 'repository', 'workflow', 'organization'
 - Examples of bad scopes: 'schema', 'graphql', 'types', 'api', 'data'
 
 Examples:
@@ -59,7 +59,7 @@ async function run() {
           content: `Please analyze this git diff and generate an appropriate PR title.
 
 Remember:
-If the changes affect schema files, identify the SPECIFIC entity or component being modified (e.g., 'User', 'Repository') rather than using 'schema' as the scope.
+If the changes affect schema files, identify the SPECIFIC entity or component being modified (e.g., 'user', 'repository') rather than using 'schema' as the scope.
 If changes span multiple entities, use both scopes but separate them with a comma.
 
 Git diff:
