@@ -13,13 +13,20 @@ Guidelines for the message:
 - Focus on the user-facing impact or technical improvement
 - Use present tense, imperative mood
 - Keep the full formatted title (type(scope): message) under 72 characters
-- Avoid generic scopes like 'graphql' or 'schema'; prefer specific component names such as 'User' or 'Repository' (if applicable)
+
+IMPORTANT Guidelines for scope:
+- NEVER use generic terms like 'schema', 'graphql', 'api', or 'types'
+- Look for specific entity or component names in the diff (e.g., 'User', 'Repository', 'Issue')
+- If changes span multiple specific components, use empty string for scope
+- Prefer empty string over vague or project-level scopes
+- Examples of good scopes: 'User', 'Repository', 'Workflow', 'Organization'
+- Examples of bad scopes: 'schema', 'graphql', 'types', 'api', 'data'
 
 Examples:
-- {"type": "feat", "scope": "auth", "message": "add user authentication with JWT tokens"}
+- {"type": "feat", "scope": "user", "message": "add email verification fields"}
 - {"type": "fix", "scope": "", "message": "resolve memory leak in data processing pipeline"}
 - {"type": "chore", "scope": "deps", "message": "update dependencies to latest versions"}
-- {"type": "docs", "scope": "api", "message": "add API documentation for webhook endpoints"}
+- {"type": "feat", "scope": "repository", "message": "add visibility settings"}
 
 Analyze the diff and respond with ONLY a valid JSON object matching this schema, no additional text or explanation.
 `;
@@ -49,7 +56,15 @@ async function run() {
         },
         {
           role: "user",
-          content: `Please analyze this git diff and generate an appropriate PR title:\n\n${diff}`,
+          content: `Please analyze this git diff and generate an appropriate PR title.
+
+Remember:
+If the changes affect schema files, identify the SPECIFIC entity or component being modified (e.g., 'User', 'Repository') rather than using 'schema' as the scope.
+If changes span multiple entities, use both scopes but separate them with a comma.
+
+Git diff:
+
+${diff}`,
         },
       ],
       model: "openai/gpt-4o",
@@ -78,6 +93,7 @@ async function run() {
             additionalProperties: false,
             required: [
               "type",
+              "scope",
               "message",
             ],
           },
@@ -106,7 +122,7 @@ async function run() {
   const content = data.choices[0].message.content.trim();
   const parsed = JSON.parse(content) as {
     type: string;
-    scope: string | null;
+    scope: string;
     message: string;
   };
 
