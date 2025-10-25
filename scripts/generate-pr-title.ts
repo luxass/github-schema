@@ -78,7 +78,6 @@ async function run() {
             additionalProperties: false,
             required: [
               "type",
-              "scope",
               "message",
             ],
           },
@@ -107,7 +106,7 @@ async function run() {
   const content = data.choices[0].message.content.trim();
   const parsed = JSON.parse(content) as {
     type: string;
-    scope: string;
+    scope: string | null;
     message: string;
   };
 
