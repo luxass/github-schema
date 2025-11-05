@@ -26,21 +26,21 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
     "./github-schema": {
-      "import": "./dist/github-schema.js",
+      "import": "./dist/github-schema.mjs",
       "require": "./dist/github-schema.cjs"
     },
     "./raw": {
-      "import": "./dist/raw.js",
+      "import": "./dist/raw.mjs",
       "require": "./dist/raw.cjs"
     },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.cts",
   "files": [
     "dist",
