@@ -26,7 +26,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: taiki-e/install-action@67cc679904bee382389bf22082124fa963c6f6bd # v2.61.3
+      - uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
         with:
           tool: zizmor
 
@@ -36,7 +36,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: upload sarif file
-        uses: github/codeql-action/upload-sarif@16df4fbc19aea13d921737861d6c622bf3cefe23 # codeql-bundle-v2.23.0
+        uses: github/codeql-action/upload-sarif@17783bfb99b07f70fae080b654aed0c514057477 # codeql-bundle-v2.23.3
         with:
           sarif_file: results.sarif
           category: zizmor
