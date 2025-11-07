@@ -65,12 +65,12 @@
     "@graphql-codegen/add": "6.0.0",
     "@graphql-codegen/cli": "6.0.1",
     "@graphql-codegen/typescript": "5.0.2",
-    "@luxass/eslint-config": "6.0.1",
-    "@types/node": "24.9.2",
+    "@luxass/eslint-config": "6.0.2",
+    "@types/node": "24.10.0",
     "eslint": "9.39.1",
     "eslint-plugin-format": "1.0.2",
     "publint": "0.3.15",
-    "tsdown": "0.16.0",
+    "tsdown": "0.16.1",
     "typescript": "5.9.3"
   },
   "pnpm": {
