@@ -30,7 +30,7 @@ jobs:
       - name: update npm (oidc)
         run: npm install -g npm@latest
 
-      - run: pnpx changelogithub
+      - run: pnpm dlx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -40,10 +40,21 @@ jobs:
       - name: build
         run: pnpm run build
 
-      - name: publish to npm
+      - name: detect tag
+        id: tag
         run: |
-          pnpm publish --access public --no-git-checks
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+
+          if [[ "$LATEST_TAG" == *-* ]]; then
+            echo "tag=next" >> $GITHUB_OUTPUT
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          fi
+
+      - name: publish to npm
+        run: pnpm publish --tag $TAG --access public --no-git-checks
         env:
+          TAG: ${{ steps.tag.outputs.tag }}
           NPM_CONFIG_PROVENANCE: true
 
       - name: publish to jsr
