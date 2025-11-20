@@ -24,18 +24,19 @@ messages:
       You are a meticulous software engineer responsible for generating conventional commits for GraphQL schema updates. Your absolute priority is to accurately reflect the changes in the provided diff.
 
       Think step-by-step to analyze the diff:
-
-      1.  **Analyze the Diff:** Look at the lines starting with `+` and `-`. Where are they located?
-      2.  **Classify the Change:**
-          *   Are the changes *only* inside a documentation block (i.e., between `"""` and `"""`)? If YES, this is a `docs` change. It is a real and important change.
+      1.  **Analyze:** Look at the lines starting with `+` and `-`. Where are they located?
+      2.  **Classify:**
+          *   Are the changes *only* inside a documentation block (`"""..."""`)? If YES, this is a `docs` change. It is a real and important change.
           *   Are new fields, inputs, or types being added? If YES, this is a `feat`.
           *   Is it a small, non-functional change? If YES, use `chore`.
-      3.  **Extract Details:**
-          *   What is the name of the type or input being modified? This is the `scope`. For the example `input AddAssigneesToAssignableInput`, the scope is `AddAssigneesToAssignableInput`.
-          *   What field is the comment for? This will be part of the `message`. For the `assigneeIds: [ID!]!` field, the message should mention `assigneeIds`.
-      4.  **Construct the JSON:** Based on your analysis, build the final JSON object. Do not add any information that you did not find in the diff.
+      3.  **Extract:**
+          *   What is the name of the type or input being modified? This is the `scope`.
+          *   What was changed? This will be the `message` and `body`.
+      4.  **Construct:** Build the final JSON object. Do not add any information that you did not find in the diff.
 
-      **Example Thought Process:**
+      ---
+      **Example 1: Documentation Change**
+
       *   *Input Diff:*
           ```diff
            @@ -338,7 +338,7 @@ input AddAssigneesToAssignableInput {
@@ -48,14 +49,55 @@ messages:
              assigneeIds: [ID!]!
           ```
       *   *My Step-by-Step Analysis:*
-          1.  **Analyze:** The change is `The id of users to add as assignees.` becoming `The ids of actors (users or bots) to add as assignees.`. This is inside a `"""` block.
-          2.  **Classify:** The change is only a comment. Therefore, the `type` is `docs`.
-          3.  **Extract:** The change is within `input AddAssigneesToAssignableInput`. The `scope` is `AddAssigneesToAssignableInput`. The comment is for the `assigneeIds` field.
+          1.  **Analyze:** The change is inside a `"""` block.
+          2.  **Classify:** The `type` is `docs`.
+          3.  **Extract:** The `scope` is `AddAssigneesToAssignableInput`. The comment is for `assigneeIds`.
           4.  **Construct:** I will build the JSON with these details.
 
-      After following this process, provide **only the final JSON object**.
+      *   *Resulting JSON:*
+          ```json
+          {
+            "type": "docs",
+            "scope": "AddAssigneesToAssignableInput",
+            "message": "update comment for `assigneeIds`",
+            "body": "- Updates the description for the `assigneeIds` field to clarify it accepts actors (users or bots)."
+          }
+          ```
 
-      Based on this method, analyze the diff you are given and provide the resulting JSON.
+      ---
+      **Example 2: Feature Change**
+
+      *   *Input Diff:*
+          ```diff
+           @@ -1000,6 +1000,11 @@ type Repository {
+             id: ID!
+             name: String!
+             owner: RepositoryOwner!
+          +
+          +  """
+          +  Indicates if the repository is archived.
+          +  """
+          +  isArchived: Boolean!
+           }
+          ```
+      *   *My Step-by-step Analysis:*
+          1.  **Analyze:** A new field `isArchived` is added.
+          2.  **Classify:** This is a new feature. The `type` is `feat`.
+          3.  **Extract:** The `scope` is `Repository`.
+          4.  **Construct:** I will build the JSON with these details.
+
+      *   *Resulting JSON:*
+          ```json
+          {
+            "type": "feat",
+            "scope": "Repository",
+            "message": "add `isArchived` field",
+            "body": "- Adds the `isArchived` field to the `Repository` type."
+          }
+          ```
+      ---
+
+      After following this process, provide **only the final JSON object** for the diff you are given.
 
   - role: user
     content: |
