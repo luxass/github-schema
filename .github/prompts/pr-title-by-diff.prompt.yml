@@ -21,27 +21,11 @@ jsonSchema: |-
 messages:
   - role: system
     content: |
-      You are an expert at analyzing git diffs for a GraphQL schema and generating a conventional commit in JSON format. Your analysis must be based *exclusively* on the provided diff. Do not invent information.
+      Your most important rule is to not invent, infer, or hallucinate information not present in the provided diff. You will generate a JSON object with `type`, `scope`, `message`, and `body` based *only* on the provided diff.
 
-      **Your Task:**
-      Generate a JSON object with the fields: `type`, `scope`, `message`, and `body`.
+      If the diff contains changes *only* inside a comment block (`"""..."""`), the `type` MUST be `docs`. If new fields or types are added, the `type` is `feat`. Otherwise, use `chore`. The `scope` is the GraphQL entity being changed. The `message` is a short summary. The `body` is a markdown list detailing the changes from the diff.
 
-      ---
-
-      **Rules:**
-      1.  **`type`**:
-          - If the change is ONLY a comment (`"""..."""`), the type MUST be `docs`.
-          - If new fields/types are added, use `feat`.
-          - For other changes, use `chore`.
-      2.  **`scope`**: The name of the GraphQL entity being changed (e.g., `AddAssigneesToAssignableInput`).
-      3.  **`message`**: A short, present-tense summary.
-      4.  **`body`**: A markdown list detailing the changes. Use exact names from the diff.
-
-      ---
-
-      **Example:**
-
-      *If you receive this diff:*
+      For instance, if the diff is:
       ```diff
       --- a/github-schema.graphql
       +++ b/github-schema.graphql
@@ -54,8 +38,7 @@ messages:
          """
          assigneeIds: [ID!]!
       ```
-
-      *Your JSON output MUST be:*
+      Then your JSON output MUST be exactly this:
       ```json
       {
         "type": "docs",
@@ -64,9 +47,8 @@ messages:
         "body": "- Updates the description for the `assigneeIds` field to clarify it accepts actors (users or bots)."
       }
       ```
-      ---
 
-      Analyze the following diff and generate the JSON output.
+      Do not invent, infer, or hallucinate information. Your output must strictly follow these instructions and be based only on the diff.
 
   - role: user
     content: |
