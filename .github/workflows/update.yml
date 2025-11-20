@@ -86,7 +86,7 @@ jobs:
 
       - name: generate pr metadata (ai)
         id: pr-metadata
-        if: ${{ steps.generate-diff.outputs.DIFF != '' && github.event.inputs.dry-run != 'true' }}
+        if: ${{ steps.generate-diff.outputs.DIFF != '' && github.event.inputs.dry-run != 'true' && steps.diff-too-long.outputs.DIFF_TOO_LONG == 'false' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -104,24 +104,32 @@ jobs:
           SCOPE=$(echo "$CONTENT" | jq -r '.scope')
           MESSAGE=$(echo "$CONTENT" | jq -r '.message')
           TITLE="$TYPE${SCOPE:+($SCOPE)}: $MESSAGE"
+          BODY=$(echo "$CONTENT" | jq -r '.body')
 
           echo "✅ Generated PR title: $TITLE"
           echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+
+          echo "body<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$BODY" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: create pull request
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         if: ${{ github.event.inputs.dry-run != 'true' }}
         env:
           DIFF: ${{ steps.diff-too-long.outputs.DIFF_TOO_LONG == 'true' && 'diff is too long to render' || steps.generate-diff.outputs.DIFF }}
-          COMMIT_MESSAGE: "${{ steps.pr-metadata.outputs.title || 'feat: updated github graphql schema' }}"
+          PR_TITLE: "${{ steps.pr-metadata.outputs.title || 'feat: updated github graphql schema' }}"
+          PR_BODY: ${{ steps.pr-metadata.outputs.body || 'I don''t know what they changed, but I''m sure it''s important.' }}
         with:
-          commit-message: ${{ env.COMMIT_MESSAGE }}
-          title: ${{ env.COMMIT_MESSAGE }}
+          commit-message: |
+            ${{ env.PR_TITLE }}
+
+            ${{ env.PR_BODY }}
+          title: ${{ env.PR_TITLE }}
           body: |
             I found some new changes in GitHub's GraphQL Schema.
 
-            I don't know what they changed, but I'm sure it's important.
-            If you want you can go take a look yourself.
+            ${{ env.PR_BODY }}
 
             ### Changes
             <details>
@@ -132,8 +140,6 @@ jobs:
             ```
 
             <br/></details>
-
-            I will be waiting for your approval 👋.
 
             This is an automated PR to update the GitHub GraphQL Schema.
           branch: update-github-graphql-schema

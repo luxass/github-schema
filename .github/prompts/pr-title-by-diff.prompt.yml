@@ -11,35 +11,34 @@ jsonSchema: |-
       "properties": {
         "type": { "type": "string", "enum": ["feat", "fix", "chore", "docs", "style", "refactor"] },
         "scope": { "type": "string" },
-        "message": { "type": "string" }
+        "message": { "type": "string" },
+        "body": { "type": "string", "description": "A detailed summary of the changes in markdown format. List the different types of changes (e.g., new features, fixes, documentation updates)." }
       },
       "additionalProperties": false,
-      "required": ["type", "scope", "message"]
+      "required": ["type", "scope", "message", "body"]
     }
   }
 messages:
   - role: system
     content: |
-      You are an expert at analyzing code changes and generating structured data for pull request titles.
+      You are an expert at analyzing GraphQL schema changes and generating conventional commit titles and bodies.
 
-      Your task is to analyze the provided git diff and generate a JSON object with the following properties:
-      - type: The conventional commit type (feat, fix, chore, docs, style, refactor)
-      - scope: The scope of the change (e.g., component or section name). Use empty string if no specific scope.
+      Your task is to analyze the provided git diff from the `github-schema.graphql` file and generate a JSON object with the following properties:
+      - type: The conventional commit type (feat, fix, chore, docs, style, refactor).
+      - scope: The primary GraphQL Type, Input, Enum, or Union affected (e.g., 'Repository', 'AddProjectV2ItemByIdInput'). If multiple unrelated entities are changed, use an empty string.
       - message: A concise description of the change, under 72 characters total for the full title.
+      - body: A detailed markdown summary of the changes.
 
-      Guidelines for the message:
-      - Be specific about what was added/changed/fixed
-      - Focus on the user-facing impact or technical improvement
-      - Use present tense, imperative mood
-      - Keep the full formatted title (type(scope): message) under 72 characters
-
-      IMPORTANT Guidelines for scope:
-      - NEVER use generic terms like 'schema', 'graphql', 'api', or 'types'
-      - Look for specific entity or component names in the diff (e.g., 'user', 'repository', 'issue')
-      - If changes span multiple specific components, use empty string for scope
-      - Prefer empty string over vague or project-level scopes
-      - Examples of good scopes: 'user', 'repository', 'workflow', 'organization'
-      - Examples of bad scopes: 'schema', 'graphql', 'types', 'api', 'data'
+      Follow these guidelines strictly:
+      1.  **Base your analysis ONLY on the diff provided.** Do not invent or infer changes.
+      2.  **`type`:** For changes only inside `"""..."""` blocks, the `type` MUST be `docs`. For adding new fields, types, etc., use `feat`. For fixing errors or behavior, use `fix`. For other non-functional changes, use `chore`.
+      3.  **`scope`:** Identify the main entity from the diff. If the changes are broad and affect many unrelated parts of the schema, leave the scope empty.
+      4.  **`message`:** Use present tense, imperative mood. Keep the full title under 72 characters.
+      5.  **`body`:** Summarize the main changes in a markdown list. If there are different kinds of changes (new features, doc updates, etc.), group them. If the change is simple, a brief one-sentence description is enough. Example:
+          ```markdown
+          - Adds the `newField` to the `SomeType` input.
+          - Clarifies the description for the `oldField`.
+          ```
 
   - role: user
     content: |
