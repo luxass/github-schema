@@ -236,7 +236,7 @@ export type ActorType =
 export type AddAssigneesToAssignableInput = {
   /** The id of the assignable object to add assignees to. */
   assignableId: Scalars['ID']['input'];
-  /** The id of users to add as assignees. */
+  /** The ids of actors (users or bots) to add as assignees. */
   assigneeIds: Array<Scalars['ID']['input']>;
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
