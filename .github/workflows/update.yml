@@ -79,71 +79,24 @@ jobs:
             echo "DIFF_TOO_LONG=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: install gh model extension
+        run: gh extension install https://github.com/github/gh-models
+
       - name: generate pr metadata (ai)
         id: pr-metadata
         if: ${{ steps.generate-diff.outputs.DIFF != '' && github.event.inputs.dry-run != 'true' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SYSTEM_PROMPT: |
-            You are an expert at analyzing code changes and generating structured data for pull request titles.
-
-            Your task is to analyze the provided git diff and generate a JSON object with the following properties:
-            - type: The conventional commit type (feat, fix, chore, docs, style, refactor)
-            - scope: The scope of the change (e.g., component or section name). Use empty string if no specific scope.
-            - message: A concise description of the change, under 72 characters total for the full title.
-
-            Guidelines for the message:
-            - Be specific about what was added/changed/fixed
-            - Focus on the user-facing impact or technical improvement
-            - Use present tense, imperative mood
-            - Keep the full formatted title (type(scope): message) under 72 characters
-
-            IMPORTANT Guidelines for scope:
-            - NEVER use generic terms like 'schema', 'graphql', 'api', or 'types'
-            - Look for specific entity or component names in the diff (e.g., 'user', 'repository', 'issue')
-            - If changes span multiple specific components, use empty string for scope
-            - Prefer empty string over vague or project-level scopes
-            - Examples of good scopes: 'user', 'repository', 'workflow', 'organization'
-            - Examples of bad scopes: 'schema', 'graphql', 'types', 'api', 'data'
-          REQUEST_TEMPLATE: |
-            {
-              "messages": [
-                { "role": "system", "content": "" },
-                { "role": "user", "content": "" }
-              ],
-              "model": "openai/gpt-4o",
-              "response_format": {
-                "type": "json_schema",
-                "json_schema": {
-                  "name": "pr-title",
-                  "strict": true,
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "type": { "type": "string", "enum": ["feat", "fix", "chore", "docs", "style", "refactor"] },
-                      "scope": { "type": "string" },
-                      "message": { "type": "string" }
-                    },
-                    "additionalProperties": false,
-                    "required": ["type", "scope", "message"]
-                  }
-                }
-              }
-            }
-
         run: |
           set -euo pipefail
 
           DIFF_CONTENT=$(cat github-schema.diff)
 
-          # Build the request JSON using jq to safely insert the prompt and diff into the REQUEST_TEMPLATE.
-          REQUEST_JSON=$(jq --arg system "$SYSTEM_PROMPT" --arg diff "$DIFF_CONTENT" '.messages[0].content=$system | .messages[1].content=("Please analyze this git diff and generate an appropriate PR title.\n\n" + $diff)' <<< "$REQUEST_TEMPLATE")
-
           # Call the GitHub models API via gh and capture the output (read request from stdin)
-          RESPONSE=$(printf '%s' "$REQUEST_JSON" | gh api --hostname models.github.ai -X POST /inference/chat/completions --input -)
+          RESPONSE=$(gh models run --file=.github/prompts/pr-title-by-diff.prompt.yml --var "diff=$DIFF_CONTENT")
 
           # Extract the generated JSON content and build the title
-          CONTENT=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
+          CONTENT=$(echo "$RESPONSE" | jq -r '.')
 
           TYPE=$(echo "$CONTENT" | jq -r '.type')
           SCOPE=$(echo "$CONTENT" | jq -r '.scope')
