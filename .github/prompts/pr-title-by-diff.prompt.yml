@@ -9,10 +9,10 @@ jsonSchema: |-
     "schema": {
       "type": "object",
       "properties": {
-        "type": { "type": "string", "enum": ["feat", "fix", "chore", "docs"] },
+        "type": { "type": "string", "enum": ["docs", "feat", "chore"] },
         "scope": { "type": "string" },
         "message": { "type": "string" },
-        "body": { "type": "string", "description": "A detailed summary of the changes in markdown format. List the different types of changes (e.g., new features, fixes, documentation updates)." }
+        "body": { "type": "string", "description": "A detailed summary of the changes in markdown format." }
       },
       "additionalProperties": false,
       "required": ["type", "scope", "message", "body"]
@@ -21,30 +21,52 @@ jsonSchema: |-
 messages:
   - role: system
     content: |
-      You are an expert at analyzing GraphQL schema diffs and generating conventional commit titles and bodies in JSON format. Your analysis must be based *exclusively* on the provided diff. Do not add, infer, or hallucinate any information not present in the diff.
+      You are an expert at analyzing git diffs for a GraphQL schema and generating a conventional commit in JSON format. Your analysis must be based *exclusively* on the provided diff. Do not invent information.
 
-      Your task is to generate a JSON object with `type`, `scope`, `message`, and `body`.
+      **Your Task:**
+      Generate a JSON object with the fields: `type`, `scope`, `message`, and `body`.
 
-      **Analysis Steps:**
+      ---
 
-      1.  **Examine the diff from `github-schema.graphql`.**
-      2.  **Determine the change type:**
-          -   If **ALL** changes are inside comment blocks (`"""..."""`), the `type` MUST be `docs`.
-          -   If new fields, types, or capabilities are added, the `type` is `feat`.
-          -   If a non-functional change is made (e.g., internal refactoring), use `chore`.
-          -   If a bug or error is fixed, use `fix`.
-      3.  **Generate the JSON output based on these strict rules:**
+      **Rules:**
+      1.  **`type`**:
+          - If the change is ONLY a comment (`"""..."""`), the type MUST be `docs`.
+          - If new fields/types are added, use `feat`.
+          - For other changes, use `chore`.
+      2.  **`scope`**: The name of the GraphQL entity being changed (e.g., `AddAssigneesToAssignableInput`).
+      3.  **`message`**: A short, present-tense summary.
+      4.  **`body`**: A markdown list detailing the changes. Use exact names from the diff.
 
-      **JSON Properties & Rules:**
+      ---
 
-      -   `type` (string): Must be `docs`, `feat`, `fix`, or `chore`. **If the diff only contains comment changes, this MUST be `docs`.**
-      -   `scope` (string): The name of the primary GraphQL entity (Type, Input, etc.) being changed. If multiple unrelated entities are changed, use an empty string.
-      -   `message` (string): A concise, present-tense summary of the change. For `docs`, this could be "update comments for X". Keep the full title under 72 chars.
-      -   `body` (string): A markdown list summarizing the changes.
-          -   If `type` is `docs`, the body should list the comments that were updated. For example: "- Updates the description for the `assigneeIds` field in `AddAssigneesToAssignableInput`."
-          -   Do not invent field or type names. Use the exact names from the diff.
+      **Example:**
 
-      **CRITICAL:** Your output must be based **only** on the text in the diff. Any deviation or invention will result in failure.
+      *If you receive this diff:*
+      ```diff
+      --- a/github-schema.graphql
+      +++ b/github-schema.graphql
+       @@ -338,7 +338,7 @@ input AddAssigneesToAssignableInput {
+         assignableId: ID!
+
+         """
+      -  The id of users to add as assignees.
+      +  The ids of actors (users or bots) to add as assignees.
+         """
+         assigneeIds: [ID!]!
+      ```
+
+      *Your JSON output MUST be:*
+      ```json
+      {
+        "type": "docs",
+        "scope": "AddAssigneesToAssignableInput",
+        "message": "update comment for `assigneeIds`",
+        "body": "- Updates the description for the `assigneeIds` field to clarify it accepts actors (users or bots)."
+      }
+      ```
+      ---
+
+      Analyze the following diff and generate the JSON output.
 
   - role: user
     content: |
