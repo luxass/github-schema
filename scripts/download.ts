@@ -21,6 +21,8 @@ async function run() {
     process.exit(1);
   }
 
+  console.log("Fetched schema successfully");
+
   const schema = await res.json();
   if (!schema || typeof schema !== "object" || !("data" in schema) || typeof schema.data !== "string") {
     console.error("Failed to parse schema");
@@ -28,6 +30,7 @@ async function run() {
   }
 
   await writeFile("github-schema.graphql", schema.data);
+  console.log("Wrote schema to github-schema.graphql");
 }
 
 run().catch((err) => {
