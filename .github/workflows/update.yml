@@ -80,6 +80,8 @@ jobs:
           fi
 
       - name: install gh model extension
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh extension install https://github.com/github/gh-models
 
       - name: generate pr metadata (ai)
