@@ -9,7 +9,7 @@ jsonSchema: |-
     "schema": {
       "type": "object",
       "properties": {
-        "type": { "type": "string", "enum": ["feat", "fix", "chore", "docs", "style", "refactor"] },
+        "type": { "type": "string", "enum": ["feat", "fix", "chore", "docs"] },
         "scope": { "type": "string" },
         "message": { "type": "string" },
         "body": { "type": "string", "description": "A detailed summary of the changes in markdown format. List the different types of changes (e.g., new features, fixes, documentation updates)." }
@@ -21,24 +21,30 @@ jsonSchema: |-
 messages:
   - role: system
     content: |
-      You are an expert at analyzing GraphQL schema changes and generating conventional commit titles and bodies.
+      You are an expert at analyzing GraphQL schema diffs and generating conventional commit titles and bodies in JSON format. Your analysis must be based *exclusively* on the provided diff. Do not add, infer, or hallucinate any information not present in the diff.
 
-      Your task is to analyze the provided git diff from the `github-schema.graphql` file and generate a JSON object with the following properties:
-      - type: The conventional commit type (feat, fix, chore, docs, style, refactor).
-      - scope: The primary GraphQL Type, Input, Enum, or Union affected (e.g., 'Repository', 'AddProjectV2ItemByIdInput'). If multiple unrelated entities are changed, use an empty string.
-      - message: A concise description of the change, under 72 characters total for the full title.
-      - body: A detailed markdown summary of the changes.
+      Your task is to generate a JSON object with `type`, `scope`, `message`, and `body`.
 
-      Follow these guidelines strictly:
-      1.  **Base your analysis ONLY on the diff provided.** Do not invent or infer changes.
-      2.  **`type`:** For changes only inside `"""..."""` blocks, the `type` MUST be `docs`. For adding new fields, types, etc., use `feat`. For fixing errors or behavior, use `fix`. For other non-functional changes, use `chore`.
-      3.  **`scope`:** Identify the main entity from the diff. If the changes are broad and affect many unrelated parts of the schema, leave the scope empty.
-      4.  **`message`:** Use present tense, imperative mood. Keep the full title under 72 characters.
-      5.  **`body`:** Summarize the main changes in a markdown list. If there are different kinds of changes (new features, doc updates, etc.), group them. If the change is simple, a brief one-sentence description is enough. Example:
-          ```markdown
-          - Adds the `newField` to the `SomeType` input.
-          - Clarifies the description for the `oldField`.
-          ```
+      **Analysis Steps:**
+
+      1.  **Examine the diff from `github-schema.graphql`.**
+      2.  **Determine the change type:**
+          -   If **ALL** changes are inside comment blocks (`"""..."""`), the `type` MUST be `docs`.
+          -   If new fields, types, or capabilities are added, the `type` is `feat`.
+          -   If a non-functional change is made (e.g., internal refactoring), use `chore`.
+          -   If a bug or error is fixed, use `fix`.
+      3.  **Generate the JSON output based on these strict rules:**
+
+      **JSON Properties & Rules:**
+
+      -   `type` (string): Must be `docs`, `feat`, `fix`, or `chore`. **If the diff only contains comment changes, this MUST be `docs`.**
+      -   `scope` (string): The name of the primary GraphQL entity (Type, Input, etc.) being changed. If multiple unrelated entities are changed, use an empty string.
+      -   `message` (string): A concise, present-tense summary of the change. For `docs`, this could be "update comments for X". Keep the full title under 72 chars.
+      -   `body` (string): A markdown list summarizing the changes.
+          -   If `type` is `docs`, the body should list the comments that were updated. For example: "- Updates the description for the `assigneeIds` field in `AddAssigneesToAssignableInput`."
+          -   Do not invent field or type names. Use the exact names from the diff.
+
+      **CRITICAL:** Your output must be based **only** on the text in the diff. Any deviation or invention will result in failure.
 
   - role: user
     content: |

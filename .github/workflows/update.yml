@@ -94,11 +94,18 @@ jobs:
 
           DIFF_CONTENT=$(cat github-schema.diff)
 
+          echo "Generating PR metadata based on the following diff:"
+          echo "----------------------------------------"
+          echo "$DIFF_CONTENT"
+          echo "----------------------------------------"
+
           # Call the GitHub models API via gh and capture the output (read request from stdin)
           RESPONSE=$(gh models run --file=.github/prompts/pr-title-by-diff.prompt.yml --var "diff=$DIFF_CONTENT")
 
           # Extract the generated JSON content and build the title
           CONTENT=$(echo "$RESPONSE" | jq -r '.')
+
+          echo "✅ Generated PR metadata: $CONTENT"
 
           TYPE=$(echo "$CONTENT" | jq -r '.type')
           SCOPE=$(echo "$CONTENT" | jq -r '.scope')
