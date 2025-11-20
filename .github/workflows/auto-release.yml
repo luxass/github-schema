@@ -42,7 +42,7 @@ jobs:
       - name: create tag and release
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          AUTO_RELEASE_TOKEN: ${{ secrets.AUTO_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.AUTO_RELEASE_TOKEN }}
           GH_TOKEN: ${{ secrets.AUTO_RELEASE_TOKEN }}
         run: |
           set -euo pipefail

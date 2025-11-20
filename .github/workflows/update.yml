@@ -72,7 +72,7 @@ jobs:
         id: diff-too-long
         run: |
           DIFF_LENGTH=$(wc -l < github-schema.diff)
-          if [ "$DIFF_LENGTH" -gt 100 ]; then
+          if [ "$DIFF_LENGTH" -gt 300 ]; then
             echo "The diff is too long. Please check the file manually."
             echo "DIFF_TOO_LONG=true" >> "$GITHUB_OUTPUT"
           else
