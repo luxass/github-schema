@@ -104,5 +104,5 @@ messages:
       Please analyze this git diff and generate an appropriate PR title.
 
       ```diff
-      {{DIFF}}
+      {{diff}}
       ```
