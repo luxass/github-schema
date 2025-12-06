@@ -39481,13 +39481,6 @@ type PullRequestParameters {
   allowedMergeMethods: [PullRequestAllowedMergeMethods!]
 
   """
-  Request Copilot code review for new pull requests automatically if the author
-  has access to Copilot code review and their premium requests quota has not
-  reached the limit.
-  """
-  automaticCopilotCodeReviewEnabled: Boolean!
-
-  """
   New, reviewable commits pushed will dismiss previous pull request review approvals.
   """
   dismissStaleReviewsOnPush: Boolean!
@@ -39529,13 +39522,6 @@ input PullRequestParametersInput {
   `rebase`. At least one option must be enabled.
   """
   allowedMergeMethods: [PullRequestAllowedMergeMethods!]
-
-  """
-  Request Copilot code review for new pull requests automatically if the author
-  has access to Copilot code review and their premium requests quota has not
-  reached the limit.
-  """
-  automaticCopilotCodeReviewEnabled: Boolean
 
   """
   New, reviewable commits pushed will dismiss previous pull request review approvals.
