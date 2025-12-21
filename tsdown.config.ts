@@ -7,7 +7,9 @@ export default defineConfig(
     clean: true,
     dts: true,
     treeshake: true,
-    exports: true,
+    exports: {
+      enabled: "local-only",
+    },
     publint: true,
   },
 );
