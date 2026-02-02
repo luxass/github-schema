@@ -63,14 +63,14 @@
   },
   "devDependencies": {
     "@graphql-codegen/add": "6.0.0",
-    "@graphql-codegen/cli": "6.1.0",
+    "@graphql-codegen/cli": "6.1.1",
     "@graphql-codegen/typescript": "5.0.7",
     "@luxass/eslint-config": "6.0.3",
-    "@types/node": "24.10.4",
+    "@types/node": "24.10.9",
     "eslint": "9.39.2",
     "eslint-plugin-format": "1.1.0",
-    "publint": "0.3.16",
-    "tsdown": "0.18.3",
+    "publint": "0.3.17",
+    "tsdown": "0.20.1",
     "typescript": "5.9.3"
   },
   "pnpm": {
