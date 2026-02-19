@@ -65,7 +65,7 @@
     "@graphql-codegen/add": "6.0.0",
     "@graphql-codegen/cli": "6.1.0",
     "@graphql-codegen/typescript": "5.0.7",
-    "@luxass/eslint-config": "6.0.3",
+    "@luxass/eslint-config": "7.2.0",
     "@types/node": "24.10.4",
     "eslint": "9.39.2",
     "eslint-plugin-format": "1.1.0",
