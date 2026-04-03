@@ -14,9 +14,7 @@
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
   "include": ["src", "scripts"],
   "exclude": ["node_modules", "dist"]

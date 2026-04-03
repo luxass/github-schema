@@ -15,4 +15,5 @@ export default defineConfig({
     newlinesBetween: true,
     order: "asc",
   },
+  ignorePatterns: ["src/github-schema.ts", "github-schema.graphql"],
 });
