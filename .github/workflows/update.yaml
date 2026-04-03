@@ -1,0 +1,280 @@
+name: Update GitHub GraphQL Schema
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        type: boolean
+        description: Run the workflow without creating a pull request
+        required: false
+        default: false
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      models: read
+    environment:
+      name: huginn
+      deployment: false
+    if: github.repository == 'luxass/github-schema'
+    steps:
+      - name: generate token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+
+      - name: setup node
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: install dependencies
+        run: pnpm install
+
+      - name: download github graphql schema
+        run: |
+          echo "" > .env
+          pnpm run schema:download
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: generate types
+        run: pnpm run schema:codegen
+
+      - name: lint with fix
+        run: pnpm run lint --fix
+
+      - name: generate diff
+        id: generate-diff
+        run: |
+          git diff github-schema.graphql > github-schema.diff
+
+          # if the diff is empty
+          if [ ! -s github-schema.diff ]; then
+            echo "No changes found in the GitHub GraphQL Schema."
+            exit 0
+          fi
+
+          echo "Changes found in the GitHub GraphQL Schema:"
+          {
+            echo 'DIFF<<EOF'
+            cat github-schema.diff
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - name: check if diff is too long
+        id: diff-too-long
+        run: |
+          DIFF_LENGTH=$(wc -l < github-schema.diff)
+          if [ "$DIFF_LENGTH" -gt 2000 ]; then
+            echo "The diff is too long. Please check the file manually."
+            echo "DIFF_TOO_LONG=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "DIFF_TOO_LONG=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: generate pr metadata (ai)
+        id: pr-metadata
+        if: ${{ steps.generate-diff.outputs.DIFF != '' && github.event.inputs.dry-run != 'true' && steps.diff-too-long.outputs.DIFF_TOO_LONG == 'false' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SYSTEM_PROMPT: |
+            You are a meticulous software engineer responsible for generating conventional commits for GraphQL schema updates. Your absolute priority is to accurately reflect the changes in the provided diff.
+
+            Think step-by-step to analyze the diff:
+            1.  **Analyze:** Look at the lines starting with `+` and `-`. Where are they located?
+            2.  **Classify:**
+                *   Are the changes *only* inside a documentation block (`"""..."""`)? If YES, this is a `docs` change. It is a real and important change.
+                *   Are new fields, inputs, or types being added? If YES, this is a `feat`.
+                *   Is it a small, non-functional change? If YES, use `chore`.
+            3.  **Extract:**
+                *   What is the name of the type or input being modified? This is the `scope`.
+                *   What was changed? This will be the `message` and `body`.
+            4.  **Construct:** Build the final JSON object. Do not add any information that you did not find in the diff.
+
+            ---
+            **Example 1: Documentation Change**
+
+            *   *Input Diff:*
+                ```diff
+                 @@ -338,7 +338,7 @@ input AddAssigneesToAssignableInput {
+                   assignableId: ID!
+
+                   """
+                -  The id of users to add as assignees.
+                +  The ids of actors (users or bots) to add as assignees.
+                   """
+                   assigneeIds: [ID!]!
+                ```
+            *   *My Step-by-Step Analysis:*
+                1.  **Analyze:** The change is inside a `"""` block.
+                2.  **Classify:** The `type` is `docs`.
+                3.  **Extract:** The `scope` is `AddAssigneesToAssignableInput`. The comment is for `assigneeIds`.
+                4.  **Construct:** I will build the JSON with these details.
+
+            *   *Resulting JSON:*
+                ```json
+                {
+                  "type": "docs",
+                  "scope": "AddAssigneesToAssignableInput",
+                  "message": "update comment for `assigneeIds`",
+                  "body": "- Updates the description for the `assigneeIds` field to clarify it accepts actors (users or bots)."
+                }
+                ```
+
+            ---
+            **Example 2: Feature Change**
+
+            *   *Input Diff:*
+                ```diff
+                 @@ -1000,6 +1000,11 @@ type Repository {
+                   id: ID!
+                   name: String!
+                   owner: RepositoryOwner!
+                +
+                +  """
+                +  Indicates if the repository is archived.
+                +  """
+                +  isArchived: Boolean!
+                 }
+                ```
+            *   *My Step-by-step Analysis:*
+                1.  **Analyze:** A new field `isArchived` is added.
+                2.  **Classify:** This is a new feature. The `type` is `feat`.
+                3.  **Extract:** The `scope` is `Repository`.
+                4.  **Construct:** I will build the JSON with these details.
+
+            *   *Resulting JSON:*
+                ```json
+                {
+                  "type": "feat",
+                  "scope": "Repository",
+                  "message": "add `isArchived` field",
+                  "body": "- Adds the `isArchived` field to the `Repository` type."
+                }
+                ```
+            ---
+
+            After following this process, provide **only the final JSON object** for the diff you are given.
+          REQUEST_TEMPLATE: |
+            {
+              "messages": [
+                { "role": "system", "content": "" },
+                { "role": "user", "content": "" }
+              ],
+              "model": "xai/grok-3-mini",
+              "reasoning_effort": "high",
+              "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                  "name": "pr-title",
+                  "strict": true,
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string", "enum": ["docs", "feat", "fix", "chore"] },
+                      "scope": { "type": "string" },
+                      "message": { "type": "string" },
+                      "body": { "type": "string" }
+                    },
+                    "additionalProperties": false,
+                    "required": ["type", "scope", "message", "body"]
+                  }
+                }
+              }
+            }
+
+        run: |
+          set -euo pipefail
+
+          DIFF_CONTENT=$(cat github-schema.diff)
+
+          # Build the request JSON using jq to safely insert the prompt and diff into the REQUEST_TEMPLATE.
+          REQUEST_JSON=$(jq --arg system "$SYSTEM_PROMPT" --arg diff "$DIFF_CONTENT" \
+            '.messages[0].content=$system | .messages[1].content=("Please analyze this git diff and generate an appropriate PR title.\n\n```diff\n" + $diff + "\n```")' \
+            <<< "$REQUEST_TEMPLATE")
+
+          # Call the GitHub Models API via curl (pipe JSON via stdin to avoid shell quoting issues)
+          RESPONSE=$(printf '%s' "$REQUEST_JSON" | curl -s -X POST "https://models.github.ai/inference/chat/completions" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            --data-binary @-)
+
+          echo "API response: $RESPONSE"
+
+          # Extract the generated JSON content and build the title
+          CONTENT=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
+
+          TYPE=$(echo "$CONTENT" | jq -r '.type')
+          SCOPE=$(echo "$CONTENT" | jq -r '.scope')
+          MESSAGE=$(echo "$CONTENT" | jq -r '.message')
+          BODY=$(echo "$CONTENT" | jq -r '.body')
+          TITLE="$TYPE${SCOPE:+($SCOPE)}: $MESSAGE"
+
+          echo "✅ Generated PR title: $TITLE"
+          {
+            echo "title<<GITHUB_EOF"
+            printf '%s' "$TITLE"
+            echo
+            echo "GITHUB_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "body<<GITHUB_EOF"
+            printf '%s' "$BODY"
+            echo
+            echo "GITHUB_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: create pull request
+        uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8.0.0
+        if: ${{ github.event.inputs.dry-run != 'true' }}
+        env:
+          DIFF: ${{ steps.diff-too-long.outputs.DIFF_TOO_LONG == 'true' && 'diff is too long to render' || steps.generate-diff.outputs.DIFF }}
+          PR_TITLE: "${{ steps.pr-metadata.outputs.title || 'feat: updated github graphql schema' }}"
+          PR_BODY: ${{ steps.pr-metadata.outputs.body || 'I don''t know what they changed, but I''m sure it''s important.' }}
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          commit-message: |
+            ${{ env.PR_TITLE }}
+
+            ${{ env.PR_BODY }}
+          title: ${{ env.PR_TITLE }}
+          body: |
+            I found some new changes in GitHub's GraphQL Schema.
+
+            ${{ env.PR_BODY }}
+
+            ### Changes
+            <details>
+            <summary>Schema Changes</summary><br/>
+
+            ```diff
+            ${{ env.DIFF }}
+            ```
+
+            <br/></details>
+
+            This is an automated PR to update the GitHub GraphQL Schema.
+          branch: update-github-graphql-schema
+          add-paths: github-schema.graphql,src/github-schema.ts
+          base: main
+          committer: huginn-watch[bot] <273299945+huginn-watch[bot]@users.noreply.github.com>
+          author: huginn-watch[bot] <273299945+huginn-watch[bot]@users.noreply.github.com>
+          reviewers: luxass
