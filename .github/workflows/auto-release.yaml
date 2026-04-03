@@ -1,0 +1,74 @@
+name: Auto Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - github-schema.graphql
+      - src/github-schema.ts
+
+jobs:
+  auto-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    environment:
+      name: huginn
+      deployment: false
+    if: |
+      github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'update-github-graphql-schema'
+      && github.repository == 'luxass/github-schema' && (github.event.pull_request.user.login == 'luxass' || github.event.pull_request.user.login == 'huginn-watch[bot]')
+    steps:
+      - name: generate token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+
+      - name: setup node
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: lts/*
+          package-manager-cache: false
+
+      - name: install dependencies
+        run: pnpm install
+
+      - name: build
+        run: pnpm run build
+
+      - name: create tag and release
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$(jq -r '.version' package.json)"
+          NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+
+          while IFS= read -r msg; do
+            if [[ "$msg" =~ ^feat ]]; then
+              NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+              break
+            fi
+          done < <(git log "$BASE_SHA..$HEAD_SHA" --format=%s)
+
+          git config user.email "273299945+huginn-watch[bot]@users.noreply.github.com"
+          git config user.name "huginn-watch[bot]"
+
+          npx bumpp "$NEW_VERSION" --commit --tag --push --yes

@@ -8,7 +8,7 @@
     "email": "lucasnrgaard@gmail.com",
     "url": "https://luxass.dev"
   },
-  "packageManager": "pnpm@10.28.2",
+  "packageManager": "pnpm@10.33.0",
   "license": "MIT",
   "homepage": "https://github.com/luxass/github-schema",
   "repository": {
@@ -54,28 +54,26 @@
     "build": "tsdown",
     "schema:download": "node --env-file=.env ./scripts/download.ts",
     "schema:codegen": "graphql-codegen",
-    "lint": "eslint .",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "graphql": "16.12.0",
-    "graphql-tag": "2.12.6"
+    "graphql": "catalog:graphql",
+    "graphql-tag": "catalog:graphql"
   },
   "devDependencies": {
-    "@graphql-codegen/add": "6.0.0",
-    "@graphql-codegen/cli": "6.1.0",
-    "@graphql-codegen/typescript": "5.0.7",
-    "@luxass/eslint-config": "6.0.3",
-    "@types/node": "24.10.4",
-    "eslint": "9.39.2",
-    "eslint-plugin-format": "1.1.0",
-    "publint": "0.3.16",
-    "tsdown": "0.18.3",
-    "typescript": "5.9.3"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
+    "@graphql-codegen/add": "catalog:graphql",
+    "@graphql-codegen/cli": "catalog:graphql",
+    "@graphql-codegen/typescript": "catalog:graphql",
+    "@types/node": "catalog:types",
+    "publint": "catalog:dev",
+    "tsdown": "catalog:dev",
+    "typescript": "catalog:dev",
+    "oxfmt": "catalog:dev",
+    "oxlint": "catalog:dev",
+    "oxlint-tsgolint": "catalog:dev"
   }
 }
