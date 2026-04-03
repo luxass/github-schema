@@ -95,83 +95,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SYSTEM_PROMPT: |
-            You are a meticulous software engineer responsible for generating conventional commits for GraphQL schema updates. Your absolute priority is to accurately reflect the changes in the provided diff.
+            You generate conventional commit metadata for automated pull requests that sync changes from GitHub's GraphQL schema.
 
-            Think step-by-step to analyze the diff:
-            1.  **Analyze:** Look at the lines starting with `+` and `-`. Where are they located?
-            2.  **Classify:**
-                *   Are the changes *only* inside a documentation block (`"""..."""`)? If YES, this is a `docs` change. It is a real and important change.
-                *   Are new fields, inputs, or types being added? If YES, this is a `feat`.
-                *   Is it a small, non-functional change? If YES, use `chore`.
-            3.  **Extract:**
-                *   What is the name of the type or input being modified? This is the `scope`.
-                *   What was changed? This will be the `message` and `body`.
-            4.  **Construct:** Build the final JSON object. Do not add any information that you did not find in the diff.
-
-            ---
-            **Example 1: Documentation Change**
-
-            *   *Input Diff:*
-                ```diff
-                 @@ -338,7 +338,7 @@ input AddAssigneesToAssignableInput {
-                   assignableId: ID!
-
-                   """
-                -  The id of users to add as assignees.
-                +  The ids of actors (users or bots) to add as assignees.
-                   """
-                   assigneeIds: [ID!]!
-                ```
-            *   *My Step-by-Step Analysis:*
-                1.  **Analyze:** The change is inside a `"""` block.
-                2.  **Classify:** The `type` is `docs`.
-                3.  **Extract:** The `scope` is `AddAssigneesToAssignableInput`. The comment is for `assigneeIds`.
-                4.  **Construct:** I will build the JSON with these details.
-
-            *   *Resulting JSON:*
-                ```json
-                {
-                  "type": "docs",
-                  "scope": "AddAssigneesToAssignableInput",
-                  "message": "update comment for `assigneeIds`",
-                  "body": "- Updates the description for the `assigneeIds` field to clarify it accepts actors (users or bots)."
-                }
-                ```
-
-            ---
-            **Example 2: Feature Change**
-
-            *   *Input Diff:*
-                ```diff
-                 @@ -1000,6 +1000,11 @@ type Repository {
-                   id: ID!
-                   name: String!
-                   owner: RepositoryOwner!
-                +
-                +  """
-                +  Indicates if the repository is archived.
-                +  """
-                +  isArchived: Boolean!
-                 }
-                ```
-            *   *My Step-by-step Analysis:*
-                1.  **Analyze:** A new field `isArchived` is added.
-                2.  **Classify:** This is a new feature. The `type` is `feat`.
-                3.  **Extract:** The `scope` is `Repository`.
-                4.  **Construct:** I will build the JSON with these details.
-
-            *   *Resulting JSON:*
-                ```json
-                {
-                  "type": "feat",
-                  "scope": "Repository",
-                  "message": "add `isArchived` field",
-                  "body": "- Adds the `isArchived` field to the `Repository` type."
-                }
-                ```
-            ---
-
-            After following this process, provide **only the final JSON object** for the diff you are given.
+            You will receive a git diff of the GraphQL schema. Analyze it and return a JSON object with:
+            - type: "docs" if only descriptions/comments changed, "feat" if fields/types/inputs were added, "fix" if something was corrected, "chore" for anything else.
+            - scope: the GraphQL type or input name being changed. Empty string if multiple types changed.
+            - message: a concise imperative-mood description under 72 characters.
+            - body: a short markdown bullet list summarizing what changed.
           REQUEST_TEMPLATE: |
             {
               "messages": [

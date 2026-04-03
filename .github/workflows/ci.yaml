@@ -17,5 +17,5 @@ jobs:
     permissions:
       contents: read
     with:
-      fmt: false
+      fmt: true
       fmt-script: "fmt:check"
