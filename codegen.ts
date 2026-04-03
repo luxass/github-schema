@@ -8,7 +8,8 @@ const config = {
       plugins: [
         {
           add: {
-            content: "/* eslint-disable eslint-comments/no-unlimited-disable */\n/* eslint-disable */",
+            content:
+              "/* eslint-disable eslint-comments/no-unlimited-disable */\n/* eslint-disable */",
           },
         },
         "typescript",

@@ -2,28 +2,35 @@
   "name": "github-schema",
   "version": "1.22.14",
   "description": "GitHub's GraphQL schema",
-  "type": "module",
+  "keywords": [
+    "github",
+    "github graphql",
+    "github schema",
+    "graphql"
+  ],
+  "homepage": "https://github.com/luxass/github-schema",
+  "bugs": {
+    "url": "https://github.com/luxass/github-schema/issues"
+  },
+  "license": "MIT",
   "author": {
     "name": "Lucas Nørgård",
     "email": "lucasnrgaard@gmail.com",
     "url": "https://luxass.dev"
   },
-  "packageManager": "pnpm@10.33.0",
-  "license": "MIT",
-  "homepage": "https://github.com/luxass/github-schema",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/luxass/github-schema.git"
   },
-  "bugs": {
-    "url": "https://github.com/luxass/github-schema/issues"
-  },
-  "keywords": [
-    "github graphql",
-    "github",
-    "graphql",
-    "github schema"
+  "files": [
+    "dist",
+    "github-schema.d.ts",
+    "github-schema.graphql"
   ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -38,17 +45,6 @@
       "require": "./dist/raw.cjs"
     },
     "./package.json": "./package.json"
-  },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.cts",
-  "files": [
-    "dist",
-    "github-schema.d.ts",
-    "github-schema.graphql"
-  ],
-  "engines": {
-    "node": ">=20"
   },
   "scripts": {
     "build": "tsdown",
@@ -69,11 +65,15 @@
     "@graphql-codegen/cli": "catalog:graphql",
     "@graphql-codegen/typescript": "catalog:graphql",
     "@types/node": "catalog:types",
-    "publint": "catalog:dev",
-    "tsdown": "catalog:dev",
-    "typescript": "catalog:dev",
     "oxfmt": "catalog:dev",
     "oxlint": "catalog:dev",
-    "oxlint-tsgolint": "catalog:dev"
-  }
+    "oxlint-tsgolint": "catalog:dev",
+    "publint": "catalog:dev",
+    "tsdown": "catalog:dev",
+    "typescript": "catalog:dev"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.33.0"
 }
