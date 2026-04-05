@@ -5,57 +5,13 @@ on:
     tags:
       - "v*"
 
+permissions: {}
+
 jobs:
   release:
+    uses: luxass/shared-workflows/.github/workflows/release-npm.yaml@56bd9148cc90ee377d1e6fa3a32e43d18859dfe1 # v0.4.2
     permissions:
-      id-token: write
       contents: write
-    runs-on: ubuntu-latest
-    environment: npm-registry
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: setup pnpm
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
-
-      - name: setup node
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
-        with:
-          node-version: lts/*
-          package-manager-cache: false
-
-      - name: update npm (oidc)
-        run: npm install -g npm@latest
-
-      - run: pnpm dlx changelogithub
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: install dependencies
-        run: pnpm install
-
-      - name: build
-        run: pnpm run build
-
-      - name: detect tag
-        id: tag
-        run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0)
-
-          if [[ "$LATEST_TAG" == *-* ]]; then
-            echo "tag=next" >> $GITHUB_OUTPUT
-          else
-            echo "tag=latest" >> $GITHUB_OUTPUT
-          fi
-
-      - name: publish to npm
-        run: pnpm publish --tag $TAG --access public --no-git-checks
-        env:
-          TAG: ${{ steps.tag.outputs.tag }}
-          NPM_CONFIG_PROVENANCE: true
-
-      - name: print dirty files
-        run: git status --porcelain
+      id-token: write
+    with:
+      environment: npm-registry
