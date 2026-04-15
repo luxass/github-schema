@@ -28,4 +28,4 @@ catalogs:
     graphql-tag: 2.12.6
 
   types:
-    "@types/node": 22.19.14
+    "@types/node": 24.12.2
