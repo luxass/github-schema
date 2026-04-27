@@ -6,26 +6,26 @@ strictDepBuilds: true
 blockExoticSubdeps: true
 
 overrides:
-  undici-types: 6.24.0
-  "@graphql-tools/executor-http": 3.1.1
+  undici-types: 6.25.0
+  "@graphql-tools/executor-http": 3.2.1
   "@graphql-tools/executor-graphql-ws": 3.1.5
   semver: 7.7.4
 
 catalogs:
   dev:
-    oxfmt: 0.43.0
+    oxfmt: 0.46.0
     oxlint: 1.58.0
-    oxlint-tsgolint: 0.19.0
+    oxlint-tsgolint: 0.21.1
     publint: 0.3.18
-    tsdown: 0.21.7
-    typescript: 6.0.2
+    tsdown: 0.21.9
+    typescript: 6.0.3
 
   graphql:
-    "@graphql-codegen/add": 6.0.0
-    "@graphql-codegen/cli": 6.2.1
-    "@graphql-codegen/typescript": 5.0.9
+    "@graphql-codegen/add": 6.0.1
+    "@graphql-codegen/cli": 6.3.1
+    "@graphql-codegen/typescript": 5.0.10
     graphql: 16.13.2
     graphql-tag: 2.12.6
 
   types:
-    "@types/node": 22.19.14
+    "@types/node": 22.19.17
