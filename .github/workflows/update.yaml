@@ -118,6 +118,7 @@ jobs:
 
           RESPONSE=$(printf '%s' "$REQUEST_JSON" | curl -fsS -X POST "$PR_METADATA_URL" \
             -H "Content-Type: application/json" \
+            -H "User-Agent: luxass/github-schema (+https://github.com/luxass/github-schema; workflow=update.yaml)" \
             -H "X-Timestamp: $TIMESTAMP" \
             -H "X-Signature: $SIGNATURE" \
             --data-binary @-)
