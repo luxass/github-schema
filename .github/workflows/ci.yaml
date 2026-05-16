@@ -13,7 +13,7 @@ permissions: {}
 
 jobs:
   ci:
-    uses: luxass/shared-workflows/.github/workflows/ci.yaml@477a19d60c922bc63fa3f926f531572cdfaf3e95 # v0.3.3
+    uses: luxass/shared-workflows/.github/workflows/reusable-ci.yaml@ce9e8e27eebe8940214594f75f503742a4db8150 # v0.6.0
     permissions:
       contents: read
     with:
