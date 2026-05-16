@@ -23,4 +23,4 @@ jobs:
       security-events: write
       id-token: write
     with:
-      zizmor-version: v1.23.1
+      zizmor-version: v1.25.0
