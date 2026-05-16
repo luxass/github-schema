@@ -22,5 +22,6 @@ jobs:
       contents: read
       security-events: write
       id-token: write
+      actions: read
     with:
       zizmor-version: v1.25.0
