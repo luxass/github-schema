@@ -10706,6 +10706,8 @@ export type IssueFieldCommon = {
   dataType: IssueFieldDataType;
   /** The issue field's description. */
   description?: Maybe<Scalars['String']['output']>;
+  /** Identifies the primary key from the database as a BigInt. */
+  fullDatabaseId?: Maybe<Scalars['BigInt']['output']>;
   /** The issue field's name. */
   name: Scalars['String']['output'];
   /** The issue field's visibility. */
@@ -10750,6 +10752,8 @@ export type IssueFieldDate = IssueFieldCommon & Node & {
   dataType: IssueFieldDataType;
   /** The issue field's description. */
   description?: Maybe<Scalars['String']['output']>;
+  /** Identifies the primary key from the database as a BigInt. */
+  fullDatabaseId?: Maybe<Scalars['BigInt']['output']>;
   /** The Node ID of the IssueFieldDate object */
   id: Scalars['ID']['output'];
   /** The issue field's name. */
@@ -10778,6 +10782,8 @@ export type IssueFieldNumber = IssueFieldCommon & Node & {
   dataType: IssueFieldDataType;
   /** The issue field's description. */
   description?: Maybe<Scalars['String']['output']>;
+  /** Identifies the primary key from the database as a BigInt. */
+  fullDatabaseId?: Maybe<Scalars['BigInt']['output']>;
   /** The Node ID of the IssueFieldNumber object */
   id: Scalars['ID']['output'];
   /** The issue field's name. */
@@ -10834,6 +10840,8 @@ export type IssueFieldSingleSelect = IssueFieldCommon & Node & {
   dataType: IssueFieldDataType;
   /** The issue field's description. */
   description?: Maybe<Scalars['String']['output']>;
+  /** Identifies the primary key from the database as a BigInt. */
+  fullDatabaseId?: Maybe<Scalars['BigInt']['output']>;
   /** The Node ID of the IssueFieldSingleSelect object */
   id: Scalars['ID']['output'];
   /** The issue field's name. */
@@ -10849,8 +10857,12 @@ export type IssueFieldSingleSelectOption = Node & {
   __typename?: 'IssueFieldSingleSelectOption';
   /** The option's display color. */
   color: IssueFieldSingleSelectOptionColor;
+  /** Identifies the primary key from the database. */
+  databaseId?: Maybe<Scalars['Int']['output']>;
   /** The option's plain-text description. */
   description?: Maybe<Scalars['String']['output']>;
+  /** Identifies the primary key from the database as a BigInt. */
+  fullDatabaseId?: Maybe<Scalars['BigInt']['output']>;
   /** The Node ID of the IssueFieldSingleSelectOption object */
   id: Scalars['ID']['output'];
   /** The option's name. */
@@ -10918,6 +10930,8 @@ export type IssueFieldText = IssueFieldCommon & Node & {
   dataType: IssueFieldDataType;
   /** The issue field's description. */
   description?: Maybe<Scalars['String']['output']>;
+  /** Identifies the primary key from the database as a BigInt. */
+  fullDatabaseId?: Maybe<Scalars['BigInt']['output']>;
   /** The Node ID of the IssueFieldText object */
   id: Scalars['ID']['output'];
   /** The issue field's name. */
@@ -27599,6 +27613,8 @@ export type ReportedContentClassifiers =
   | 'ABUSE'
   /** A duplicated piece of content */
   | 'DUPLICATE'
+  /** A low quality piece of content */
+  | 'LOW_QUALITY'
   /** An irrelevant piece of content */
   | 'OFF_TOPIC'
   /** An outdated piece of content */
