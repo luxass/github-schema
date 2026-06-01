@@ -21,9 +21,9 @@ catalogs:
     typescript: 6.0.2
 
   graphql:
-    "@graphql-codegen/add": 6.0.0
-    "@graphql-codegen/cli": 6.2.1
-    "@graphql-codegen/typescript": 5.0.9
+    "@graphql-codegen/add": 7.0.0
+    "@graphql-codegen/cli": 7.0.0
+    "@graphql-codegen/typescript": 6.0.1
     graphql: 16.13.2
     graphql-tag: 2.12.6
 
