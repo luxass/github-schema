@@ -384,7 +384,7 @@ export type AddLabelsToLabelableInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The ids of the labels to add. */
-  labelIds: Array<Scalars['ID']['input']>;
+  labelIds?: InputMaybe<Array<Scalars['ID']['input']>>;
   /** The id of the labelable object to add labels to. */
   labelableId: Scalars['ID']['input'];
 };
@@ -21280,6 +21280,7 @@ export type ProjectV2FieldsArgs = {
 /** New projects that manage issues, pull requests and drafts using tables and boards. */
 export type ProjectV2ItemsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
+  archivedStates?: InputMaybe<Array<ProjectV2ItemArchivedState>>;
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
@@ -21641,6 +21642,13 @@ export type ProjectV2ItemFieldValuesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<ProjectV2ItemFieldValueOrder>;
 };
+
+/** The possible archived states of a `ProjectV2Item`. */
+export type ProjectV2ItemArchivedState =
+  /** A project item that is archived */
+  | 'ARCHIVED'
+  /** A project item that is not archived */
+  | 'NOT_ARCHIVED';
 
 /** The connection type for ProjectV2Item. */
 export type ProjectV2ItemConnection = {
@@ -30878,7 +30886,7 @@ export type SetEnterpriseIdentityProviderPayload = {
 export type SetIssueFieldValueInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The issue fields to set on the issue */
+  /** The issue fields to set on the issue. */
   issueFields: Array<IssueFieldCreateOrUpdateInput>;
   /** The ID of the Issue to set the field value on. */
   issueId: Scalars['ID']['input'];
@@ -35327,7 +35335,11 @@ export type UpdateIssueFieldPayload = {
 export type UpdateIssueFieldValueInput = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The field value to update. */
+  /**
+   * The field value to update. May include an optional `rationale` or be flagged
+   * with `suggest: true` to be stored as a pending suggestion instead of being
+   * applied directly.
+   */
   issueField: IssueFieldCreateOrUpdateInput;
   /** The ID of the issue. */
   issueId: Scalars['ID']['input'];
@@ -37418,6 +37430,8 @@ export type WorkflowRun = Node & UniformResourceLocatable & {
   databaseId?: Maybe<Scalars['Int']['output']>;
   /** The log of deployment reviews */
   deploymentReviews: DeploymentReviewConnection;
+  /** The human-readable title of the workflow run. */
+  displayTitle?: Maybe<Scalars['String']['output']>;
   /** The event that triggered the workflow run */
   event: Scalars['String']['output'];
   /** The workflow file */
@@ -37428,6 +37442,8 @@ export type WorkflowRun = Node & UniformResourceLocatable & {
   pendingDeploymentRequests: DeploymentRequestConnection;
   /** The HTTP path for this workflow run */
   resourcePath: Scalars['URI']['output'];
+  /** The attempt number of this workflow run. */
+  runAttempt: Scalars['Int']['output'];
   /** A number that uniquely identifies this workflow run in its parent workflow. */
   runNumber: Scalars['Int']['output'];
   /** Identifies the date and time when the object was last updated. */
