@@ -31062,6 +31062,8 @@ export type SocialAccountProvider =
   | 'NPM'
   /** Social news aggregation and discussion website. */
   | 'REDDIT'
+  /** Microblogging social platform. */
+  | 'THREADS'
   /** Live-streaming service. */
   | 'TWITCH'
   /** Microblogging website. */
