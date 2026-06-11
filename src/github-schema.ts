@@ -10618,6 +10618,13 @@ export type IssueContributionsByRepositoryContributionsArgs = {
   orderBy?: InputMaybe<ContributionOrder>;
 };
 
+/** The policy controlling who can create issues in a repository. */
+export type IssueCreationPolicy =
+  /** Anyone can create issues. */
+  | 'ALL'
+  /** Only collaborators can create issues. */
+  | 'COLLABORATORS_ONLY';
+
 /** Summary of the state of an issue's dependencies */
 export type IssueDependenciesSummary = {
   __typename?: 'IssueDependenciesSummary';
@@ -27777,6 +27784,8 @@ export type Repository = Node & PackageOwner & ProjectOwner & ProjectV2Recent & 
   isUserConfigurationRepository: Scalars['Boolean']['output'];
   /** Returns a single issue from the current repository by number. */
   issue?: Maybe<Issue>;
+  /** The policy controlling who can create issues in this repository. */
+  issueCreationPolicy?: Maybe<IssueCreationPolicy>;
   /** A list of the repository's issue fields, inherited from the organization */
   issueFields?: Maybe<IssueFieldsConnection>;
   /** Returns a single issue-like object from the current repository by number. */
@@ -27933,6 +27942,8 @@ export type Repository = Node & PackageOwner & ProjectOwner & ProjectV2Recent & 
   usesCustomOpenGraphImage: Scalars['Boolean']['output'];
   /** Indicates whether the viewer has admin permissions on this repository. */
   viewerCanAdminister: Scalars['Boolean']['output'];
+  /** Indicates whether the current user can create issues in this repository. */
+  viewerCanCreateIssues: Scalars['Boolean']['output'];
   /**
    * Can the current viewer create new projects on this owner.
    * @deprecated Projects (classic) is being deprecated in favor of the new Projects experience, see: https://github.blog/changelog/2024-05-23-sunset-notice-projects-classic/. Removal on 2025-04-01 UTC.
@@ -28785,6 +28796,8 @@ export type RepositoryInfo = {
   isPrivate: Scalars['Boolean']['output'];
   /** Identifies if the repository is a template that can be used to generate new repositories. */
   isTemplate: Scalars['Boolean']['output'];
+  /** The policy controlling who can create issues in this repository. */
+  issueCreationPolicy?: Maybe<IssueCreationPolicy>;
   /** The license associated with the repository */
   licenseInfo?: Maybe<License>;
   /** The reason the repository has been locked. */
@@ -32674,6 +32687,8 @@ export type StatusContext = Node & RequirableByPullRequest & {
   state: StatusState;
   /** The URL for this status context. */
   targetUrl?: Maybe<Scalars['URI']['output']>;
+  /** Identifies the date and time when the object was last updated. */
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 
