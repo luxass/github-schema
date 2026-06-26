@@ -20973,6 +20973,11 @@ type IssueFieldAddedEvent implements Node {
   issueField: IssueFields
 
   """
+  The selected options for option-backed fields; single-select returns one option and multi-select returns many.
+  """
+  options: [IssueFieldTimelineOption!]
+
+  """
   The value of the added field.
   """
   value: String
@@ -21008,6 +21013,11 @@ type IssueFieldChangedEvent implements Node {
   newColor: String
 
   """
+  The new options for option-backed fields; single-select returns one option and multi-select returns many.
+  """
+  newOptions: [IssueFieldTimelineOption!]
+
+  """
   The new value of the field.
   """
   newValue: String
@@ -21016,6 +21026,11 @@ type IssueFieldChangedEvent implements Node {
   The previous color if it was a single-select field.
   """
   previousColor: String
+
+  """
+  The previous options for option-backed fields; single-select returns one option and multi-select returns many.
+  """
+  previousOptions: [IssueFieldTimelineOption!]
 
   """
   The previous value of the field.
@@ -21371,6 +21386,11 @@ type IssueFieldRemovedEvent implements Node {
   The issue field removed.
   """
   issueField: IssueFields
+
+  """
+  The removed options for option-backed fields; single-select returns one option and multi-select returns many.
+  """
+  options: [IssueFieldTimelineOption!]
 }
 
 """
@@ -21626,6 +21646,21 @@ type IssueFieldTextValue implements IssueFieldValueCommon & Node {
   Value of the field.
   """
   value: String!
+}
+
+"""
+Represents a selected option for a timeline issue field event.
+"""
+type IssueFieldTimelineOption {
+  """
+  The option color.
+  """
+  color: String
+
+  """
+  The option name.
+  """
+  name: String!
 }
 
 """
