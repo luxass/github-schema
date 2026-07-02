@@ -29,3 +29,6 @@ catalogs:
 
   types:
     "@types/node": 24.12.4
+minimumReleaseAgeExclude:
+  # Renovate security update: pnpm@11.8.0
+  - pnpm@11.8.0
