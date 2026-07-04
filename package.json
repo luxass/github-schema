@@ -56,10 +56,6 @@
     "fmt:check": "oxfmt --check",
     "typecheck": "tsc --noEmit"
   },
-  "peerDependencies": {
-    "graphql": "catalog:peer",
-    "graphql-tag": "catalog:peer"
-  },
   "devDependencies": {
     "@graphql-codegen/add": "catalog:graphql",
     "@graphql-codegen/cli": "catalog:graphql",
@@ -71,6 +67,10 @@
     "publint": "catalog:dev",
     "tsdown": "catalog:dev",
     "typescript": "catalog:dev"
+  },
+  "peerDependencies": {
+    "graphql": "catalog:peer",
+    "graphql-tag": "catalog:peer"
   },
   "engines": {
     "node": ">=22"
