@@ -4,6 +4,6 @@
  * @param {...string} keys - The variables to interpolate.
  * @returns {string} The interpolated GraphQL query string.
  */
-export function gql(raw: TemplateStringsArray, ...keys: string[]): string {
+export function gql(raw: TemplateStringsArray, ...keys: readonly string[]): string {
   return keys.length === 0 ? raw[0]! : String.raw({ raw }, ...keys);
 }

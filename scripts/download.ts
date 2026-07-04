@@ -2,14 +2,15 @@ import { writeFile } from "node:fs/promises";
 import process from "node:process";
 
 async function run() {
-  if (!process.env.GITHUB_TOKEN) {
+  const token = process.env.GITHUB_TOKEN;
+  if (token == null || token === "") {
     console.error("GITHUB_TOKEN not set");
     process.exit(1);
   }
 
   const res = await fetch("https://api.github.com/graphql", {
     headers: {
-      Authorization: `bearer ${process.env.GITHUB_TOKEN}`,
+      Authorization: `bearer ${token}`,
       Accept: "application/vnd.github.v4.idl",
     },
   });
@@ -21,22 +22,24 @@ async function run() {
 
   console.log("Fetched schema successfully");
 
-  const schema = await res.json();
+  const schema: unknown = await res.json();
   if (
-    !schema ||
+    schema == null ||
     typeof schema !== "object" ||
     !("data" in schema) ||
-    typeof schema.data !== "string"
+    typeof (schema as Record<string, unknown>).data !== "string"
   ) {
     console.error("Failed to parse schema");
     process.exit(1);
   }
 
-  await writeFile("github-schema.graphql", schema.data);
+  await writeFile("github-schema.graphql", (schema as { data: string }).data);
   console.log("Wrote schema to github-schema.graphql");
 }
 
-run().catch((err) => {
+try {
+  await run();
+} catch (err) {
   console.error(err);
   process.exit(1);
-});
+}
