@@ -29405,6 +29405,8 @@ export type RepositoryRuleType =
    * being pushed to the commit graph. This includes absolute paths that contain file names.
    */
   | 'FILE_PATH_RESTRICTION'
+  /** Enforce any added or changed dependencies to comply with the organization's license policy. */
+  | 'LICENSE_COMPLIANCE_SCANNING'
   /** Branch is read-only. Users cannot push to the branch. */
   | 'LOCK_BRANCH'
   /** Prevent commits that include file paths that exceed the specified character limit from being pushed to the commit graph. */
@@ -36116,6 +36118,8 @@ export type UpdateRepositoryInput = {
   hasWikiEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   /** The URL for a web page about this repository. Pass an empty string to erase the existing URL. */
   homepageUrl?: InputMaybe<Scalars['URI']['input']>;
+  /** The policy controlling who can create issues in this repository. */
+  issueCreationPolicy?: InputMaybe<IssueCreationPolicy>;
   /** The new name of the repository. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** The policy controlling who can create pull requests in this repository. */

@@ -52341,6 +52341,11 @@ enum RepositoryRuleType {
   FILE_PATH_RESTRICTION
 
   """
+  Enforce any added or changed dependencies to comply with the organization's license policy.
+  """
+  LICENSE_COMPLIANCE_SCANNING
+
+  """
   Branch is read-only. Users cannot push to the branch.
   """
   LOCK_BRANCH
@@ -65191,6 +65196,11 @@ input UpdateRepositoryInput {
   The URL for a web page about this repository. Pass an empty string to erase the existing URL.
   """
   homepageUrl: URI
+
+  """
+  The policy controlling who can create issues in this repository.
+  """
+  issueCreationPolicy: IssueCreationPolicy
 
   """
   The new name of the repository.
