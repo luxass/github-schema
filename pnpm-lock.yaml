@@ -47,7 +47,7 @@ catalogs:
       version: 26.1.0
 
 overrides:
-  undici-types: 7.16.0
+  undici-types: 8.7.0
   '@graphql-tools/executor-http': 3.3.0
   '@graphql-tools/executor-graphql-ws': 3.1.5
   semver: 7.8.1
@@ -1944,8 +1944,8 @@ packages:
   unconfig-core@7.5.0:
     resolution: {integrity: sha512-Su3FauozOGP44ZmKdHy2oE6LPjk51M/TRRjHv2HNCWiDvfvCoxC2lno6jevMA91MYAdCdwP05QnWdWpSbncX/w==}
 
-  undici-types@7.16.0:
-    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+  undici-types@8.7.0:
+    resolution: {integrity: sha512-gbsS+hAjHg9iV+T8XWdFqnOZEk4f5xrrX3eb9Y1GDe+B5u9H68P6SzYXXUw/rkRvJHRgKIdNfAcrcVj/JvayVA==}
 
   unixify@1.0.0:
     resolution: {integrity: sha512-6bc58dPYhCMHHuwxldQxO3RRNZ4eCogZ/st++0+fcC1nr0jiGUtAdBJ2qzmLQWSxbtz42pWt4QQMiZ9HvZf5cg==}
@@ -2954,7 +2954,7 @@ snapshots:
 
   '@types/node@26.1.0':
     dependencies:
-      undici-types: 7.16.0
+      undici-types: 8.7.0
 
   '@types/ws@8.18.1':
     dependencies:
@@ -3748,7 +3748,7 @@ snapshots:
       '@quansync/fs': 1.0.0
       quansync: 1.0.0
 
-  undici-types@7.16.0: {}
+  undici-types@8.7.0: {}
 
   unixify@1.0.0:
     dependencies:
