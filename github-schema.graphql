@@ -19936,6 +19936,11 @@ type Issue implements Assignable & Closable & Comment & Deletable & Labelable & 
     before: String
 
     """
+    Exclude manually linked PRs
+    """
+    excludeUserLinked: Boolean = false
+
+    """
     Returns the first _n_ elements from the list.
     """
     first: Int
@@ -41315,11 +41320,6 @@ enum ProofOfPresenceRequirement {
   Members must complete a fresh re-authentication against the enterprise identity provider.
   """
   REAUTH
-
-  """
-  Members must satisfy a phishing-resistant security key re-authentication (Microsoft Entra only).
-  """
-  SECURITY_KEY
 }
 
 """
@@ -41632,6 +41632,11 @@ type PullRequest implements Assignable & Closable & Comment & Labelable & Lockab
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
+
+    """
+    Exclude manually linked Issues
+    """
+    excludeUserLinked: Boolean = false
 
     """
     Returns the first _n_ elements from the list.
