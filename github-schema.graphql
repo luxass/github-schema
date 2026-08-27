@@ -14041,6 +14041,11 @@ type Enterprise implements Node {
     The search string to look for.
     """
     query: String
+
+    """
+    User logins to filter by. A maximum of 3 logins can be passed.
+    """
+    userLogins: [String!]
   ): EnterpriseTeamConnection!
 
   """
