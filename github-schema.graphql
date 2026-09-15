@@ -56407,7 +56407,7 @@ type SecurityAdvisory implements Node {
   permalink: URI
 
   """
-  When the advisory was published
+  When GitHub published this advisory
   """
   publishedAt: DateTime!
 
