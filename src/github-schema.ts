@@ -30106,6 +30106,8 @@ export type RepositoryPermission =
   | 'READ'
   /** Can read and clone this repository. Can also manage issues and pull requests */
   | 'TRIAGE'
+  /** Can read and clone this repository. Can also manage issues and pull requests, plus additional triage abilities */
+  | 'TRIAGE_PLUS'
   /** Can read, clone, and push to this repository. Can also manage issues and pull requests */
   | 'WRITE';
 
