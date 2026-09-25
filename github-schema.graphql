@@ -28102,6 +28102,11 @@ type Mutation {
 
   """
   Merge a pull request.
+
+  > [!NOTE]
+  > We recommend using the [asynchronous merge REST
+  API](${externalDocsUrl}/rest/pulls/pulls#merge-a-pull-request-asynchronously) instead.
+  > This mutation does not support stacked pull requests.
   """
   mergePullRequest(
     """
