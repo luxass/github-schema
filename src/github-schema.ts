@@ -2704,8 +2704,10 @@ export type ClosedEvent = Node & UniformResourceLocatable & {
 export type Closer = Commit | ProjectV2 | PullRequest;
 
 /**
- * Enforce minimum line coverage thresholds on pull requests. When configured,
- * uploaded coverage data must meet the specified criteria before changes can be merged.
+ * Enforce minimum line coverage thresholds on pull requests. This rule evaluates
+ * uploaded coverage data but does not wait for coverage uploads. To ensure
+ * coverage is evaluated before merging, make each status check associated with a
+ * coverage upload a required status check.
  */
 export type CodeCoverageParameters = {
   __typename?: 'CodeCoverageParameters';
@@ -2723,8 +2725,10 @@ export type CodeCoverageParameters = {
 };
 
 /**
- * Enforce minimum line coverage thresholds on pull requests. When configured,
- * uploaded coverage data must meet the specified criteria before changes can be merged.
+ * Enforce minimum line coverage thresholds on pull requests. This rule evaluates
+ * uploaded coverage data but does not wait for coverage uploads. To ensure
+ * coverage is evaluated before merging, make each status check associated with a
+ * coverage upload a required status check.
  */
 export type CodeCoverageParametersInput = {
   /**
@@ -13799,7 +13803,10 @@ export type Mutation = {
   approveVerifiableDomain?: Maybe<ApproveVerifiableDomainPayload>;
   /** Archives a ProjectV2Item */
   archiveProjectV2Item?: Maybe<ArchiveProjectV2ItemPayload>;
-  /** Archive a pull request. Closes and marks the pull request as archived. Only repository admins can archive pull requests. */
+  /**
+   * Archive a pull request. Closes and marks the pull request as archived. Users
+   * with the triage role or higher can archive pull requests.
+   */
   archivePullRequest?: Maybe<ArchivePullRequestPayload>;
   /** Marks a repository as archived. */
   archiveRepository?: Maybe<ArchiveRepositoryPayload>;
@@ -14229,8 +14236,8 @@ export type Mutation = {
   unarchiveProjectV2Item?: Maybe<UnarchiveProjectV2ItemPayload>;
   /**
    * Unarchive a pull request. Removes the archived flag from the pull request.
-   * Does not automatically reopen or unlock the pull request. Only repository
-   * admins can unarchive pull requests.
+   * Does not automatically reopen or unlock the pull request. Users with the
+   * triage role or higher can unarchive pull requests.
    */
   unarchivePullRequest?: Maybe<UnarchivePullRequestPayload>;
   /** Unarchives a repository. */
@@ -28835,6 +28842,8 @@ export type Repository = Node & PackageOwner & ProjectOwner & ProjectV2Recent & 
   forkingAllowed: Scalars['Boolean']['output'];
   /** A list of direct forked repositories. */
   forks: RepositoryConnection;
+  /** Identifies the primary key from the database as a BigInt. */
+  fullDatabaseId?: Maybe<Scalars['BigInt']['output']>;
   /** The funding links for this repository */
   fundingLinks: Array<FundingLink>;
   /** Indicates if the repository has the Discussions feature enabled. */
@@ -30383,8 +30392,10 @@ export type RepositoryRuleType =
   /** Branch name pattern */
   | 'BRANCH_NAME_PATTERN'
   /**
-   * Enforce minimum line coverage thresholds on pull requests. When configured,
-   * uploaded coverage data must meet the specified criteria before changes can be merged.
+   * Enforce minimum line coverage thresholds on pull requests. This rule evaluates
+   * uploaded coverage data but does not wait for coverage uploads. To ensure
+   * coverage is evaluated before merging, make each status check associated with a
+   * coverage upload a required status check.
    */
   | 'CODE_COVERAGE'
   /**
