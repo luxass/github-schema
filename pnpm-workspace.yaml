@@ -11,23 +11,23 @@ minimumReleaseAgeExclude:
   - "@typescript/typescript-*"
 
 overrides:
-  undici-types: 7.16.0
-  "@graphql-tools/executor-http": 3.3.0
-  "@graphql-tools/executor-graphql-ws": 3.1.5
-  semver: 7.8.1
+  undici-types: 7.30.0
+  "@graphql-tools/executor-http": 3.4.1
+  "@graphql-tools/executor-graphql-ws": 3.2.0
+  semver: 7.8.5
 
 catalogs:
   dev:
-    oxfmt: 0.61.0
+    oxfmt: 0.71.0
     oxlint: 1.76.0
-    oxlint-tsgolint: 7.0.2001
-    publint: 0.3.22
-    tsdown: 0.22.14
+    oxlint-tsgolint: 7.0.2003
+    publint: 0.3.25
+    tsdown: 0.23.0
     typescript: 7.0.2
 
   graphql:
-    "@graphql-codegen/add": 7.1.0
-    "@graphql-codegen/cli": 7.2.0
+    "@graphql-codegen/add": 7.1.1
+    "@graphql-codegen/cli": 7.4.3
     "@graphql-codegen/typescript": 6.1.0
     graphql: 17.0.2
     graphql-tag: 2.12.7
@@ -37,4 +37,4 @@ catalogs:
     graphql-tag: ">=2.12.7"
 
   types:
-    "@types/node": 26.1.2
+    "@types/node": 26.6.4
