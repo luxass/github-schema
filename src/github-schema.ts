@@ -4103,8 +4103,7 @@ export type ConvertedToDiscussionEvent = Node & {
 
 /**
  * Request Copilot code review for new pull requests automatically if the author
- * has access to Copilot code review and their premium requests quota has not
- * reached the limit.
+ * has access to Copilot code review and AI credits.
  */
 export type CopilotCodeReviewParameters = {
   __typename?: 'CopilotCodeReviewParameters';
@@ -4116,8 +4115,7 @@ export type CopilotCodeReviewParameters = {
 
 /**
  * Request Copilot code review for new pull requests automatically if the author
- * has access to Copilot code review and their premium requests quota has not
- * reached the limit.
+ * has access to Copilot code review and AI credits.
  */
 export type CopilotCodeReviewParametersInput = {
   /** Copilot automatically reviews draft pull requests before they are marked as ready for review. */
@@ -30418,8 +30416,7 @@ export type RepositoryRuleType =
   | 'COMMIT_MESSAGE_PATTERN'
   /**
    * Request Copilot code review for new pull requests automatically if the author
-   * has access to Copilot code review and their premium requests quota has not
-   * reached the limit.
+   * has access to Copilot code review and AI credits.
    */
   | 'COPILOT_CODE_REVIEW'
   /** Only allow users with bypass permission to create matching refs. */
