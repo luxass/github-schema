@@ -9496,6 +9496,8 @@ export type FileExtensionRestrictionParametersInput = {
  */
 export type FilePathRestrictionParameters = {
   __typename?: 'FilePathRestrictionParameters';
+  /** Files matching these patterns are allowed even when they also match a restricted path. */
+  ignoredFilePaths?: Maybe<Array<Scalars['String']['output']>>;
   /** The file paths that are restricted from being pushed to the commit graph. */
   restrictedFilePaths: Array<Scalars['String']['output']>;
 };
@@ -9505,6 +9507,8 @@ export type FilePathRestrictionParameters = {
  * being pushed to the commit graph. This includes absolute paths that contain file names.
  */
 export type FilePathRestrictionParametersInput = {
+  /** Files matching these patterns are allowed even when they also match a restricted path. */
+  ignoredFilePaths?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The file paths that are restricted from being pushed to the commit graph. */
   restrictedFilePaths: Array<Scalars['String']['input']>;
 };
@@ -12720,12 +12724,16 @@ export type MaxFilePathLengthParametersInput = {
 /** Prevent commits with individual files that exceed the specified limit from being pushed to the commit graph. */
 export type MaxFileSizeParameters = {
   __typename?: 'MaxFileSizeParameters';
+  /** Files matching these patterns may exceed the maximum size. */
+  ignoredFilePaths?: Maybe<Array<Scalars['String']['output']>>;
   /** The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS). */
   maxFileSize: Scalars['Int']['output'];
 };
 
 /** Prevent commits with individual files that exceed the specified limit from being pushed to the commit graph. */
 export type MaxFileSizeParametersInput = {
+  /** Files matching these patterns may exceed the maximum size. */
+  ignoredFilePaths?: InputMaybe<Array<Scalars['String']['input']>>;
   /** The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS). */
   maxFileSize: Scalars['Int']['input'];
 };
