@@ -24342,6 +24342,11 @@ export type PullRequestParameters = {
   dismissalRestriction?: Maybe<DismissalRestriction>;
   /** Require an approving review in pull requests that modify files that have a designated code owner. */
   requireCodeOwnerReview: Scalars['Boolean']['output'];
+  /**
+   * When Copilot opens a pull request without a human collaborator, require one
+   * more approving review if a non-zero approval count is required.
+   */
+  requireExtraApprovalForUnattributedChanges: Scalars['Boolean']['output'];
   /** Whether the most recent reviewable push must be approved by someone other than the person who pushed it. */
   requireLastPushApproval: Scalars['Boolean']['output'];
   /** The number of approving reviews that are required before a pull request can be merged. */
@@ -24368,6 +24373,11 @@ export type PullRequestParametersInput = {
   dismissalRestriction?: InputMaybe<DismissalRestrictionInput>;
   /** Require an approving review in pull requests that modify files that have a designated code owner. */
   requireCodeOwnerReview: Scalars['Boolean']['input'];
+  /**
+   * When Copilot opens a pull request without a human collaborator, require one
+   * more approving review if a non-zero approval count is required.
+   */
+  requireExtraApprovalForUnattributedChanges?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether the most recent reviewable push must be approved by someone other than the person who pushed it. */
   requireLastPushApproval: Scalars['Boolean']['input'];
   /** The number of approving reviews that are required before a pull request can be merged. */
