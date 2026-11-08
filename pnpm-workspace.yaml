@@ -12,7 +12,7 @@ minimumReleaseAgeExclude:
 
 overrides:
   undici-types: 8.12.3
-  "@graphql-tools/executor-http": 3.3.0
+  "@graphql-tools/executor-http": 3.5.1
   "@graphql-tools/executor-graphql-ws": 3.1.5
   semver: 7.8.1
 
