@@ -37,4 +37,4 @@ catalogs:
     graphql-tag: ">=2.12.7"
 
   types:
-    "@types/node": 26.1.2
+    "@types/node": 26.6.6
