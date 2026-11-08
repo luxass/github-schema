@@ -16,8 +16,8 @@ catalogs:
       specifier: 7.0.2005
       version: 7.0.2005
     publint:
-      specifier: 0.3.22
-      version: 0.3.22
+      specifier: 0.3.25
+      version: 0.3.25
     tsdown:
       specifier: 0.22.14
       version: 0.22.14
@@ -86,10 +86,10 @@ importers:
         version: 7.0.2005
       publint:
         specifier: catalog:dev
-        version: 0.3.22
+        version: 0.3.25
       tsdown:
         specifier: catalog:dev
-        version: 0.22.14(publint@0.3.22)(typescript@7.0.2)
+        version: 0.22.14(publint@0.3.25)(typescript@7.0.2)
       typescript:
         specifier: catalog:dev
         version: 7.0.2
@@ -890,8 +890,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@publint/pack@0.1.6':
-    resolution: {integrity: sha512-3uVNyGcVplhPZSLVyeIpL7+cIRn1YCSNHLG/rUIlBQMVH8YuN9++YF+5+UDIIO9RW98dujiUoTltO7RDB5bFJA==}
+  '@publint/pack@0.1.7':
+    resolution: {integrity: sha512-4EDEmvxWtgsCnnVeBvtFIFZtUhPPt1+bA9JrSwU4Sa//6oKtzCSlGGXYJr44OD9aGISymbieJ4mCKHUygUDU+g==}
     engines: {node: '>=18'}
 
   '@quansync/fs@1.0.0':
@@ -1826,8 +1826,8 @@ packages:
     resolution: {integrity: sha512-RvwwcruNjI1ncT5xRakeyS9Lf8lcItv34KD+aif+VH9kduAyfYBipGh12274xtenIPZ119/R9BdTBa8gAwSh0A==}
     engines: {node: '>=12'}
 
-  publint@0.3.22:
-    resolution: {integrity: sha512-6Z/scsr5CA7APdwyF35EY88CqgDj1textWuY788DVTJYPCWVv/Wn9G6KmLnrVRnStgYcahqN4wCDLZGSbQJ69w==}
+  publint@0.3.25:
+    resolution: {integrity: sha512-WMMbn/d7JqRlfXQL/JUI4n5skC8cJ5WVr8/wT5mmiYWkUdENkZr1I5rgs2+dQPVRgoJd+JRYtB46MTsuDylw9g==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -1958,6 +1958,10 @@ packages:
 
   tinyexec@1.2.4:
     resolution: {integrity: sha512-SHf/r48b7vOrjve9PxJo3MN5v5yuyjHvdUcrQffT3WXMUfnGmHDVbC4k3sHJaJTgZCwpUplIaAo5ANtMyp3YHg==}
+    engines: {node: '>=18'}
+
+  tinyexec@1.3.1:
+    resolution: {integrity: sha512-GCvB3aoys96IuDFBMcTB46JOR6mdMtAToqwiW8JlWhsoh1mhHi/xn9ss/Dg7N555GiJyEt2qzoG/NHCwM6h1EA==}
     engines: {node: '>=18'}
 
   tinyglobby@0.2.17:
@@ -2963,9 +2967,9 @@ snapshots:
   '@oxlint/binding-win32-x64-msvc@1.90.0':
     optional: true
 
-  '@publint/pack@0.1.6':
+  '@publint/pack@0.1.7':
     dependencies:
-      tinyexec: 1.2.4
+      tinyexec: 1.3.1
 
   '@quansync/fs@1.0.0':
     dependencies:
@@ -3674,9 +3678,9 @@ snapshots:
 
   picomatch@4.0.5: {}
 
-  publint@0.3.22:
+  publint@0.3.25:
     dependencies:
-      '@publint/pack': 0.1.6
+      '@publint/pack': 0.1.7
       package-manager-detector: 1.8.0
       picocolors: 1.1.1
       sade: 1.8.1
@@ -3800,6 +3804,8 @@ snapshots:
 
   tinyexec@1.2.4: {}
 
+  tinyexec@1.3.1: {}
+
   tinyglobby@0.2.17:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.5)
@@ -3819,7 +3825,7 @@ snapshots:
 
   ts-log@3.0.2: {}
 
-  tsdown@0.22.14(publint@0.3.22)(typescript@7.0.2):
+  tsdown@0.22.14(publint@0.3.25)(typescript@7.0.2):
     dependencies:
       ansis: 4.3.1
       cac: 7.0.0
@@ -3837,7 +3843,7 @@ snapshots:
       unconfig-core: 7.5.0
       verkit: 0.3.1
     optionalDependencies:
-      publint: 0.3.22
+      publint: 0.3.25
       typescript: 7.0.2
     transitivePeerDependencies:
       - '@typescript/native-preview'
