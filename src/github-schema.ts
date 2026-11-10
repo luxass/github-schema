@@ -19901,6 +19901,7 @@ export type OrganizationPinnedIssueFieldsArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PinnedIssueFieldOrder>;
 };
 
 
@@ -21445,6 +21446,19 @@ export type PinnedIssueEdge = {
   /** The item at the end of the edge. */
   node?: Maybe<PinnedIssue>;
 };
+
+/** Ordering options for pinned issue field connections. */
+export type PinnedIssueFieldOrder = {
+  /** The ordering direction. */
+  direction: OrderDirection;
+  /** The field to order pinned issue fields by. */
+  field: PinnedIssueFieldOrderField;
+};
+
+/** Properties by which pinned issue fields can be ordered. */
+export type PinnedIssueFieldOrderField =
+  /** Order pinned issue fields by their configured pinned position. */
+  | 'POSITION';
 
 /** Audit log entry for a private_repository_forking.disable event. */
 export type PrivateRepositoryForkingDisableAuditEntry = AuditEntry & EnterpriseAuditEntryData & Node & OrganizationAuditEntryData & RepositoryAuditEntryData & {
