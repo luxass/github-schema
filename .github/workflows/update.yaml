@@ -283,6 +283,9 @@ jobs:
             printf "\n### Changes\nThe diff is too big to show here, so take a look at **Files changed** instead.\n" >> "$BODY_PATH"
           fi
 
+          if [ "$INCOMPLETE" = false ]; then
+            printf '\nI will be waiting for your approval 👋\n' >> "$BODY_PATH"
+          fi
           printf '\nThis is an automated PR to update the GitHub GraphQL Schema.\n' >> "$BODY_PATH"
           printf 'title=%s\nincomplete=%s\n' "$TITLE" "$INCOMPLETE" >> "$GITHUB_OUTPUT"
 
