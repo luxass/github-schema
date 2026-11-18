@@ -1,6 +1,6 @@
 {
   "name": "github-schema",
-  "version": "1.50.0",
+  "version": "1.51.0",
   "description": "GitHub's GraphQL schema",
   "keywords": [
     "github",
