@@ -236,54 +236,54 @@ jobs:
           set -euo pipefail
 
           BODY_PATH="$RUNNER_TEMP/github-schema-pr-body.md"
+          DIFF_PATH="$RUNNER_TEMP/github-schema.diff"
           INCOMPLETE=true
           TITLE='chore: [incomplete] update GitHub GraphQL schema'
 
+          # Every PR body has the same shape: greeting, summary, changes, sign-off.
+          # The incomplete marker must stay the first line: the merge check and auto-release look for it.
           if [ "$AI_OUTCOME" = success ] && [ -n "$AI_TITLE" ]; then
             INCOMPLETE=false
             TITLE="$AI_TITLE"
-            printf '## AI-generated summary\n\nVerify this summary and classification against **Files changed** before merging.\n\n' > "$BODY_PATH"
+            printf "I found some new changes in GitHub's GraphQL Schema.\n\n" > "$BODY_PATH"
             jq -r '.body' "$RUNNER_TEMP/pr-metadata.json" >> "$BODY_PATH"
           else
             if [ "$DIFF_BYTES" -gt 100000 ]; then
-              REASON='The schema diff exceeds the metadata service input limit.'
+              REASON='the diff was too big for me to summarize'
             elif [ "$DIFF_BYTES" -eq 0 ]; then
-              REASON='No schema diff was available to classify the generated-code changes.'
+              REASON='only the generated types changed, so there was no schema diff to summarize'
             else
-              REASON='AI metadata generation failed or returned invalid metadata.'
+              REASON="my summary service didn't give me anything I could use"
             fi
 
             cat > "$BODY_PATH" <<EOF
           <!-- pr-metadata:incomplete -->
-          ## Incomplete — manual intervention required
+          I found some new changes in GitHub's GraphQL Schema.
 
-          $REASON
+          I don't know what they changed, but I'm sure it's important. I couldn't write a summary this time, because $REASON, so this PR is a draft.
 
-          This update is a draft. Its classification and summary have not been verified.
-          Before marking it ready for review:
-          1. Inspect the schema and generated types in **Files changed**.
-          2. Replace the incomplete title with an accurate conventional title and write a summary. Use feat for additions; otherwise choose docs, fix, or chore as appropriate.
-          3. Document removals and any compatibility concerns.
-          4. Remove this warning and the incomplete HTML marker above, then mark the PR ready for review.
-
-          Automatic release is blocked while the incomplete title or HTML marker remains.
+          Can you take a look? Give it a proper title and summary, remove \`[incomplete]\` from the title and the hidden marker at the top of this description, and mark it ready for review. I won't release anything until then 👋
           EOF
           fi
 
-          # Keep the complete PR body below GitHub's size limit. Large diffs remain in Files changed.
+          # Keep the complete PR body below GitHub's size limit. Large diffs stay in Files changed.
           if [ "$DIFF_BYTES" -gt 0 ] && [ "$DIFF_BYTES" -le 40000 ]; then
+            # Use a fence one backtick longer than any backtick run in the diff, at least three,
+            # so backticks in schema descriptions cannot close the diff block early.
+            LONGEST_BACKTICKS=$(awk '{ while (match($0, /`+/)) { if (RLENGTH > max) max = RLENGTH; $0 = substr($0, RSTART + RLENGTH) } } END { print max + 0 }' "$DIFF_PATH")
+            FENCE_LENGTH=$(( LONGEST_BACKTICKS >= 3 ? LONGEST_BACKTICKS + 1 : 3 ))
+            FENCE=$(printf '%*s' "$FENCE_LENGTH" '' | tr ' ' '`')
             {
-              printf '\n<details>\n<summary>Schema changes</summary>\n\n'
-              # A long fence prevents ordinary backticks in schema descriptions closing the block.
-              printf '``````````diff\n'
-              cat "$RUNNER_TEMP/github-schema.diff"
-              printf '\n``````````\n\n</details>\n'
+              printf '\n### Changes\n<details>\n<summary>Schema Changes</summary><br/>\n\n'
+              printf '%sdiff\n' "$FENCE"
+              cat "$DIFF_PATH"
+              printf '\n%s\n\n<br/></details>\n' "$FENCE"
             } >> "$BODY_PATH"
           elif [ "$DIFF_BYTES" -gt 0 ]; then
-            printf '\nThe schema diff is too large to embed. See **Files changed** for the complete diff.\n' >> "$BODY_PATH"
+            printf "\n### Changes\nThe diff is too big to show here, so take a look at **Files changed** instead.\n" >> "$BODY_PATH"
           fi
 
-          printf '\nThis is an automated update of the GitHub GraphQL schema.\n' >> "$BODY_PATH"
+          printf '\nThis is an automated PR to update the GitHub GraphQL Schema.\n' >> "$BODY_PATH"
           printf 'title=%s\nincomplete=%s\n' "$TITLE" "$INCOMPLETE" >> "$GITHUB_OUTPUT"
 
           if [ "$HAS_CHANGES" = true ]; then
