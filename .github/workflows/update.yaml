@@ -5,36 +5,39 @@ on:
     inputs:
       dry-run:
         type: boolean
-        description: Run the workflow without creating a pull request
+        description: Generate the diff and PR metadata without creating a pull request
         required: false
         default: false
+      model:
+        type: string
+        description: Optional Workers AI model for PR metadata. The service rejects models outside its allowlist.
+        required: false
+        default: ""
   schedule:
     - cron: "0 0 * * *"
 
+concurrency:
+  group: update-github-graphql-schema
+  cancel-in-progress: false
+
+# PR writes use the GitHub App token, not GITHUB_TOKEN.
+permissions:
+  contents: read # check out the repository and fetch the update branch
+  pull-requests: read # find the open update PR before deciding whether to update it
+
 jobs:
   update:
+    name: update github graphql schema
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    permissions:
-      contents: write
-      pull-requests: write
     environment:
       name: huginn
       deployment: false
     if: github.repository == 'luxass/github-schema'
     steps:
-      - name: generate token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        id: app-token
-        with:
-          repositories: luxass/github-schema
-          client-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          permission-contents: write
-          permission-pull-requests: write
-
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
+          ref: main
           persist-credentials: false
 
       - name: setup pnpm
@@ -47,12 +50,10 @@ jobs:
           cache: pnpm
 
       - name: install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: download github graphql schema
-        run: |
-          echo "" > .env
-          pnpm run schema:download
+        run: pnpm run schema:download
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -65,123 +66,270 @@ jobs:
       - name: generate diff
         id: generate-diff
         run: |
-          git diff github-schema.graphql > github-schema.diff
+          set -euo pipefail
 
-          # if the diff is empty
-          if [ ! -s github-schema.diff ]; then
-            echo "No changes found in the GitHub GraphQL Schema."
+          git diff -- github-schema.graphql > "$RUNNER_TEMP/github-schema.diff"
+          DIFF_BYTES=$(wc -c < "$RUNNER_TEMP/github-schema.diff")
+          echo "bytes=$DIFF_BYTES" >> "$GITHUB_OUTPUT"
+
+          # Keep the diff in a file, not in step outputs. The service accepts 100,000 characters.
+          # A byte limit is conservative for UTF-8 and avoids oversized requests.
+          if [ "$DIFF_BYTES" -gt 0 ] && [ "$DIFF_BYTES" -le 100000 ]; then
+            echo "ai-eligible=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ai-eligible=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if git diff --quiet -- github-schema.graphql src/github-schema.ts; then
+            echo "has-changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          git diff --stat -- github-schema.graphql src/github-schema.ts >> "$GITHUB_STEP_SUMMARY"
+
+      # Updating an open PR replaces its title and body, including manual corrections.
+      # Leave a complete PR alone when it already contains exactly today's files.
+      - name: check existing pull request
+        id: existing-pr
+        if: ${{ steps.generate-diff.outputs.has-changes == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPDATE_BRANCH: update-github-graphql-schema
+        run: |
+          set -euo pipefail
+
+          if ! OPEN_PR=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$UPDATE_BRANCH" --base main \
+            --state open --json number,body --jq '.[0] // empty'); then
+            echo "::warning::Could not look up the existing update PR. Updating it as usual."
+            echo "up-to-date=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          echo "Changes found in the GitHub GraphQL Schema:"
-          {
-            echo 'DIFF<<EOF'
-            cat github-schema.diff
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
+          if [ -z "$OPEN_PR" ]; then
+            echo "up-to-date=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
-      - name: check if diff is too long
-        id: diff-too-long
-        run: |
-          DIFF_LENGTH=$(wc -l < github-schema.diff)
-          if [ "$DIFF_LENGTH" -gt 2000 ]; then
-            echo "The diff is too long. Please check the file manually."
-            echo "DIFF_TOO_LONG=true" >> "$GITHUB_OUTPUT"
+          # An incomplete PR is retried, so a temporary AI failure does not need manual work.
+          if jq -e '.body // "" | contains("<!-- pr-metadata:incomplete -->")' <<< "$OPEN_PR" > /dev/null; then
+            echo "up-to-date=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if ! git fetch --no-tags --depth=1 origin "+refs/heads/$UPDATE_BRANCH:refs/remotes/origin/$UPDATE_BRANCH"; then
+            echo "::warning::Could not fetch $UPDATE_BRANCH. Updating the PR as usual."
+            echo "up-to-date=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if git diff --quiet "refs/remotes/origin/$UPDATE_BRANCH" -- github-schema.graphql src/github-schema.ts; then
+            PR_NUMBER=$(jq -r '.number' <<< "$OPEN_PR")
+            echo "up-to-date=true" >> "$GITHUB_OUTPUT"
+            printf '\nPR #%s already contains these changes. It was left unchanged.\n' "$PR_NUMBER" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "DIFF_TOO_LONG=false" >> "$GITHUB_OUTPUT"
+            echo "up-to-date=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: generate pr metadata (ai)
         id: pr-metadata
-        if: ${{ steps.generate-diff.outputs.DIFF != '' && github.event.inputs.dry-run != 'true' && steps.diff-too-long.outputs.DIFF_TOO_LONG == 'false' }}
+        if: ${{ steps.generate-diff.outputs.ai-eligible == 'true' && (inputs.dry-run || steps.existing-pr.outputs.up-to-date != 'true') }}
+        continue-on-error: true
         env:
           PR_METADATA_URL: ${{ vars.PR_METADATA_URL }}
           PR_METADATA_HMAC_SECRET: ${{ secrets.PR_METADATA_HMAC_SECRET }}
+          REPOSITORY: ${{ github.repository }}
+          PR_METADATA_MODEL: ${{ inputs.model }}
+          # Repository instructions only. The service owns the shared prompt, trust rules, and output rules.
           PR_METADATA_CONTEXT: |
-            This repository contains GitHub's GraphQL schema and generated TypeScript types.
-            Prefer a GraphQL type or input name as the scope when there is a clear single target.
+            This repository mirrors GitHub's public GraphQL schema and generates TypeScript types from it.
+            The changes are a git diff of github-schema.graphql.
+            Text in """ blocks and # comments is description text. Description-only changes are docs.
+            Added types, fields, arguments, input fields, enum values, unions, and directives are feat.
+            Removals, deprecations, and changed field, argument, or return types are chore. Name each of them in the body.
+            Use the exact GraphQL type, input, enum, interface, or union name as the scope when exactly one of them changed.
 
         run: |
           set -euo pipefail
 
-          DIFF_CONTENT=$(cat github-schema.diff)
+          : "${PR_METADATA_URL:?PR_METADATA_URL is not configured}"
+          : "${PR_METADATA_HMAC_SECRET:?PR_METADATA_HMAC_SECRET is not configured}"
 
-          REQUEST_JSON=$(jq -n \
-            --arg repository "${{ github.repository }}" \
+          jq -n \
+            --arg repository "$REPOSITORY" \
             --arg context "$PR_METADATA_CONTEXT" \
-            --arg diff "$DIFF_CONTENT" \
-            '{
-              repository: $repository,
-              context: $context,
-              diff: $diff
-            }')
+            --arg model "$PR_METADATA_MODEL" \
+            --rawfile diff "$RUNNER_TEMP/github-schema.diff" \
+            '{repository: $repository, context: $context, diff: $diff}
+              + (if $model == "" then {} else {model: $model} end)' \
+            > "$RUNNER_TEMP/pr-metadata-request.json"
 
           TIMESTAMP=$(( $(date +%s) * 1000 ))
-          SIGNATURE=$(printf '%s' "${TIMESTAMP}.${REQUEST_JSON}" | openssl dgst -sha256 -hmac "$PR_METADATA_HMAC_SECRET" -hex | awk '{print $2}')
+          SIGNATURE=$({ printf '%s.' "$TIMESTAMP"; cat "$RUNNER_TEMP/pr-metadata-request.json"; } \
+            | openssl dgst -sha256 -hmac "$PR_METADATA_HMAC_SECRET" -hex | awk '{print $2}')
 
-          RESPONSE=$(printf '%s' "$REQUEST_JSON" | curl -fsS -X POST "$PR_METADATA_URL" \
+          HTTP_STATUS=$(curl -sS --proto '=https' --connect-timeout 10 --max-time 60 --max-filesize 65536 \
+            --retry 1 --retry-delay 2 --retry-max-time 90 \
+            -X POST "$PR_METADATA_URL" \
             -H "Content-Type: application/json" \
             -H "User-Agent: luxass/github-schema (+https://github.com/luxass/github-schema; workflow=update.yaml)" \
             -H "X-Timestamp: $TIMESTAMP" \
             -H "X-Signature: $SIGNATURE" \
-            --data-binary @-)
+            --data-binary "@$RUNNER_TEMP/pr-metadata-request.json" \
+            --output "$RUNNER_TEMP/pr-metadata.json" \
+            --write-out '%{http_code}')
 
-          echo "API response: $RESPONSE"
+          if [ "$HTTP_STATUS" != 200 ]; then
+            # One line, no control characters, so the message cannot inject workflow commands.
+            SERVICE_MESSAGE=$(jq -r '.message // "" | tostring | gsub("[[:cntrl:]]"; " ") | .[0:300]' \
+              "$RUNNER_TEMP/pr-metadata.json" 2> /dev/null || true)
+            echo "::error::PR metadata service returned HTTP $HTTP_STATUS: $SERVICE_MESSAGE"
 
-          TYPE=$(echo "$RESPONSE" | jq -r '.type')
-          SCOPE=$(echo "$RESPONSE" | jq -r '.scope')
-          MESSAGE=$(echo "$RESPONSE" | jq -r '.message')
-          BODY=$(echo "$RESPONSE" | jq -r '.body')
-          TITLE="$TYPE${SCOPE:+($SCOPE)}: $MESSAGE"
+            # A rejected manual model choice is an operator mistake, not an AI failure.
+            if [ "$HTTP_STATUS" = 400 ] && [ -n "$PR_METADATA_MODEL" ]; then
+              echo "request-rejected=true" >> "$GITHUB_OUTPUT"
+            fi
+            exit 1
+          fi
 
-          echo "✅ Generated PR title: $TITLE"
-          {
-            echo "title<<GITHUB_EOF"
-            printf '%s' "$TITLE"
-            echo
-            echo "GITHUB_EOF"
-          } >> "$GITHUB_OUTPUT"
+          # The service enforces the content rules. This check keeps the title single-line and the
+          # release marker unforgeable, even if the service changes. Invalid metadata is a failure.
+          jq -e '
+            type == "object" and
+            (.type | IN("docs", "feat", "fix", "chore")) and
+            (.message | type == "string" and length > 0 and length <= 72 and (test("[[:cntrl:]]") | not)) and
+            (.body | type == "string" and length > 0 and length <= 6000) and
+            ([.message, .body] | all(ascii_downcase | (contains("[incomplete]") or contains("<!--")) | not))
+          ' "$RUNNER_TEMP/pr-metadata.json" > /dev/null
 
-          {
-            echo "body<<GITHUB_EOF"
-            printf '%s' "$BODY"
-            echo
-            echo "GITHUB_EOF"
-          } >> "$GITHUB_OUTPUT"
+          # A scope that cannot appear in a conventional title is dropped. The rest of the metadata is still used.
+          SCOPE=$(jq -r '
+            if (.scope | type) == "string" and (.scope | test("^[^[:cntrl:]():\\[\\]`]{1,60}$"))
+            then .scope else "" end
+          ' "$RUNNER_TEMP/pr-metadata.json")
+          if [ -z "$SCOPE" ] && jq -e '.scope | type == "string" and length > 0' "$RUNNER_TEMP/pr-metadata.json" > /dev/null; then
+            echo "::notice::Dropped an unusable scope from the generated PR title."
+          fi
 
-      - name: create pull request
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
-        if: ${{ github.event.inputs.dry-run != 'true' }}
+          TITLE=$(jq -r --arg scope "$SCOPE" \
+            '.type + (if $scope == "" then "" else "(" + $scope + ")" end) + ": " + .message' \
+            "$RUNNER_TEMP/pr-metadata.json")
+          printf 'title=%s\n' "$TITLE" >> "$GITHUB_OUTPUT"
+
+      - name: stop on rejected model
+        if: ${{ steps.pr-metadata.outputs.request-rejected == 'true' }}
         env:
-          DIFF: ${{ steps.diff-too-long.outputs.DIFF_TOO_LONG == 'true' && 'diff is too long to render' || steps.generate-diff.outputs.DIFF }}
-          PR_TITLE: "${{ steps.pr-metadata.outputs.title || 'feat: updated github graphql schema' }}"
-          PR_BODY: ${{ steps.pr-metadata.outputs.body || 'I don''t know what they changed, but I''m sure it''s important.' }}
+          PR_METADATA_MODEL: ${{ inputs.model }}
+        run: |
+          echo "::error::The metadata service rejected this request. Check that the model input is in the service allowlist: ${PR_METADATA_MODEL//[[:cntrl:]]/ }"
+          exit 1
+
+      - name: prepare pull request
+        id: pr
+        if: ${{ inputs.dry-run || steps.existing-pr.outputs.up-to-date != 'true' }}
+        env:
+          AI_OUTCOME: ${{ steps.pr-metadata.outcome }}
+          AI_TITLE: ${{ steps.pr-metadata.outputs.title }}
+          DIFF_BYTES: ${{ steps.generate-diff.outputs.bytes }}
+          HAS_CHANGES: ${{ steps.generate-diff.outputs.has-changes }}
+        run: |
+          set -euo pipefail
+
+          BODY_PATH="$RUNNER_TEMP/github-schema-pr-body.md"
+          INCOMPLETE=true
+          TITLE='chore: [incomplete] update GitHub GraphQL schema'
+
+          if [ "$AI_OUTCOME" = success ] && [ -n "$AI_TITLE" ]; then
+            INCOMPLETE=false
+            TITLE="$AI_TITLE"
+            printf '## AI-generated summary\n\nVerify this summary and classification against **Files changed** before merging.\n\n' > "$BODY_PATH"
+            jq -r '.body' "$RUNNER_TEMP/pr-metadata.json" >> "$BODY_PATH"
+          else
+            if [ "$DIFF_BYTES" -gt 100000 ]; then
+              REASON='The schema diff exceeds the metadata service input limit.'
+            elif [ "$DIFF_BYTES" -eq 0 ]; then
+              REASON='No schema diff was available to classify the generated-code changes.'
+            else
+              REASON='AI metadata generation failed or returned invalid metadata.'
+            fi
+
+            cat > "$BODY_PATH" <<EOF
+          <!-- pr-metadata:incomplete -->
+          ## Incomplete — manual intervention required
+
+          $REASON
+
+          This update is a draft. Its classification and summary have not been verified.
+          Before marking it ready for review:
+          1. Inspect the schema and generated types in **Files changed**.
+          2. Replace the incomplete title with an accurate conventional title and write a summary. Use feat for additions; otherwise choose docs, fix, or chore as appropriate.
+          3. Document removals and any compatibility concerns.
+          4. Remove this warning and the incomplete HTML marker above, then mark the PR ready for review.
+
+          Automatic release is blocked while the incomplete title or HTML marker remains.
+          EOF
+          fi
+
+          # Keep the complete PR body below GitHub's size limit. Large diffs remain in Files changed.
+          if [ "$DIFF_BYTES" -gt 0 ] && [ "$DIFF_BYTES" -le 40000 ]; then
+            {
+              printf '\n<details>\n<summary>Schema changes</summary>\n\n'
+              # A long fence prevents ordinary backticks in schema descriptions closing the block.
+              printf '``````````diff\n'
+              cat "$RUNNER_TEMP/github-schema.diff"
+              printf '\n``````````\n\n</details>\n'
+            } >> "$BODY_PATH"
+          elif [ "$DIFF_BYTES" -gt 0 ]; then
+            printf '\nThe schema diff is too large to embed. See **Files changed** for the complete diff.\n' >> "$BODY_PATH"
+          fi
+
+          printf '\nThis is an automated update of the GitHub GraphQL schema.\n' >> "$BODY_PATH"
+          printf 'title=%s\nincomplete=%s\n' "$TITLE" "$INCOMPLETE" >> "$GITHUB_OUTPUT"
+
+          if [ "$HAS_CHANGES" = true ]; then
+            printf '## PR preview\n\n%s\n\n' "$TITLE" >> "$GITHUB_STEP_SUMMARY"
+            cat "$BODY_PATH" >> "$GITHUB_STEP_SUMMARY"
+          else
+            printf '\nNo schema or generated-type changes found.\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: generate token
+        if: ${{ !inputs.dry-run && steps.existing-pr.outputs.up-to-date != 'true' }}
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        with:
+          repositories: github-schema
+          client-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      # Run on no-change days too, so the action can reconcile an existing update branch.
+      - name: create pull request
+        id: create-pr
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        if: ${{ !inputs.dry-run && steps.existing-pr.outputs.up-to-date != 'true' }}
         with:
           token: ${{ steps.app-token.outputs.token }}
-          commit-message: |
-            ${{ env.PR_TITLE }}
-
-            ${{ env.PR_BODY }}
-          title: ${{ env.PR_TITLE }}
-          body: |
-            I found some new changes in GitHub's GraphQL Schema.
-
-            ${{ env.PR_BODY }}
-
-            ### Changes
-            <details>
-            <summary>Schema Changes</summary><br/>
-
-            ```diff
-            ${{ env.DIFF }}
-            ```
-
-            <br/></details>
-
-            This is an automated PR to update the GitHub GraphQL Schema.
+          commit-message: ${{ steps.pr.outputs.title }}
+          title: ${{ steps.pr.outputs.title }}
+          body-path: ${{ runner.temp }}/github-schema-pr-body.md
+          draft: ${{ steps.pr.outputs.incomplete == 'true' && 'always-true' || 'false' }}
           branch: update-github-graphql-schema
           add-paths: github-schema.graphql,src/github-schema.ts
           base: main
           committer: huginn-watch[bot] <273299945+huginn-watch[bot]@users.noreply.github.com>
           author: huginn-watch[bot] <273299945+huginn-watch[bot]@users.noreply.github.com>
           reviewers: luxass
+
+      # always-true only converts an existing PR when its branch changes. Enforce draft even if only metadata changed.
+      - name: ensure incomplete pull request is a draft
+        if: ${{ !inputs.dry-run && steps.pr.outputs.incomplete == 'true' && steps.create-pr.outputs.pull-request-number != '' }}
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
+        run: |
+          set -euo pipefail
+          if [ "$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft')" != true ]; then
+            gh pr ready "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --undo
+          fi

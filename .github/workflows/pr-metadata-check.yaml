@@ -1,0 +1,33 @@
+name: PR Metadata Check
+
+# Blocks merging an update PR while its metadata is incomplete.
+# Make "require complete pr metadata" a required status check on main for this to block merges.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+    branches:
+      - main
+
+concurrency:
+  group: pr-metadata-check-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  require-complete-pr-metadata:
+    name: require complete pr metadata
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    if: github.event.pull_request.head.ref == 'update-github-graphql-schema'
+    steps:
+      - name: require complete PR metadata
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          if [[ "${PR_TITLE,,}" == *"[incomplete]"* || "$PR_BODY" == *"<!-- pr-metadata:incomplete -->"* ]]; then
+            echo "::error::This update is incomplete. Correct the PR title and summary and remove the incomplete markers before merging."
+            exit 1
+          fi

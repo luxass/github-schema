@@ -49,7 +49,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "schema:download": "node --env-file=.env ./scripts/download.ts",
+    "schema:download": "node --env-file-if-exists=.env ./scripts/download.ts",
     "schema:codegen": "graphql-codegen",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
