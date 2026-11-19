@@ -45041,6 +45041,11 @@ type PullRequestReviewThread implements Node {
   repository: Repository!
 
   """
+  The reason this thread was resolved, if one was recorded. Currently only Copilot code review threads record a reason.
+  """
+  resolutionReason: PullRequestReviewThreadResolutionReason
+
+  """
   The user who resolved this thread
   """
   resolvedBy: User
