@@ -25207,6 +25207,8 @@ export type PullRequestReviewThread = Node & {
   pullRequest: PullRequest;
   /** Identifies the repository associated with this thread. */
   repository: Repository;
+  /** The reason this thread was resolved, if one was recorded. Currently only Copilot code review threads record a reason. */
+  resolutionReason?: Maybe<PullRequestReviewThreadResolutionReason>;
   /** The user who resolved this thread */
   resolvedBy?: Maybe<User>;
   /** The side of the diff that the first line of the thread starts on (multi-line only) */
