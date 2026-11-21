@@ -4175,6 +4175,15 @@ export type CopilotCodeReviewRunnerType =
   /** Standard GitHub-hosted runners. */
   | 'STANDARD';
 
+/** The severity Copilot code review assigned to a review comment. */
+export type CopilotCodeReviewSeverity =
+  /** High severity. */
+  | 'HIGH'
+  /** Low severity. */
+  | 'LOW'
+  /** Medium severity. */
+  | 'MEDIUM';
+
 /** Which review comment severities Copilot code review leaves out. */
 export type CopilotCodeReviewSeverityFilter =
   /** Leave out low-severity comments. */
@@ -24955,6 +24964,8 @@ export type PullRequestReviewComment = Comment & Deletable & Minimizable & Node 
   bodyText: Scalars['String']['output'];
   /** Identifies the commit associated with the comment. */
   commit?: Maybe<Commit>;
+  /** The Copilot code review severity of this comment, or null if unavailable. */
+  copilotCodeReviewSeverity?: Maybe<CopilotCodeReviewSeverity>;
   /** Sources reported as contributing to this comment; may be incomplete. */
   copilotCodeReviewSources: Array<CopilotCodeReviewSource>;
   /** Identifies when the comment was created. */
