@@ -10,9 +10,13 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: npm-staged-release
+  cancel-in-progress: false
+
 jobs:
   release:
-    uses: luxass/shared-workflows/.github/workflows/reusable-release-npm-staged.yaml@0431feae72d899911e3d13270225d83152d59f5d # shared-workflows PR #85
+    uses: luxass/shared-workflows/.github/workflows/reusable-release-npm-staged.yaml@10298e06aecc428b39ef4121636400396b53a1fa # v0.16.0
     permissions:
       contents: write
       id-token: write
