@@ -22,12 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: write # bumpp pushes the version commit and tag (with the GitHub App token)
+      contents: read # the GitHub App token pushes the version commit
     environment:
       name: huginn
       deployment: false
     if: |
       github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'update-github-graphql-schema'
+      && github.event.pull_request.head.repo.full_name == github.repository
       && github.repository == 'luxass/github-schema' && (github.event.pull_request.user.login == 'luxass' || github.event.pull_request.user.login == 'huginn-watch[bot]')
     steps:
       - name: require complete PR metadata
@@ -45,48 +46,68 @@ jobs:
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
-          repositories: luxass/github-schema
           client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
+          permission-actions: write
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
+          ref: main
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: true # required to push the version commit
           token: ${{ steps.app-token.outputs.token }}
 
-      - name: setup pnpm
-        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
-
-      - name: setup node
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version: lts/*
-          package-manager-cache: false
-
-      - name: install dependencies
-        run: pnpm install
-
-      - name: build
-        run: pnpm run build
-
-      - name: create tag and release
+      - name: prepare the version and dispatch the release
         env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_TITLE: ${{ github.event.pull_request.title }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
         run: |
           set -euo pipefail
 
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$(jq -r '.version' package.json)"
-          NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          git merge-base --is-ancestor "$MERGE_SHA" HEAD
+          current_version=$(jq -er '.version | strings' package.json)
+          trailer="Schema-Update-PR: $PR_NUMBER"
+          prepared_sha=$(git log -1 --format=%H --grep="^$trailer$" "$MERGE_SHA..HEAD" -- package.json)
 
-          # Use the reviewed PR title, including any manual correction after an AI failure.
-          if [[ "$PR_TITLE" =~ ^feat(\(.+\))?: ]]; then
-            NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+          if [[ -n "$prepared_sha" ]]; then
+            # A failed dispatch can be retried without bumping the version again.
+            if [[ "$prepared_sha" != "$(git rev-parse HEAD)" ]]; then
+              echo "::error::The prepared release commit is no longer at main. Review the current version before dispatching."
+              exit 1
+            fi
+            if gh release view "v$current_version" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft' | grep -qx false; then
+              echo "v$current_version already has a published GitHub release."
+              exit 0
+            fi
+          else
+            # Do not prepare another version while a release still needs approval.
+            if ! gh release view "v$current_version" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft' | grep -qx false; then
+              echo "::error::Finish the release for v$current_version, then rerun this workflow."
+              exit 1
+            fi
+            if [[ ! "$current_version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+              echo "::error::Expected a stable package version in package.json."
+              exit 1
+            fi
+            major=${BASH_REMATCH[1]}
+            minor=${BASH_REMATCH[2]}
+            patch=${BASH_REMATCH[3]}
+            next_version="$major.$minor.$((patch + 1))"
+            if [[ "$PR_TITLE" =~ ^feat(\(.+\))?: ]]; then
+              next_version="$major.$((minor + 1)).0"
+            fi
+
+            jq --arg version "$next_version" '.version = $version' package.json > "$RUNNER_TEMP/package.json"
+            mv "$RUNNER_TEMP/package.json" package.json
+            git config user.email "273299945+huginn-watch[bot]@users.noreply.github.com"
+            git config user.name "huginn-watch[bot]"
+            git add -- package.json
+            git commit -m "chore: release v$next_version" -m "$trailer"
+            prepared_sha=$(git rev-parse HEAD)
+            git push origin HEAD:refs/heads/main
           fi
 
-          git config user.email "273299945+huginn-watch[bot]@users.noreply.github.com"
-          git config user.name "huginn-watch[bot]"
-
-          npx bumpp "$NEW_VERSION" --commit --tag --push --yes
+          gh workflow run release.yaml --repo "$GITHUB_REPOSITORY" --ref main -f "expected-sha=$prepared_sha"
