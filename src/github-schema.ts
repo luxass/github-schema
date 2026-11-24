@@ -4688,7 +4688,8 @@ export type CreateIssueInput = {
    * The Node ID of the planning status the issue starts in. It must be an open one
    * listed in the owner's planningStatuses. If you don't have permission to set
    * the status, it's ignored and the issue starts in Backlog. Issue statuses are
-   * in preview and only available to accounts enrolled in the preview.
+   * in public preview and subject to change. They're rolling out gradually, so
+   * they might not be available in your repositories yet.
    */
   statusId?: InputMaybe<Scalars['ID']['input']>;
   /** The title for the issue. */
@@ -10551,8 +10552,9 @@ export type Issue = Assignable & Closable & Comment & Deletable & Labelable & Lo
   stateReason?: Maybe<IssueStateReason>;
   /**
    * The status of this issue, or null when it has none or issue statuses aren't
-   * available in the repository. Issue statuses are in preview and only available
-   * to accounts enrolled in the preview.
+   * available in the repository. Issue statuses are in public preview and subject
+   * to change. They're rolling out gradually, so they might not be available in
+   * your repositories yet.
    */
   status?: Maybe<PlanningStatus>;
   /** A list of sub-issues associated with the Issue. */
@@ -10601,8 +10603,9 @@ export type Issue = Assignable & Closable & Comment & Deletable & Labelable & Lo
   /** Indicates if the viewer can edit the milestone of the issue. */
   viewerCanSetMilestone: Scalars['Boolean']['output'];
   /**
-   * Whether the viewer can set this issue's status. Issue statuses are in preview
-   * and only available to accounts enrolled in the preview.
+   * Whether the viewer can set this issue's status. Issue statuses are in public
+   * preview and subject to change. They're rolling out gradually, so they might
+   * not be available in your repositories yet.
    */
   viewerCanSetStatus: Scalars['Boolean']['output'];
   /** Check if the viewer is able to change their subscription status for the repository. */
@@ -14379,7 +14382,8 @@ export type Mutation = {
   setIssueFieldValue?: Maybe<SetIssueFieldValuePayload>;
   /**
    * Sets the status of an issue, closing or reopening it when the status calls for
-   * it. Issue statuses are in preview and only available to accounts enrolled in the preview.
+   * it. Issue statuses are in public preview and subject to change. They're
+   * rolling out gradually, so they might not be available in your repositories yet.
    */
   setIssueStatus?: Maybe<SetIssueStatusPayload>;
   /** Set an organization level interaction limit for an organization's public repositories. */
@@ -19672,8 +19676,9 @@ export type Organization = Actor & MemberStatusable & Node & PackageOwner & Prof
   /**
    * The planning statuses issues in the organization's repositories can be in, or
    * null when issue statuses aren't available. Planning statuses are returned in
-   * display order. Issue statuses are in preview and only available to accounts
-   * enrolled in the preview.
+   * display order. Issue statuses are in public preview and subject to change.
+   * They're rolling out gradually, so they might not be available in your
+   * repositories yet.
    */
   planningStatuses?: Maybe<PlanningStatusConnection>;
   /**
@@ -21536,7 +21541,11 @@ export type PinnedIssueFieldOrderField =
   /** Order pinned issue fields by their configured pinned position. */
   | 'POSITION';
 
-/** A planning status an issue can be in. Issue statuses are in preview and only available to accounts enrolled in the preview. */
+/**
+ * A planning status an issue can be in. Issue statuses are in public preview and
+ * subject to change. They're rolling out gradually, so they might not be available
+ * in your repositories yet.
+ */
 export type PlanningStatus = Node & {
   __typename?: 'PlanningStatus';
   /** The category of the planning status, which decides whether the issue is open or closed. */
@@ -21549,14 +21558,14 @@ export type PlanningStatus = Node & {
 
 /**
  * The category of a planning status, which decides whether the issue is open or
- * closed. Issue statuses are in preview and only available to accounts enrolled in the preview.
+ * closed. Issue statuses are in public preview and subject to change. They're
+ * rolling out gradually, so they might not be available in your repositories yet.
  */
 export type PlanningStatusCategory = {
   __typename?: 'PlanningStatusCategory';
   /**
-   * A stable identifier for the category, such as `new`, `backlog`, `planned`,
-   * `started`, `completed`, `not_planned` or `duplicate`. Clients should expect
-   * new keys to be added.
+   * A stable identifier for the category, such as `backlog`, `planned`, `started`,
+   * `completed`, `not_planned` or `duplicate`. Clients should expect new keys to be added.
    */
   key: Scalars['String']['output'];
   /** The display name of the category. */
@@ -29416,8 +29425,9 @@ export type Repository = Node & PackageOwner & ProjectOwner & ProjectV2Recent & 
   /**
    * The planning statuses issues in this repository can be in, or null when issue
    * statuses aren't available for this repository or viewer. Planning statuses are
-   * returned in display order. Issue statuses are in preview and only available to
-   * accounts enrolled in the preview.
+   * returned in display order. Issue statuses are in public preview and subject to
+   * change. They're rolling out gradually, so they might not be available in your
+   * repositories yet.
    */
   planningStatuses?: Maybe<PlanningStatusConnection>;
   /** The primary language of the repository's code. */
@@ -37208,7 +37218,8 @@ export type UpdateIssueInput = {
    * planning status closes the issue, `stateInput.rationale` is used as the close
    * rationale, and a Duplicate planning status takes the issue it duplicates from
    * `stateInput.duplicateIssueId`. The issue's status can't be cleared. Issue
-   * statuses are in preview and only available to accounts enrolled in the preview.
+   * statuses are in public preview and subject to change. They're rolling out
+   * gradually, so they might not be available in your repositories yet.
    */
   statusId?: InputMaybe<Scalars['ID']['input']>;
   /** The title for the issue. */
@@ -38334,8 +38345,9 @@ export type User = Actor & Agentic & Node & PackageOwner & ProfileOwner & Projec
   /**
    * The planning statuses issues in the user's repositories can be in, or null
    * when issue statuses aren't available. Planning statuses are returned in
-   * display order. Issue statuses are in preview and only available to accounts
-   * enrolled in the preview.
+   * display order. Issue statuses are in public preview and subject to change.
+   * They're rolling out gradually, so they might not be available in your
+   * repositories yet.
    */
   planningStatuses?: Maybe<PlanningStatusConnection>;
   /**
