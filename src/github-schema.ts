@@ -31023,6 +31023,8 @@ export type RepositoryRuleType =
   | 'TAG'
   /** Tag name pattern */
   | 'TAG_NAME_PATTERN'
+  /** The rule type is unavailable in the current schema. This value cannot be used to create or update a rule. */
+  | 'UNKNOWN'
   /** Only allow users with bypass permission to update matching refs. */
   | 'UPDATE'
   /** Require all changes made to a targeted branch to pass the specified workflows before they can be merged. */
